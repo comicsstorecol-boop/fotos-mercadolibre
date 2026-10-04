@@ -8,3 +8,8 @@ Mercado Libre NO aceptó URLs de raw.githubusercontent.com (fotos quedaron "veri
 Flujo actual: fotos a GitHub -> Shopify `fileCreate` (originalSource = URL de GitHub, filename `ml-CsXXXX-nombre.jpg`)
 -> usar `https://cdn.shopify.com/s/files/1/0721/1728/9233/files/ml-CsXXXX-nombre.jpg` en la columna Fotos.
 Cs0001-Cs0005 quedaron quemados en ML; siguiente consecutivo en contador.txt.
+
+## Actualización 2026-10-04
+Shopify CDN tampoco funcionó ("La foto no se cargó correctamente"). Solo sirven URLs del Gestor de fotos de ML (http2.mlstatic.com).
+Flujo final: Fernando sube fotos al Gestor de fotos y pega las URLs en el mismo orden que las fotos; Claude identifica, arma el Excel con gen.js.
+Cs0001-Cs0010 quedaron usados en ML.
