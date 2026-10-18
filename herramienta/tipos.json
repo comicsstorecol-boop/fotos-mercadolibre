@@ -9,6 +9,18 @@
     "descripcion": "Camiseta niño (tallas 4, 6, 8, 10, 12, 14, 16 - guía Camisetas Niño 2027)",
     "plantilla": "plantillas/camiseta-nino.xlsx",
     "titulo": "Camiseta {nombre} Premium Para Niños",
-    "fijos": { "Código de la guía": "10266281 - Camisetas Niño 2027" }
+    "fijos": {
+      "Código de la guía": "10266281 - Camisetas Niño 2027"
+    }
+  },
+  "camiseta-nino-colorear": {
+    "descripcion": "Camiseta niño blanca para colorear con 12 marcadores (tallas 4-16, guía Camisetas Niño 2027)",
+    "plantilla": "plantillas/camiseta-nino.xlsx",
+    "titulo": "Camiseta {nombre} Premium Para Niños Para Colorear",
+    "fijos": {
+      "Código de la guía": "10266281 - Camisetas Niño 2027",
+      "Varía por: Nombre comercial del color": "Blanco",
+      "Descripción": "¡Diviértete Pintando tu Propia Camiseta! \nCamiseta blanca manga corta de algodón premium con un diseño para colorear. Incluye 12 marcadores lavables para que los niños le den vida a su camiseta con los colores que quieran.\n\nUna actividad creativa ideal para regalos, cumpleaños, vacaciones y tardes en casa. Estimula la creatividad y la motricidad fina mientras se divierten."
+    }
   }
 }
