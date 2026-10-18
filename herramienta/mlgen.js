@@ -108,7 +108,7 @@
   }
 
   /* products: [{titulo, marca, modelo, fotos}] */
-  async function build(JSZip, templateBuf, products) {
+  async function build(JSZip, templateBuf, products, opts = {}) {
     const zip = await JSZip.loadAsync(templateBuf);
     const info = await readTemplate(zip);
     const { cols, path, startRow, blockSize } = info;
@@ -155,6 +155,12 @@
         setStr(cols.marca, p.marca);
         setStr(cols.modelo, p.modelo);
         setStr(cols.fotos, p.fotos);
+        // Valores fijos por encabezado (ej. {"Código de la guía": "10266281 - ..."}) para todas las filas
+        for (const [h, v] of Object.entries(opts.fixed || {})) {
+          const col = Object.keys(info.hdr).find(k => norm(info.hdr[k]) === norm(h));
+          if (!col) throw new Error(`No encontré la columna "${h}" en la plantilla.`);
+          setStr(col, v);
+        }
         cells.sort((a, b) => colNum(a.col) - colNum(b.col));
         const body = cells.map(c => {
           let attrs = c.attrs, inner = c.inner;

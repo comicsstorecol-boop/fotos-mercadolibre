@@ -1,0 +1,14 @@
+{
+  "camiseta-adulto": {
+    "descripcion": "Camiseta adulto (tallas S, M, L, XL)",
+    "plantilla": "plantillas/camiseta-adulto.xlsx",
+    "titulo": "Camiseta {nombre} {codigo}",
+    "fijos": {}
+  },
+  "camiseta-nino": {
+    "descripcion": "Camiseta niño (tallas 4, 6, 8, 10, 12, 14, 16 - guía Camisetas Niño 2027)",
+    "plantilla": "plantillas/camiseta-nino.xlsx",
+    "titulo": "Camiseta {nombre} Premium Para Niños",
+    "fijos": { "Código de la guía": "10266281 - Camisetas Niño 2027" }
+  }
+}
