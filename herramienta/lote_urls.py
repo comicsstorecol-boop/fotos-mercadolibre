@@ -1,7 +1,8 @@
 """Lote con URLs del Gestor de fotos de Mercado Libre.
 Uso: python3 lote_urls.py <tipo> lote.json salida.xlsx
   tipo = una clave de tipos.json (camiseta-adulto, camiseta-nino, ...)
-  lote.json = [{"nombre": "Porky", "url": "https://http2.mlstatic.com/...-F.jpg"}, ...]  (en orden)
+  lote.json = [{"nombre": "Vegeta Blue", "marca": "Dragon Ball", "url": "https://http2.mlstatic.com/...-F.jpg"}, ...]  (en orden)
+  "marca" = solo la franquicia (Dragon Ball, One Piece, Marvel, DC Comics...). Si falta, usa el nombre.
 Cada tipo tiene su propia planilla (tallas, guía de tallas, etc.) en plantillas/.
 Asigna CsXXXX desde contador.txt, genera el Excel y avanza el contador."""
 import json, os, re, subprocess, sys
@@ -16,7 +17,7 @@ for it in lote:
     c = f"Cs{n:04d}"; nm = clean(it["nombre"])
     sobra = len(T["titulo"].format(nombre="", codigo=c))
     nm_t = nm[:60 - sobra].strip()
-    prods.append({"codigo": c, "titulo": T["titulo"].format(nombre=nm_t, codigo=c), "marca": nm, "modelo": nm, "fotos": it["url"].strip()}); n += 1
+    prods.append({"codigo": c, "titulo": T["titulo"].format(nombre=nm_t, codigo=c), "marca": it.get("marca", "").strip() or nm, "modelo": nm, "fotos": it["url"].strip()}); n += 1
 json.dump(prods, open(os.path.join(H, "_productos.json"), "w"), ensure_ascii=False, indent=1)
 json.dump(T["fijos"], open(os.path.join(H, "_fijos.json"), "w"), ensure_ascii=False)
 subprocess.run(["node", os.path.join(H, "gen.js"), os.path.join(H, "_productos.json"), out,
