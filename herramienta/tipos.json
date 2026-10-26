@@ -3,7 +3,9 @@
     "descripcion": "Camiseta adulto (tallas S, M, L, XL)",
     "plantilla": "plantillas/camiseta-adulto.xlsx",
     "titulo": "Camiseta {nombre} {codigo}",
-    "fijos": {}
+    "fijos": {
+      "Stock": 6
+    }
   },
   "camiseta-nino": {
     "descripcion": "Camiseta niño (tallas 4, 6, 8, 10, 12, 14, 16 - guía Camisetas Niño 2027)",

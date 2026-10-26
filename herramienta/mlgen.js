@@ -159,7 +159,12 @@
         for (const [h, v] of Object.entries(opts.fixed || {})) {
           const col = Object.keys(info.hdr).find(k => norm(info.hdr[k]) === norm(h));
           if (!col) throw new Error(`No encontré la columna "${h}" en la plantilla.`);
-          setStr(col, v);
+          if (typeof v === 'number') {
+            const c = cells.find(x => x.col === col);
+            const st = c && /\bs="(\d+)"/.exec(c.attrs || '');
+            if (c) { c.attrs = st ? ` s="${st[1]}"` : ''; c.inner = `<v>${v}</v>`; }
+            else setStr(col, String(v));
+          } else setStr(col, v);
         }
         cells.sort((a, b) => colNum(a.col) - colNum(b.col));
         const body = cells.map(c => {
