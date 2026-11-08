@@ -36,5 +36,18 @@
     "modelo_es_marca": true,
     "prefijo": "Bz",
     "contador": "contador-buzos.txt"
+  },
+  "buzo-nino": {
+    "descripcion": "Buzo con capota niño negro (tallas 2, 4, 6, 8, 10, 12, 14, 16 - guía 12318170 Buzos Niño Talle Completo)",
+    "plantilla": "plantillas/buzo-nino.xlsx",
+    "titulo": "Buzo Capota {nombre} Premium Niños {codigo}",
+    "fijos": {
+      "Código de la guía": "12318170 - Buzos Niño Talle Completo",
+      "Género": "Niños",
+      "Stock": 6
+    },
+    "modelo_es_marca": true,
+    "prefijo": "Bz",
+    "contador": "contador-buzos.txt"
   }
 }
