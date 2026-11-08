@@ -17,7 +17,7 @@ for it in lote:
     c = f"Cs{n:04d}"; nm = clean(it["nombre"])
     sobra = len(T["titulo"].format(nombre="", codigo=c))
     nm_t = nm[:60 - sobra].strip()
-    prods.append({"codigo": c, "titulo": T["titulo"].format(nombre=nm_t, codigo=c), "marca": it.get("marca", "").strip() or nm, "modelo": nm, "fotos": it["url"].strip()}); n += 1
+    prods.append({"codigo": c, "titulo": T["titulo"].format(nombre=nm_t, codigo=c), "marca": (mk := it.get("marca", "").strip() or nm), "modelo": mk if T.get("modelo_es_marca") else nm, "fotos": it["url"].strip()}); n += 1
 json.dump(prods, open(os.path.join(H, "_productos.json"), "w"), ensure_ascii=False, indent=1)
 json.dump(T["fijos"], open(os.path.join(H, "_fijos.json"), "w"), ensure_ascii=False)
 subprocess.run(["node", os.path.join(H, "gen.js"), os.path.join(H, "_productos.json"), out,

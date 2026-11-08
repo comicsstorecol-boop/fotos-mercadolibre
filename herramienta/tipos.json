@@ -24,5 +24,15 @@
       "Varía por: Nombre comercial del color": "Blanco",
       "Descripción": "¡Diviértete Pintando tu Propia Camiseta! \nCamiseta blanca manga corta de algodón premium con un diseño para colorear. Incluye 12 marcadores lavables para que los niños le den vida a su camiseta con los colores que quieran.\n\nUna actividad creativa ideal para regalos, cumpleaños, vacaciones y tardes en casa. Estimula la creatividad y la motricidad fina mientras se divierten."
     }
+  },
+  "buzo-adulto": {
+    "descripcion": "Buzo con capota adulto negro (tallas S, M, L, XL - guía BUZO COMICS STORE 2023)",
+    "plantilla": "plantillas/buzo-adulto.xlsx",
+    "titulo": "Buzo Capota {nombre} Premium {codigo}",
+    "fijos": {
+      "Código de la guía": "736654 - BUZO COMICS STORE 2023",
+      "Stock": 6
+    },
+    "modelo_es_marca": true
   }
 }
