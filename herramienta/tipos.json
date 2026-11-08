@@ -33,6 +33,8 @@
       "Código de la guía": "736654 - BUZO COMICS STORE 2023",
       "Stock": 6
     },
-    "modelo_es_marca": true
+    "modelo_es_marca": true,
+    "prefijo": "Bz",
+    "contador": "contador-buzos.txt"
   }
 }
