@@ -18,3 +18,4 @@ Cs0001-Cs0010 quedaron usados en ML.
 Mismo consecutivo Bz (contador-buzos.txt). Acumulado propio: `acumulado-buzo-nino-cuello-redondo-desde-BzXXXX.json`, archivos de 200 buzos (lotes de 20).
 `pendiente-buzo-nino-cuello-redondo.json` = nombres identificados esperando URLs del Gestor.
 - Si llegan fotos/diseños repetidos (mismo estampado idéntico), se quitan siempre sin preguntar (Bz0276 eliminado por repetido).
+- Segundo archivo de 200 buzos niño cuello redondo: desde Bz0377, precio 89999 (`acumulado-buzo-nino-cuello-redondo-desde-Bz0377.json`).
