@@ -13,3 +13,7 @@ Cs0001-Cs0005 quedaron quemados en ML; siguiente consecutivo en contador.txt.
 Shopify CDN tampoco funcionó ("La foto no se cargó correctamente"). Solo sirven URLs del Gestor de fotos de ML (http2.mlstatic.com).
 Flujo final: Fernando sube fotos al Gestor de fotos y pega las URLs en el mismo orden que las fotos; Claude identifica, arma el Excel con gen.js.
 Cs0001-Cs0010 quedaron usados en ML.
+
+## Buzo niño cuello redondo (tipo `buzo-nino-cuello-redondo`)
+Mismo consecutivo Bz (contador-buzos.txt). Acumulado propio: `acumulado-buzo-nino-cuello-redondo-desde-BzXXXX.json`, archivos de 200 buzos (lotes de 20).
+`pendiente-buzo-nino-cuello-redondo.json` = nombres identificados esperando URLs del Gestor.
