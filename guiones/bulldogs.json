@@ -1,0 +1,17 @@
+{
+  "titulo": "3 cosas que no sabías",
+  "subtitulo_logo": "EDICIÓN BULLDOG",
+  "subtitulo_intro": "Bulldogs",
+  "intro_voz": "¡Atención, amantes de los bulldogs! Tres cosas que no sabías de estos gorditos gruñones.",
+  "equipos": [
+    {"equipo": "perro", "nombre": "Bulldog", "plural": "Bulldogs",
+     "datos": [
+      {"titulo": "Nacieron para pelear con toros", "texto": "Se criaron en Inglaterra para el 'bull-baiting', un deporte cruel que se prohibió en 1835.",
+       "voz": "Número uno. Nacieron para pelear con toros. Se criaron en Inglaterra para un deporte cruel contra toros, que se prohibió en mil ochocientos treinta y cinco."},
+      {"titulo": "Casi siempre nacen por cesárea", "texto": "Su cabeza es tan grande que la mayoría de cachorros no puede nacer de forma natural."},
+      {"titulo": "No saben nadar", "texto": "Su cuerpo pesado y sus patas cortas los hunden. Nunca los dejes solos cerca de una piscina."}
+     ]}
+  ],
+  "outro_texto": ["¿Tienes un", "bulldog en casa?"],
+  "outro_voz": "¿Tienes un bulldog en casa? Cuéntanos su nombre en los comentarios y síguenos en Guerra de Peludos."
+}

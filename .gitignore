@@ -1,0 +1,4 @@
+voz/
+__pycache__/
+*.mp4
+*_preview.jpg

@@ -1,0 +1,31 @@
+{
+  "titulo": "5 cosas que no sabías",
+  "intro_voz": "¡Perros contra gatos! Cinco cosas que no sabías de cada uno. ¿Quién gana esta guerra?",
+  "equipos": [
+    {"equipo": "perro", "nombre": "Perro", "plural": "Perros", "seccion_voz": "Empezamos con el equipo perro.",
+     "datos": [
+      {"titulo": "Su nariz es única", "texto": "La huella de la nariz de cada perro es irrepetible, como nuestra huella digital."},
+      {"titulo": "Sudan por las patas", "texto": "Sus glándulas de sudor están en las almohadillas. El resto del calor lo sueltan jadeando.",
+       "voz": "Número dos. Sudan por las patas. Sus glándulas de sudor están en las almohadillas, y el resto del calor lo sueltan jadeando."},
+      {"titulo": "Súper olfato", "texto": "Huelen entre 10.000 y 100.000 veces mejor que una persona.",
+       "voz": "Número tres. Tienen un súper olfato. Huelen entre diez mil y cien mil veces mejor que una persona."},
+      {"titulo": "Orejas de precisión", "texto": "Mueven cada oreja con unos 18 músculos para ubicar de dónde viene un sonido.",
+       "voz": "Número cuatro. Orejas de precisión. Mueven cada oreja con unos dieciocho músculos para saber de dónde viene un sonido."},
+      {"titulo": "También sueñan", "texto": "Tienen fase REM como nosotros: por eso mueven las patas y ladran dormidos.",
+       "voz": "Número cinco. También sueñan. Tienen fase rem, igual que nosotros. Por eso mueven las patas y ladran dormidos."}
+     ]},
+    {"equipo": "gato", "nombre": "Gato", "plural": "Gatos", "seccion_voz": "¡Y ahora, el equipo gato!",
+     "datos": [
+      {"titulo": "Campeones del sueño", "texto": "Duermen entre 12 y 16 horas al día. ¡Más de la mitad de su vida!",
+       "voz": "Número uno. Son campeones del sueño. Duermen entre doce y dieciséis horas al día. ¡Más de la mitad de su vida!"},
+      {"titulo": "No sienten lo dulce", "texto": "Les falta el receptor del sabor dulce, así que el azúcar no les dice nada."},
+      {"titulo": "Maúllan para ti", "texto": "Los gatos adultos casi no se maúllan entre ellos: el maullido es para hablar con humanos."},
+      {"titulo": "Orejas radar", "texto": "Giran cada oreja hasta 180° gracias a 32 músculos.",
+       "voz": "Número cuatro. Orejas radar. Giran cada oreja hasta ciento ochenta grados gracias a treinta y dos músculos."},
+      {"titulo": "Saltos de ninja", "texto": "Pueden saltar hasta 5 o 6 veces su propia altura.",
+       "voz": "Número cinco. Saltos de ninja. Pueden saltar hasta cinco o seis veces su propia altura."}
+     ]}
+  ],
+  "outro_texto": ["¿Y tú de qué", "equipo eres?"],
+  "outro_voz": "¿Y tú de qué equipo eres? ¿Perro o gato? Déjalo en los comentarios y síguenos en Guerra de Peludos."
+}
