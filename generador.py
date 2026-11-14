@@ -114,7 +114,13 @@ def _src(kind): return Image.open(A(CHAR[kind]["src"])).convert("RGBA")
 @lru_cache(maxsize=None)
 def _frame(kind, level, blink):
     c = CHAR[kind]; base = _src(kind).copy(); Wd, Hd = base.size
-    if level > 0:
+    if level > 0 and c.get("mouth_mode") == "stretch":
+        x0, y0, x1, y1 = c["stretch"]; k = 1 + c.get("stretch_max", .9) * level
+        reg = base.crop((x0, y0, x1, y1)); nh = int((y1 - y0) * k)
+        reg = reg.resize((x1 - x0, nh), Image.LANCZOS)
+        m = Image.new("L", reg.size, 0); ImageDraw.Draw(m).ellipse((4, -nh * .2, reg.width - 4, nh - 4), fill=255)
+        base.paste(reg, (x0, y0), m.filter(ImageFilter.GaussianBlur(5)))
+    elif level > 0:
         d = int(c["drop"] * level); x0, y0, x1, y1 = c["jaw"]
         m = Image.new("L", (Wd, Hd), 0); md = ImageDraw.Draw(m)
         md.ellipse((x0, y0, x1, y1), fill=255); md.rectangle((0, 0, Wd, c["cut"]), fill=0)
@@ -125,7 +131,17 @@ def _frame(kind, level, blink):
             tw = (mx1 - mx0) * .32; cx = (mx0 + mx1) / 2
             dr.ellipse((cx - tw, my1 + d * .4, cx + tw, my1 + d + 14), fill=c["tongue"])
         base.alpha_composite(jaw, (0, d))
-    if blink:
+    if blink and c.get("blink_fill"):
+        dr = ImageDraw.Draw(base)
+        px = base.load()
+        for (ex, ey, rx, ry) in c["eyes"]:
+            for yy in range(int(ey - ry * 1.4), int(ey + ry * 1.4)):
+                for xx in range(int(ex - rx * 1.3), int(ex + rx * 1.3)):
+                    r, g, b_, a = px[xx, yy]
+                    if g > 70 and b_ < g * .75:
+                        px[xx, yy] = tuple(c["blink_fill"]) + (a,)
+            dr.line((ex - rx * .85, ey + ry * .2, ex + rx * .85, ey + ry * .2), fill=tuple(c.get("blink_line", c["line"])), width=max(4, int(ry * .35)))
+    elif blink:
         src = base.copy()
         for (ex, ey, rx, ry) in c["eyes"]:
             bx0, by0, bx1, by1 = int(ex - rx * 1.3), int(ey - ry * 1.4), int(ex + rx * 1.3), int(ey + ry * 1.35)
@@ -277,7 +293,17 @@ def build(guion, out):
     mix = mix / max(1e-6, np.abs(mix).max()) * .92
 
     # ---- visuals
-    LOGO = Image.open(A("logo.png")).convert("RGBA")
+    if os.path.exists(A("logo.png")):
+        LOGO = Image.open(A("logo.png")).convert("RGBA")
+    else:  # logo provisional: insignia con el nombre
+        g1, g2 = [tuple(x) for x in BRAND["glow"]]
+        LOGO = Image.new("RGBA", (900, 900), (0, 0, 0, 0)); ld = ImageDraw.Draw(LOGO)
+        ld.ellipse((10, 10, 890, 890), fill=(14, 14, 22), outline=g1, width=28)
+        ld.ellipse((70, 70, 830, 830), outline=g2, width=10)
+        words = BRAND["nombre"].split(); y0 = 450 - len(words) * 75
+        for i, w_ in enumerate(words):
+            tl = text_layer(w_, fit_size(w_, 190, 700), fill=g1 if i % 2 == 0 else WHITE, stroke=6, stroke_fill=(0, 0, 0))
+            LOGO.alpha_composite(tl, (450 - tl.width // 2, y0 + i * 150 - 10))
     logo = lambda w: LOGO.resize((w, int(w * LOGO.height / LOGO.width)), Image.LANCZOS)
     LOGO_BIG, LOGO_SM = logo(860), logo(110)
     BRANDL = text_layer(BRAND["nombre"], fit_size(BRAND["nombre"], 44, 420), fill=(255, 255, 255, 235))
@@ -399,6 +425,7 @@ def build(guion, out):
             H - 210 + max(0, cy0 + card_h - 1320) + (1 - rise) * 560 + math.sin(t * 6) * 8, rot=side * -6 + math.sin(t * 2.2) * 3)
         put(c, (star if BRAND.get('deco') == 'estrella' else paw)(120, col[0], 200), W/2 - side * 250, H - 230 + math.sin(t * 4) * 10, scale=ease_back(prog(t, .6, .4)), rot=side * 20)
         ImageDraw.Draw(c).rectangle((0, H - 14, int(W * clamp(t / dur)), H), fill=col[0])
+        disclaimer(c)
         fade(c, t, dur); return c
 
     def f_outro(s, t, dur):
@@ -423,8 +450,14 @@ def build(guion, out):
         put(c, pill(820, 124, (255, 255, 255), (235, 235, 245)), W/2, 1370 + bob, alpha=p)
         cta = guion.get("cta", BRAND.get("cta", "COMENTA  ·  SÍGUENOS")); put(c, text_layer(cta, fit_size(cta, 54, 760), fill=DARK), W/2, 1370 + bob, alpha=p)
         put(c, logo(300), W/2, 1650, alpha=p, scale=.9 + .1 * ease_back(prog(t, 1.2, .5)))
+        disclaimer(c)
         fade(c, t, dur, .6, (0, 0, 0)); return c
 
+    def disclaimer(c):
+        txt = BRAND.get("disclaimer")
+        if not txt: return
+        put(c, pill(560, 56, (0, 0, 0), (25, 25, 25), r=28), W/2, H - 60, alpha=.85)
+        put(c, text_layer(txt, fit_size(txt, 30, 520), fill=(255, 255, 255, 230)), W/2, H - 60)
     FN = dict(logo=f_logo, intro=f_intro, section=f_section, fact=f_fact, outro=f_outro)
     with tempfile.TemporaryDirectory() as td:
         if os.environ.get("PREVIEW"):

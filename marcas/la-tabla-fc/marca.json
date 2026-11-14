@@ -1,0 +1,106 @@
+{
+ "nombre": "LA TABLA FC",
+ "subtitulo_logo": "FÚTBOL EN DATOS",
+ "glow": [
+  [
+   120,
+   255,
+   30
+  ],
+  [
+   40,
+   170,
+   255
+  ]
+ ],
+ "deco": "estrella",
+ "cta": "COMENTA · SÍGUENOS",
+ "equipos": {
+  "futbol": {
+   "personaje": "bot",
+   "colors": [
+    [
+     110,
+     235,
+     20
+    ],
+    [
+     30,
+     110,
+     10
+    ]
+   ],
+   "stroke": [
+    10,
+    60,
+    10
+   ]
+  }
+ },
+ "personajes": {
+  "bot": {
+   "src": "narrador.png",
+   "jaw": [
+    505,
+    440,
+    700,
+    612
+   ],
+   "cut": 512,
+   "drop": 18,
+   "mouth": [
+    566,
+    494,
+    684,
+    520
+   ],
+   "mouth_col": [
+    8,
+    8,
+    8
+   ],
+   "tongue": [
+    8,
+    8,
+    8
+   ],
+   "eyes": [
+    [
+     527,
+     390,
+     52,
+     34
+    ],
+    [
+     725,
+     390,
+     52,
+     34
+    ]
+   ],
+   "line": [
+    10,
+    10,
+    10
+   ],
+   "blink_fill": [
+    8,
+    8,
+    8
+   ],
+   "blink_line": [
+    170,
+    255,
+    40
+   ],
+   "mouth_mode": "stretch",
+   "stretch": [
+    548,
+    482,
+    702,
+    545
+   ],
+   "stretch_max": 0.9
+  }
+ }
+}
