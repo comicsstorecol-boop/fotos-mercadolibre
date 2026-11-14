@@ -1,0 +1,27 @@
+{
+  "titulo": "Mito: ¿se odian?",
+  "subtitulo_logo": "MITOS DESMENTIDOS",
+  "intro_voz": "¿Perros y gatos se odian de verdad? Todo el mundo lo dice… pero la ciencia dice otra cosa. ¡Vamos a desmentir este mito!",
+  "equipos": [
+    {"equipo": "perro", "nombre": "Perro", "plural": "Perros", "seccion_voz": "Primero, lo que descubrió la ciencia.",
+     "datos": [
+      {"titulo": "La mayoría se lleva bien", "texto": "En un estudio con 170 hogares, 2 de cada 3 reportaron una relación amistosa. Menos de 1 de cada 10 peleaba.",
+       "voz": "Número uno. La mayoría se lleva bien. En un estudio con ciento setenta hogares, dos de cada tres reportaron una relación amistosa. ¡Menos de uno de cada diez peleaba!"},
+      {"titulo": "Aprenden a hablar «gato»", "texto": "Mover la cola es alegría en el perro y molestia en el gato. Los que conviven aprenden a leer al otro.",
+       "voz": "Número dos. Aprenden a hablar gato. Mover la cola es alegría en el perro, pero molestia en el gato. Los que conviven aprenden a leerse el uno al otro."},
+      {"titulo": "Perro tranquilo, gato feliz", "texto": "Cuando el perro está relajado y no persigue, el gato se estresa menos y se acerca más.",
+       "voz": "Número tres. Perro tranquilo, gato feliz. Cuando el perro está relajado y no persigue, el gato se estresa menos, ¡y se acerca más!"}
+     ]},
+    {"equipo": "gato", "nombre": "Gato", "plural": "Gatos", "seccion_voz": "¿Y cómo lograr que sean amigos?",
+     "datos": [
+      {"titulo": "Que el gato llegue primero", "texto": "La amistad es más probable si el gato ya vivía en casa antes de que llegara el perro.",
+       "voz": "Número uno. Que el gato llegue primero. La amistad es más probable si el gato ya vivía en casa antes de que llegara el perro."},
+      {"titulo": "Mientras más jóvenes, mejor", "texto": "Lo ideal: presentarlos cuando el gato tiene menos de 6 meses y el perro menos de 1 año.",
+       "voz": "Número dos. Mientras más jóvenes, mejor. Lo ideal es presentarlos cuando el gato tiene menos de seis meses, y el perro menos de un año."},
+      {"titulo": "Mejores amigos de verdad", "texto": "Juegan, se saludan nariz con nariz, duermen juntos en el sofá y hasta se acicalan.",
+       "voz": "Número tres. Mejores amigos de verdad. Juegan, se saludan nariz con nariz, duermen juntos en el sofá, ¡y hasta se acicalan!"}
+     ]}
+  ],
+  "outro_texto": ["¿Amigos o", "enemigos?"],
+  "outro_voz": "Mito desmentido: ¡sí pueden ser mejores amigos! ¿Cómo se llevan tu perro y tu gato? Cuéntanos en los comentarios y síguenos en Guerra de Peludos."
+}
