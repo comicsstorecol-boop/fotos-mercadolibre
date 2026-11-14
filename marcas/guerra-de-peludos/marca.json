@@ -1,0 +1,16 @@
+{
+  "nombre": "GUERRA DE PELUDOS",
+  "subtitulo_logo": "PERROS  VS  GATOS",
+  "glow": [[232, 36, 36], [35, 100, 235]],
+  "cta": "COMENTA  ·  SÍGUENOS",
+  "equipos": {
+    "perro": {"personaje": "dog", "colors": [[232, 36, 36], [165, 12, 22]], "stroke": [110, 10, 10]},
+    "gato":  {"personaje": "cat", "colors": [[35, 100, 235], [18, 52, 170]], "stroke": [10, 30, 110]}
+  },
+  "personajes": {
+    "dog": {"src": "dog.png", "jaw": [500, 600, 800, 850], "cut": 636, "drop": 46, "mouth": [528, 618, 772, 646],
+            "mouth_col": [70, 14, 20], "tongue": [224, 96, 110], "eyes": [[425, 405, 70, 46], [845, 397, 70, 46]], "line": [25, 15, 10]},
+    "cat": {"src": "cat.png", "jaw": [540, 590, 740, 770], "cut": 628, "drop": 34, "mouth": [560, 612, 720, 636],
+            "mouth_col": [70, 18, 30], "tongue": [228, 110, 130], "eyes": [[442, 445, 92, 58], [820, 445, 92, 58]], "line": [20, 20, 24]}
+  }
+}

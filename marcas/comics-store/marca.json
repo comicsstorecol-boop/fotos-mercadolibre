@@ -1,0 +1,109 @@
+{
+ "nombre": "COMICS-STORE",
+ "subtitulo_logo": "EL PARAÍSO DEL COLECCIONISTA",
+ "glow": [
+  [
+   57,
+   235,
+   30
+  ],
+  [
+   255,
+   46,
+   166
+  ]
+ ],
+ "cta": "COMICS-STORE.COM.CO",
+ "equipos": {
+  "coleccionista": {
+   "personaje": "fer",
+   "colors": [
+    [
+     57,
+     220,
+     30
+    ],
+    [
+     18,
+     110,
+     20
+    ]
+   ],
+   "stroke": [
+    10,
+    60,
+    10
+   ]
+  },
+  "tienda": {
+   "personaje": "fer",
+   "colors": [
+    [
+     255,
+     46,
+     166
+    ],
+    [
+     150,
+     15,
+     100
+    ]
+   ],
+   "stroke": [
+    90,
+    10,
+    60
+   ]
+  }
+ },
+ "personajes": {
+  "fer": {
+   "src": "narrador.png",
+   "jaw": [
+    515,
+    300,
+    735,
+    490
+   ],
+   "cut": 358,
+   "drop": 22,
+   "mouth": [
+    562,
+    344,
+    688,
+    364
+   ],
+   "mouth_col": [
+    60,
+    18,
+    18
+   ],
+   "tongue": [
+    205,
+    95,
+    95
+   ],
+   "eyes": [
+    [
+     550,
+     262,
+     36,
+     16
+    ],
+    [
+     692,
+     262,
+     36,
+     16
+    ]
+   ],
+   "line": [
+    20,
+    14,
+    10
+   ],
+   "blink_from": "below"
+  }
+ },
+ "deco": "estrella"
+}

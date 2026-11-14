@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generador de videos Guerra de Peludos.
 Uso:  python3 generador.py guion.json salida.mp4
-Lee el guion (ver README.md), genera la voz latina, la música, los efectos,
+Lee el guion (ver README.md); "marca" elige la página (carpeta marcas/), genera la voz latina, la música, los efectos,
 anima al Bulldog y al gato y entrega un MP4 vertical 1080x1920 listo para Reels/TikTok.
 """
 import json, math, os, subprocess, sys, tempfile, wave
@@ -10,7 +10,9 @@ import numpy as np, soundfile as sf
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 KIT = os.path.dirname(os.path.abspath(__file__))
-A = lambda f: os.path.join(KIT, "assets", f)
+MARCA_DIR = os.path.join(KIT, "marcas", "guerra-de-peludos")
+A = lambda f: os.path.join(MARCA_DIR, f)
+BRAND = {}
 W, H, FPS = 1080, 1920, 30
 SR = 22050
 VOICE = os.environ.get("VOICE", os.path.join(KIT, "voz", "es_MX-claude-high.onnx"))
@@ -23,10 +25,19 @@ FB, FM = font_path("Poppins-Bold"), font_path("Poppins-Medium")
 F = lambda s: ImageFont.truetype(FB, s)
 FR = lambda s: ImageFont.truetype(FM if os.path.exists(FM) else FB, s)
 
-TEAM = {
-    "perro": dict(kind="dog", colors=((232, 36, 36), (165, 12, 22)), stroke=(110, 10, 10)),
-    "gato":  dict(kind="cat", colors=((35, 100, 235), (18, 52, 170)), stroke=(10, 30, 110)),
-}
+TEAM = {}
+CHAR = {}
+def load_brand(name):
+    global MARCA_DIR
+    MARCA_DIR = os.path.join(KIT, "marcas", name)
+    b = json.load(open(os.path.join(MARCA_DIR, "marca.json"), encoding="utf-8"))
+    BRAND.clear(); BRAND.update(b); TEAM.clear(); CHAR.clear()
+    tup = lambda c: tuple(int(v) for v in c)
+    for k, e in b["equipos"].items():
+        TEAM[k] = dict(kind=e["personaje"], colors=(tup(e["colors"][0]), tup(e["colors"][1])), stroke=tup(e["stroke"]))
+    for k, c in b["personajes"].items():
+        CHAR[k] = dict(c, mouth_col=tup(c["mouth_col"]), tongue=tup(c["tongue"]), line=tup(c["line"]))
+    _src.cache_clear(); _frame.cache_clear(); character.cache_clear()
 WHITE, DARK = (255, 255, 255), (18, 16, 28)
 
 # ------------------------------------------------------------------ helpers
@@ -49,6 +60,11 @@ def paw(size, color, alpha=255):
     for (x, y) in [(.12, .30), (.34, .10), (.58, .10), (.80, .30)]:
         d.ellipse((s*(x-.1), s*(y-.11), s*(x+.1), s*(y+.13)), fill=c)
     return im
+
+def star(size, color, alpha=255):
+    im = Image.new("RGBA", (size, size), (0, 0, 0, 0)); c = tuple(color) + (alpha,); r = size / 2
+    pts = [(r + (r if i % 2 == 0 else r * .45) * math.sin(i * math.pi / 5), r - (r if i % 2 == 0 else r * .45) * math.cos(i * math.pi / 5)) for i in range(10)]
+    ImageDraw.Draw(im).polygon(pts, fill=c); return im
 
 def wrap(text, font, maxw):
     d = ImageDraw.Draw(Image.new("RGBA", (1, 1))); lines, cur = [], ""
@@ -92,12 +108,6 @@ def fade(c, t, dur, d=.25, col=DARK):
     if a > 0: c.alpha_composite(Image.new("RGBA", (W, H), col + (int(255 * a),)))
 
 # ------------------------------------------------------------------ characters (talking + blink)
-CHAR = {
-    "dog": dict(src="dog.png", jaw=(500, 600, 800, 850), cut=636, drop=46, mouth=(528, 618, 772, 646),
-                mouth_col=(70, 14, 20), tongue=(224, 96, 110), eyes=[(425, 405, 70, 46), (845, 397, 70, 46)], line=(25, 15, 10)),
-    "cat": dict(src="cat.png", jaw=(540, 590, 740, 770), cut=628, drop=34, mouth=(560, 612, 720, 636),
-                mouth_col=(70, 18, 30), tongue=(228, 110, 130), eyes=[(442, 445, 92, 58), (820, 445, 92, 58)], line=(20, 20, 24)),
-}
 @lru_cache(maxsize=None)
 def _src(kind): return Image.open(A(CHAR[kind]["src"])).convert("RGBA")
 
@@ -119,11 +129,12 @@ def _frame(kind, level, blink):
         src = base.copy()
         for (ex, ey, rx, ry) in c["eyes"]:
             bx0, by0, bx1, by1 = int(ex - rx * 1.3), int(ey - ry * 1.4), int(ex + rx * 1.3), int(ey + ry * 1.35)
-            up = int(ry * 2.5); patch = src.crop((bx0, by0 - up, bx1, by1 - up))
+            up = -int(ry * 2.3) if c.get("blink_from") == "below" else int(ry * 2.5)
+            patch = src.crop((bx0, by0 - up, bx1, by1 - up))
             m = Image.new("L", patch.size, 0)
             ImageDraw.Draw(m).ellipse((rx * .18, ry * .2, patch.width - rx * .18, patch.height - ry * .15), fill=255)
             base.paste(patch, (bx0, by0), m.filter(ImageFilter.GaussianBlur(9)))
-            ImageDraw.Draw(base).arc((ex - rx, ey - ry * 1.1, ex + rx, ey + ry * .9), 18, 162, fill=c["line"], width=10)
+            ImageDraw.Draw(base).arc((ex - rx, ey - ry * 1.1, ex + rx, ey + ry * .9), 18, 162, fill=c["line"], width=max(4, int(ry * .45)))
     return base
 
 @lru_cache(maxsize=None)
@@ -218,6 +229,7 @@ def _add(buf, clip, at):
 
 # ------------------------------------------------------------------ build plan from guion
 def build(guion, out):
+    load_brand(guion.get("marca", "guerra-de-peludos"))
     teams = [dict(TEAM[e["equipo"]], **e) for e in guion["equipos"]]
     vs = len(teams) == 2
     speak = tts_engine()
@@ -268,7 +280,7 @@ def build(guion, out):
     LOGO = Image.open(A("logo.png")).convert("RGBA")
     logo = lambda w: LOGO.resize((w, int(w * LOGO.height / LOGO.width)), Image.LANCZOS)
     LOGO_BIG, LOGO_SM = logo(860), logo(110)
-    BRAND = text_layer("GUERRA DE PELUDOS", 44, fill=(255, 255, 255, 235))
+    BRANDL = text_layer(BRAND["nombre"], fit_size(BRAND["nombre"], 44, 420), fill=(255, 255, 255, 235))
     def darkbg(acc):
         base = gradient((26, 20, 34), (8, 8, 16)).convert("RGBA")
         mk = Image.new("L", (W, H), 0); ImageDraw.Draw(mk).ellipse((-300, -400, W + 300, 900), fill=110)
@@ -279,10 +291,10 @@ def build(guion, out):
         for i in range(6):
             k = (seed * 37 + i * 53) % 100 / 100; x = (i * 173 + seed * 61) % W
             y = (H + 200) - ((t * (40 + 30 * k) + i * 330 + seed * 90) % (H + 400)); sz = int(90 + 80 * k)
-            key = (sz, color); PAWS.setdefault(key, paw(sz, color, 38))
+            key = (sz, color); PAWS.setdefault(key, (star if BRAND.get('deco') == 'estrella' else paw)(sz, color, 38))
             put(c, PAWS[key], x, y, rot=(i * 40 + t * 15) % 360)
     def header(c, t):
-        a = ease_out(prog(t, 0, .4)); put(c, LOGO_SM, W/2 - 270, 110, alpha=a); put(c, BRAND, W/2 + 60, 112, alpha=a)
+        a = ease_out(prog(t, 0, .4)); put(c, LOGO_SM, W/2 - 270, 110, alpha=a); put(c, BRANDL, W/2 + 60, 112, alpha=a)
     def ch(kind, size, s, t, gain=1.0, phase=0.0):
         mo = s["mouth"]; lv = clamp(mo[min(len(mo) - 1, int(t * FPS))] * gain)
         return character(kind, size, round(lv * 5) / 5, ((t + phase) % 3.1) < .13)
@@ -299,8 +311,9 @@ def build(guion, out):
     def f_logo(s, t, dur):
         c = Image.new("RGBA", (W, H), (8, 8, 14, 255)); p = ease_out(prog(t, 0, .8))
         g = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(g)
-        d.ellipse((-200, 500, W/2 + 200, 1500), fill=TEAM["perro"]["colors"][0] + (int(150 * p),))
-        d.ellipse((W/2 - 200, 500, W + 200, 1500), fill=TEAM["gato"]["colors"][0] + (int(150 * p),))
+        g1, g2 = [tuple(x) for x in BRAND["glow"]]
+        d.ellipse((-200, 500, W/2 + 200, 1500), fill=g1 + (int(150 * p),))
+        d.ellipse((W/2 - 200, 500, W + 200, 1500), fill=g2 + (int(150 * p),))
         c.alpha_composite(g.filter(ImageFilter.GaussianBlur(160)))
         rays = Image.new("RGBA", (W, H), (0, 0, 0, 0)); rd = ImageDraw.Draw(rays)
         for i in range(12):
@@ -313,8 +326,8 @@ def build(guion, out):
             fl = 1 - ease_out(prog(t, .5, .4))
             if fl > 0: c.alpha_composite(Image.new("RGBA", (W, H), (255, 255, 255, int(160 * fl))))
         q = ease_out(prog(t, .9, .5))
-        put(c, text_layer("GUERRA DE PELUDOS", 96, stroke=6, stroke_fill=(10, 10, 20)), W/2, 1480 + (1 - q) * 60, alpha=q)
-        sub = guion.get("subtitulo_logo", "PERROS  VS  GATOS")
+        put(c, text_layer(BRAND["nombre"], fit_size(BRAND["nombre"], 96, 1000), stroke=6, stroke_fill=(10, 10, 20)), W/2, 1480 + (1 - q) * 60, alpha=q)
+        sub = guion.get("subtitulo_logo", BRAND.get("subtitulo_logo", ""))
         put(c, text_layer(sub, fit_size(sub, 52, 980), fill=(255, 255, 255, 210)), W/2, 1590 + (1 - q) * 60, alpha=q)
         fade(c, t, dur, .2); return c
 
@@ -384,7 +397,7 @@ def build(guion, out):
         side = -1 if idx % 2 else 1; rise = ease_back(prog(t, .2, .6))
         put(c, ch(tm["kind"], 700, s, t, gain=1.1, phase=idx * .7), W/2 + side * 230,
             H - 210 + max(0, cy0 + card_h - 1320) + (1 - rise) * 560 + math.sin(t * 6) * 8, rot=side * -6 + math.sin(t * 2.2) * 3)
-        put(c, paw(120, col[0], 200), W/2 - side * 250, H - 230 + math.sin(t * 4) * 10, scale=ease_back(prog(t, .6, .4)), rot=side * 20)
+        put(c, (star if BRAND.get('deco') == 'estrella' else paw)(120, col[0], 200), W/2 - side * 250, H - 230 + math.sin(t * 4) * 10, scale=ease_back(prog(t, .6, .4)), rot=side * 20)
         ImageDraw.Draw(c).rectangle((0, H - 14, int(W * clamp(t / dur)), H), fill=col[0])
         fade(c, t, dur); return c
 
@@ -408,7 +421,7 @@ def build(guion, out):
             put(c, ch(tm["kind"], 700, s, t, gain=1.1), W/2, 900 + math.sin(t * 5) * 10, scale=ease_back(prog(t, .3, .5)), rot=math.sin(t * 3) * 3)
         p = ease_out(prog(t, 1.1, .5)); bob = math.sin(t * 6) * 10
         put(c, pill(820, 124, (255, 255, 255), (235, 235, 245)), W/2, 1370 + bob, alpha=p)
-        put(c, text_layer("COMENTA  ·  SÍGUENOS", 54, fill=DARK), W/2, 1370 + bob, alpha=p)
+        cta = guion.get("cta", BRAND.get("cta", "COMENTA  ·  SÍGUENOS")); put(c, text_layer(cta, fit_size(cta, 54, 760), fill=DARK), W/2, 1370 + bob, alpha=p)
         put(c, logo(300), W/2, 1650, alpha=p, scale=.9 + .1 * ease_back(prog(t, 1.2, .5)))
         fade(c, t, dur, .6, (0, 0, 0)); return c
 
