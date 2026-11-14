@@ -1,0 +1,27 @@
+{
+  "marca": "la-tabla-fc",
+  "titulo": "Los 8 clasificados",
+  "subtitulo_logo": "LIGA BETPLAY II-2026",
+  "intro_voz": "¡Se acabó el todos contra todos! Estos son los ocho clasificados a los cuadrangulares de la Liga BetPlay, y así quedaron los grupos.",
+  "equipos": [
+    {"equipo": "futbol", "nombre": "Liga BetPlay", "plural": "Cuadrangulares",
+     "datos": [
+      {"titulo": "Nacional, líder absoluto", "texto": "Primero con 40 puntos y +20 de gol. Cabeza de serie del Grupo A con ventaja deportiva.",
+       "voz": "Número uno. Nacional, líder absoluto. Terminó primero con cuarenta puntos y más veinte de gol. Es cabeza de serie del grupo A, con ventaja deportiva."},
+      {"titulo": "América, segundo", "texto": "Ganó 2-0 en Pereira, cerró con 36 puntos y será cabeza de serie del Grupo B.",
+       "voz": "Número dos. América, segundo. Ganó dos a cero en Pereira, cerró con treinta y seis puntos, y será cabeza de serie del grupo B."},
+      {"titulo": "Del tercero al sexto", "texto": "Deportivo Cali 35, Bucaramanga 35, Santa Fe 34 y Medellín 32 puntos.",
+       "voz": "Número tres. Del tercero al sexto: Deportivo Cali y Bucaramanga con treinta y cinco puntos, Santa Fe con treinta y cuatro, y Medellín con treinta y dos."},
+      {"titulo": "Millonarios cumplió", "texto": "Le ganó 2-0 a Alianza en El Campín y entró séptimo con 30 puntos.",
+       "voz": "Número cuatro. Millonarios cumplió. Le ganó dos a cero a Alianza en El Campín, y entró séptimo con treinta puntos."},
+      {"titulo": "Once Caldas, por un punto", "texto": "Empató 1-1 con Nacional y se quedó con el octavo cupo. Tolima, con 27, quedó afuera.",
+       "voz": "Número cinco. Once Caldas, por un punto. Empató uno a uno con Nacional y se quedó con el octavo cupo. ¡Tolima, con veintisiete puntos, quedó afuera!"},
+      {"titulo": "Grupo A", "texto": "Atlético Nacional, Once Caldas, Santa Fe e Independiente Medellín.",
+       "voz": "Número seis. El grupo A: Atlético Nacional, Once Caldas, Santa Fe e Independiente Medellín."},
+      {"titulo": "Grupo B", "texto": "América de Cali, Bucaramanga, Millonarios y Deportivo Cali.",
+       "voz": "Número siete. El grupo B: América de Cali, Bucaramanga, Millonarios y Deportivo Cali. ¡Arrancan el fin de semana del veintiuno y veintidós de noviembre!"}
+     ]}
+  ],
+  "outro_texto": ["¿Quién será", "el campeón?"],
+  "outro_voz": "¿Quién será el campeón? Deja tu favorito en los comentarios y síguenos en La Tabla FC."
+}
