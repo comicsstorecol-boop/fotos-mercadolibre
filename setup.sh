@@ -22,5 +22,14 @@ cd "$KIT/knnvc"
 for f in WavLM-Large.pt prematch_g_02500000.pt; do
   [ -s "$f" ] || curl -sL -o "$f" $GH/bshall/knn-vc/releases/download/v0.1/$f
 done
+# voz de Fernando (cifrada; la clave viene en VOZ_KEY desde su habilidad privada)
+if [ -n "$VOZ_KEY" ] && [ -f "$KIT/voz_fernando.enc" ]; then
+  mkdir -p "$KIT/voz_fernando" && cd "$KIT/voz_fernando"
+  openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in "$KIT/voz_fernando.enc" -pass env:VOZ_KEY | tar -xf -
+  for f in *.mp3; do [ -f "${f%.mp3}.wav" ] || ffmpeg -y -loglevel error -i "$f" -ac 1 -ar 16000 "${f%.mp3}.wav"; done
+  echo "Voz de Fernando lista"
+else
+  echo "AVISO: sin VOZ_KEY se usa la voz genérica"
+fi
 which ffmpeg >/dev/null || echo "FALTA ffmpeg"
 echo "Kit listo"
