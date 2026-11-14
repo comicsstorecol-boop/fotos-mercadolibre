@@ -135,14 +135,32 @@ def tts_engine():
     from piper import PiperVoice, SynthesisConfig
     v = PiperVoice.load(VOICE, config_path=VOICE + ".json")
     cfg = SynthesisConfig(length_scale=0.8, noise_scale=0.6, noise_w_scale=0.7)
+    import glob
+    ref = os.environ.get("VOICE_REF") or ",".join(sorted(glob.glob(os.path.join(KIT, "voz_fernando", "*.wav"))))
+    if ref:
+        sys.path.insert(0, KIT); import vc as _vc
+        import torch, torchaudio
+    kok = None
+    if ref or os.environ.get("TTS") == "kokoro":
+        from kokoro_onnx import Kokoro
+        kok = Kokoro(os.path.join(KIT, "voz", "kokoro-v1.0.onnx"), os.path.join(KIT, "voz", "voices-v1.0.bin"))
+    def base_voice(txt):
+        if kok:
+            y, ksr = kok.create(txt, voice="em_alex", speed=1.1, lang="es-419")
+            import librosa
+            return librosa.resample(y.astype(np.float32), orig_sr=ksr, target_sr=SR).astype(np.float32)
+        return np.concatenate([ch.audio_float_array for ch in v.synthesize(txt, syn_config=cfg)]).astype(np.float32)
     def speak(txt):
-        x = np.concatenate([ch.audio_float_array for ch in v.synthesize(txt, syn_config=cfg)]).astype(np.float32)
+        x = base_voice(txt)
+        if ref:
+            y = _vc.convert(x, SR, ref.split(","))
+            x = torchaudio.functional.resample(torch.tensor(y)[None], 16000, SR)[0].numpy().astype(np.float32)
         with tempfile.TemporaryDirectory() as td:
             sf.write(f"{td}/i.wav", x, SR)
             subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", f"{td}/i.wav", "-af",
                 "highpass=f=75,equalizer=f=140:t=q:w=1.2:g=4,equalizer=f=350:t=q:w=1:g=-2,"
                 "equalizer=f=3200:t=q:w=1.5:g=3,equalizer=f=9000:t=q:w=1:g=2,"
-                "acompressor=threshold=-20dB:ratio=3.5:attack=4:release=90:makeup=4,aecho=0.8:0.5:22:0.12",
+                "acompressor=threshold=-20dB:ratio=3.5:attack=4:release=90:makeup=4" + ("" if ref else ",aecho=0.8:0.5:22:0.12"),
                 "-ar", str(SR), f"{td}/o.wav"], check=True)
             y, _ = sf.read(f"{td}/o.wav", dtype="float32")
         return y[:len(x) + int(.05 * SR)]

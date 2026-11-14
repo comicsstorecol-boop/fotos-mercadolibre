@@ -1,4 +1,8 @@
 voz/
+knnvc/
 __pycache__/
 *.mp4
 *_preview.jpg
+*.feats.pt
+voz_fernando/
+knnvc
