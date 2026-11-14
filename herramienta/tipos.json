@@ -1,0 +1,72 @@
+{
+  "camiseta-adulto": {
+    "descripcion": "Camiseta adulto (tallas S, M, L, XL)",
+    "plantilla": "plantillas/camiseta-adulto.xlsx",
+    "titulo": "Camiseta {nombre} {codigo}",
+    "fijos": {
+      "Stock": 6
+    }
+  },
+  "camiseta-nino": {
+    "descripcion": "Camiseta niño (tallas 4, 6, 8, 10, 12, 14, 16 - guía Camisetas Niño 2027)",
+    "plantilla": "plantillas/camiseta-nino.xlsx",
+    "titulo": "Camiseta {nombre} Premium Para Niños",
+    "fijos": {
+      "Código de la guía": "10266281 - Camisetas Niño 2027"
+    }
+  },
+  "camiseta-nino-colorear": {
+    "descripcion": "Camiseta niño blanca para colorear con 12 marcadores (tallas 4-16, guía Camisetas Niño 2027)",
+    "plantilla": "plantillas/camiseta-nino.xlsx",
+    "titulo": "Camiseta {nombre} Premium Para Niños Para Colorear",
+    "fijos": {
+      "Código de la guía": "10266281 - Camisetas Niño 2027",
+      "Varía por: Nombre comercial del color": "Blanco",
+      "Descripción": "¡Diviértete Pintando tu Propia Camiseta! \nCamiseta blanca manga corta de algodón premium con un diseño para colorear. Incluye 12 marcadores lavables para que los niños le den vida a su camiseta con los colores que quieran.\n\nUna actividad creativa ideal para regalos, cumpleaños, vacaciones y tardes en casa. Estimula la creatividad y la motricidad fina mientras se divierten."
+    }
+  },
+  "buzo-adulto": {
+    "descripcion": "Buzo con capota adulto negro (tallas S, M, L, XL - guía BUZO COMICS STORE 2023)",
+    "plantilla": "plantillas/buzo-adulto.xlsx",
+    "titulo": "Buzo Capota {nombre} Premium {codigo}",
+    "fijos": {
+      "Código de la guía": "736654 - BUZO COMICS STORE 2023",
+      "Stock": 6,
+      "Descripción": "¿Estás buscando la combinación perfecta de estilo y comodidad para los días frescos? ¡No busques más!\n\nNuestro Hoodie con capota y bolsillo canguro es la prenda esencial que estás buscando. Con su diseño moderno y versátil, te mantendrá abrigado mientras luces a la moda en cualquier ocasión. Ya sea para una caminata por el parque, una tarde relajada en casa o una salida con amigos, este Hoodie es la elección ideal.\n\nImagina sentir la suavidad y calidez de su tela de alta calidad abrazándote. Visualiza cómo el bolsillo canguro se convierte en tu compañero perfecto para llevar tus pertenencias o simplemente mantener tus manos calientes. Este Hoodie no solo te hará lucir genial, sino que también te proporcionará un confort inigualable.\n\n¡No dejes pasar esta oportunidad! Adquiere tu Hoodie con capota y bolsillo canguro ahora mismo y experimenta la combinación definitiva de estilo y comodidad que has estado buscando. ¡No esperes más para elevar tu guardarropa!\n\nNo esperes a que llegue el frío, prepárate con estilo. ¡Haz clic y consigue tu Hoodie hoy mismo!\n\n- calidad y durabilidad garantizada.\n\n- Este producto es exclusivo, no está disponible en tiendas.\n\n- Esta prenda es de una de las mejores marcas en el sitio.\n\n- Buzo canguro con capucha , bolsillo sin cierre \n\n- Estampado en vinilo importado de primera calidad.\n\n- Estilo unisex de corte recto.\n\n- Su textura suave de 100% algodón de 279 grs. \n\n- Costura a dos agujas. \n\n- No tendrás que preocuparte por el planchado. \n\n- Su estilo moderno cuenta con capucha de cordón ajustable. \n\n- Bolsillo delantero practico para guardar de todo."
+    },
+    "modelo_es_marca": true,
+    "prefijo": "Bz",
+    "contador": "contador-buzos.txt"
+  },
+  "buzo-nino": {
+    "descripcion": "Buzo con capota niño negro (tallas 2, 4, 6, 8, 10, 12, 14, 16 - guía 12318170 Buzos Niño Talle Completo)",
+    "plantilla": "plantillas/buzo-nino.xlsx",
+    "titulo": "Buzo Capota {nombre} Premium Niños {codigo}",
+    "fijos": {
+      "Código de la guía": "12318170 - Buzos Niño Talle Completo",
+      "Género": "Niños",
+      "Stock": 6,
+      "Descripción": "¿Estás buscando la combinación perfecta de estilo y comodidad para los días frescos? ¡No busques más!\n\nNuestro Hoodie con capota y bolsillo canguro es la prenda esencial que estás buscando. Con su diseño moderno y versátil, te mantendrá abrigado mientras luces a la moda en cualquier ocasión. Ya sea para una caminata por el parque, una tarde relajada en casa o una salida con amigos, este Hoodie es la elección ideal.\n\nImagina sentir la suavidad y calidez de su tela de alta calidad abrazándote. Visualiza cómo el bolsillo canguro se convierte en tu compañero perfecto para llevar tus pertenencias o simplemente mantener tus manos calientes. Este Hoodie no solo te hará lucir genial, sino que también te proporcionará un confort inigualable.\n\n¡No dejes pasar esta oportunidad! Adquiere tu Hoodie con capota y bolsillo canguro ahora mismo y experimenta la combinación definitiva de estilo y comodidad que has estado buscando. ¡No esperes más para elevar tu guardarropa!\n\nNo esperes a que llegue el frío, prepárate con estilo. ¡Haz clic y consigue tu Hoodie hoy mismo!\n\n- calidad y durabilidad garantizada.\n\n- Este producto es exclusivo, no está disponible en tiendas.\n\n- Esta prenda es de una de las mejores marcas en el sitio.\n\n- Buzo canguro con capucha , bolsillo sin cierre \n\n- Estampado en vinilo importado de primera calidad.\n\n- Estilo unisex de corte recto.\n\n- Su textura suave de 100% algodón de 279 grs. \n\n- Costura a dos agujas. \n\n- No tendrás que preocuparte por el planchado. \n\n- Su estilo moderno cuenta con capucha de cordón ajustable. \n\n- Bolsillo delantero practico para guardar de todo."
+    },
+    "modelo_es_marca": true,
+    "prefijo": "Bz",
+    "contador": "contador-buzos.txt"
+  },
+  "buzo-nino-cuello-redondo": {
+    "descripcion": "Buzo cuello redondo (sin capota) niño negro (tallas 2-16 - guía 12318170 Buzos Niño Talle Completo)",
+    "plantilla": "plantillas/buzo-nino.xlsx",
+    "titulo": "Buzo Cuello Redondo {nombre} Premium Niños {codigo}",
+    "fijos": {
+      "Código de la guía": "12318170 - Buzos Niño Talle Completo",
+      "Género": "Niños",
+      "Stock": 6,
+      "Descripción": "¿Estás buscando la combinación perfecta de estilo y comodidad para los días frescos? ¡No busques más!\n\nNuestro Buzo cuello redondo es la prenda esencial que estás buscando. Con su diseño moderno y versátil, mantendrá a los niños abrigados mientras lucen a la moda en cualquier ocasión: el colegio, una tarde en el parque, un paseo o una salida con amigos.\n\nImagina sentir la suavidad y calidez de su tela de alta calidad. Un buzo cómodo, fácil de combinar y con un estampado exclusivo de sus personajes favoritos.\n\n¡No dejes pasar esta oportunidad! Adquiere tu Buzo cuello redondo ahora mismo y experimenta la combinación definitiva de estilo y comodidad.\n\n- Calidad y durabilidad garantizada.\n\n- Este producto es exclusivo, no está disponible en tiendas.\n\n- Esta prenda es de una de las mejores marcas en el sitio.\n\n- Buzo cuello redondo, sin capota, con puños y pretina en rib.\n\n- Estampado en vinilo importado de primera calidad.\n\n- Estilo unisex de corte recto.\n\n- Su textura suave de 100% algodón de 279 grs.\n\n- Costura a dos agujas.\n\n- No tendrás que preocuparte por el planchado.",
+      "Capucha": "No",
+      "Tipo de cuello": "Redondo",
+      "Precio [$]": 89999
+    },
+    "modelo_es_marca": true,
+    "prefijo": "Bz",
+    "contador": "contador-buzos.txt"
+  }
+}

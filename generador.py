@@ -365,7 +365,7 @@ def build(guion, out):
             put(c, text_layer(ln, bsz, fill=(232, 232, 242), medium=True), W/2, y + 28 + (1 - p) * 40, alpha=p); y += int(bsz * 1.4)
         side = -1 if idx % 2 else 1; rise = ease_back(prog(t, .2, .6))
         put(c, ch(tm["kind"], 700, s, t, gain=1.1, phase=idx * .7), W/2 + side * 230,
-            H - 210 + (1 - rise) * 560 + math.sin(t * 6) * 8, rot=side * -6 + math.sin(t * 2.2) * 3)
+            H - 210 + max(0, cy0 + card_h - 1320) + (1 - rise) * 560 + math.sin(t * 6) * 8, rot=side * -6 + math.sin(t * 2.2) * 3)
         put(c, paw(120, col[0], 200), W/2 - side * 250, H - 230 + math.sin(t * 4) * 10, scale=ease_back(prog(t, .6, .4)), rot=side * 20)
         ImageDraw.Draw(c).rectangle((0, H - 14, int(W * clamp(t / dur)), H), fill=col[0])
         fade(c, t, dur); return c

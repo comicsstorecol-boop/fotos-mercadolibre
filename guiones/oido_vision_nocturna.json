@@ -1,0 +1,31 @@
+{
+  "titulo": "¿Quién tiene mejores sentidos?",
+  "subtitulo_logo": "OÍDO Y VISIÓN NOCTURNA",
+  "intro_voz": "¿Quién oye mejor? ¿Quién ve mejor en la oscuridad? ¡Perros contra gatos, en una batalla de súper sentidos!",
+  "equipos": [
+    {"equipo": "perro", "nombre": "Perro", "plural": "Perros", "seccion_voz": "Primero, el equipo perro.",
+     "datos": [
+      {"titulo": "Oyen el ultrasonido", "texto": "Escuchan sonidos de hasta 45.000 Hz. Los humanos apenas llegamos a unos 20.000.",
+       "voz": "Número uno. Oyen el ultrasonido. Escuchan sonidos de hasta cuarenta y cinco mil hercios. ¡Los humanos apenas llegamos a veinte mil!"},
+      {"titulo": "Visión de gran angular", "texto": "Su campo de visión es más amplio que el nuestro: detectan movimiento casi por los lados.",
+       "voz": "Número dos. Visión de gran angular. Su campo de visión es más amplio que el nuestro, y detectan movimiento casi por los lados."},
+      {"titulo": "Cazadores del atardecer", "texto": "En poca luz ven muchísimo mejor que tú. Pero en oscuridad total, quedan tan ciegos como nosotros.",
+       "voz": "Número tres. Cazadores del atardecer. Con poca luz ven muchísimo mejor que tú. Pero en oscuridad total, quedan tan ciegos como nosotros."},
+      {"titulo": "Velocistas de élite", "texto": "Un galgo alcanza 72 km/h y corre 100 metros en solo 5,33 segundos.",
+       "voz": "Número cuatro. Velocistas de élite. Un galgo alcanza setenta y dos kilómetros por hora, ¡y corre cien metros en apenas cinco segundos!"}
+     ]},
+    {"equipo": "gato", "nombre": "Gato", "plural": "Gatos", "seccion_voz": "¡Y ahora, el equipo gato!",
+     "datos": [
+      {"titulo": "Oído de récord", "texto": "Oyen más de 60.000 Hz: uno de los rangos más amplios entre los mamíferos.",
+       "voz": "Número uno. Oído de récord. Oyen sonidos de más de sesenta mil hercios. ¡Uno de los rangos más amplios entre los mamíferos!"},
+      {"titulo": "Ven con 6 veces menos luz", "texto": "Les basta una sexta parte de la luz que necesita un humano para ver.",
+       "voz": "Número dos. Ven con seis veces menos luz. Les basta una sexta parte de la luz que necesita un humano para ver."},
+      {"titulo": "Un espejo en los ojos", "texto": "Una capa reflectante detrás de la retina recicla la luz. Por eso sus ojos brillan de noche.",
+       "voz": "Número tres. Tienen un espejo en los ojos. Una capa detrás de la retina recicla la luz. ¡Por eso sus ojos brillan en la oscuridad!"},
+      {"titulo": "Más rápidos que Usain Bolt", "texto": "Un gato casero puede correr a 48 km/h en un sprint corto. Bolt llegó a unos 44.",
+       "voz": "Número cuatro. Más rápidos que Usain Bolt. Un gato casero puede correr a cuarenta y ocho kilómetros por hora. ¡Bolt llegó a unos cuarenta y cuatro!"}
+     ]}
+  ],
+  "outro_texto": ["¿Quién ganó", "esta batalla?"],
+  "outro_voz": "En oído y visión nocturna gana el gato. En velocidad, el perro. ¿Y tú con quién vas? Comenta y síguenos en Guerra de Peludos."
+}
