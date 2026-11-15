@@ -1,0 +1,34 @@
+{
+  "marca": "comics-store",
+  "cuenta_regresiva": true,
+  "titulo": "10 curiosidades de GTA VI",
+  "subtitulo_logo": "10 CURIOSIDADES DE GTA VI",
+  "intro_voz": "¡Faltan días para ge te a seis! Hoy en Comics Store te traigo diez curiosidades del juego más esperado de la historia. ¡Vamos con la cuenta regresiva!",
+  "equipos": [
+    {"equipo": "coleccionista", "nombre": "GTA VI", "plural": "GTA VI",
+     "datos": [
+      {"titulo": "Caimanes en el barrio", "texto": "El primer tráiler mostró caimanes paseando por barrios residenciales y hasta nadando en piscinas.",
+       "voz": "Número diez. Caimanes en el barrio. El primer tráiler mostró caimanes paseando por los barrios… ¡y hasta nadando en piscinas!"},
+      {"titulo": "Se filtró antes de tiempo", "texto": "El primer tráiler iba a salir el 5 de diciembre de 2023, pero se filtró un día antes.",
+       "voz": "Número nueve. Se filtró antes de tiempo. El primer tráiler iba a salir el cinco de diciembre de dos mil veintitrés, pero se filtró un día antes."},
+      {"titulo": "Récord Guinness", "texto": "Ese tráiler logró más de 90 millones de vistas en YouTube en 24 horas: récord para un tráiler de videojuego.",
+       "voz": "Número ocho. Récord Guinness. Ese tráiler logró más de noventa millones de vistas en YouTube en veinticuatro horas. ¡Récord mundial para un tráiler de videojuego!"},
+      {"titulo": "475 millones en un día", "texto": "El segundo tráiler (mayo de 2025) sumó 475 millones de vistas en 24 horas entre todas las plataformas.",
+       "voz": "Número siete. Cuatrocientos setenta y cinco millones en un día. El segundo tráiler sumó cuatrocientos setenta y cinco millones de vistas en veinticuatro horas, contando todas las plataformas."},
+      {"titulo": "Regreso a Vice City", "texto": "Vuelve Vice City, la Miami de Rockstar, ahora dentro de Leonida, un estado ficticio inspirado en Florida.",
+       "voz": "Número seis. Regreso a Vice City. Vuelve la Miami de Rockstar, ahora dentro de Leonida, un estado ficticio inspirado en Florida."},
+      {"titulo": "Un Bonnie y Clyde moderno", "texto": "Los protagonistas son Jason Duval y Lucia Caminos, una pareja de criminales al estilo Bonnie y Clyde.",
+       "voz": "Número cinco. Un Bonnie y Clyde moderno. Los protagonistas son Jason Duval y Lucía Caminos, una pareja de criminales al estilo Bonnie y Clyde."},
+      {"titulo": "La primera protagonista mujer", "texto": "Lucia es la primera protagonista femenina de un GTA moderno. Su historia arranca en la Penitenciaría de Leonida.",
+       "voz": "Número cuatro. La primera protagonista mujer. Lucía es la primera protagonista femenina de un ge te a moderno, y su historia arranca en la penitenciaría de Leonida."},
+      {"titulo": "Más de 13 años de espera", "texto": "GTA V salió en septiembre de 2013. GTA VI llega más de 13 años después.",
+       "voz": "Número tres. Más de trece años de espera. Ge te a cinco salió en septiembre de dos mil trece. ¡Ge te a seis llega más de trece años después!"},
+      {"titulo": "Retrasado dos veces", "texto": "Iba para otoño de 2025, pasó al 26 de mayo de 2026 y finalmente al 19 de noviembre.",
+       "voz": "Número dos. Retrasado dos veces. Iba para finales de dos mil veinticinco, pasó al veintiséis de mayo de dos mil veintiséis, y finalmente al diecinueve de noviembre."},
+      {"titulo": "¡Sale el 19 de noviembre!", "texto": "Llega el jueves 19 de noviembre de 2026 a PS5 y Xbox Series X|S. Por ahora no hay fecha para PC.",
+       "voz": "Y el número uno… ¡sale este jueves diecinueve de noviembre! Llega a PlayStation cinco y Xbox Series. Por ahora, no hay fecha para computador."}
+     ]}
+  ],
+  "outro_texto": ["¿Lo vas a jugar", "el día uno?"],
+  "outro_voz": "¿Lo vas a jugar el día uno? Cuéntanos en los comentarios, y síguenos en Comics Store, el paraíso del coleccionista."
+}
