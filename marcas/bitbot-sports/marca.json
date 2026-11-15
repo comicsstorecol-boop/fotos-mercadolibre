@@ -1,5 +1,5 @@
 {
- "nombre": "BITCOL",
+ "nombre": "BITBOT SPORTS",
  "subtitulo_logo": "PRONÓSTICOS DEPORTIVOS",
  "glow": [
   [
@@ -42,18 +42,18 @@
   "bot": {
    "src": "narrador.png",
    "jaw": [
-    505,
-    440,
-    700,
-    612
+    508,
+    437,
+    703,
+    609
    ],
-   "cut": 512,
+   "cut": 509,
    "drop": 18,
    "mouth": [
-    566,
-    494,
-    684,
-    520
+    569,
+    491,
+    687,
+    517
    ],
    "mouth_col": [
     8,
@@ -67,14 +67,14 @@
    ],
    "eyes": [
     [
-     527,
-     390,
+     530,
+     387,
      52,
      34
     ],
     [
-     725,
-     390,
+     728,
+     387,
      52,
      34
     ]
@@ -96,12 +96,14 @@
    ],
    "mouth_mode": "stretch",
    "stretch": [
-    548,
-    482,
-    702,
-    545
+    551,
+    479,
+    705,
+    542
    ],
-   "stretch_max": 0.9
+   "stretch_max": 0.9,
+   "_shifted": true
   }
- }
+ },
+ "requiere_jornada": true
 }

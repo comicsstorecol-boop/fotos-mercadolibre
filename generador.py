@@ -246,6 +246,11 @@ def _add(buf, clip, at):
 # ------------------------------------------------------------------ build plan from guion
 def build(guion, out):
     load_brand(guion.get("marca", "guerra-de-peludos"))
+    if BRAND.get("requiere_jornada") and not guion.get("jornada"):
+        sys.exit('Falta "jornada" en el guion (ej. "Jornada de la NBA para hoy 14 de noviembre de 2026")')
+    if guion.get("jornada"):
+        guion["intro_voz"] = guion["jornada"].rstrip(".") + ". " + guion["intro_voz"]
+        guion.setdefault("subtitulo_logo", guion.get("jornada_corta", ""))
     teams = [dict(TEAM[e["equipo"]], **e) for e in guion["equipos"]]
     vs = len(teams) == 2
     speak = tts_engine()
