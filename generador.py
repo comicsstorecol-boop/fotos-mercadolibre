@@ -379,7 +379,7 @@ def build(guion, out):
     def gamer_desk(c, t, rise=1.0):
         """Escritorio gamer estilo podcast (genérico) que tapa el torso del narrador."""
         g1, g2 = [tuple(x) for x in BRAND["glow"]]
-        off = int((1 - rise) * 800)
+        shift = int((1 - rise) * 800); off = 0
         L = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(L)
         top = 1150 + off
         # brazo y micrófono (detrás del escritorio, delante del personaje)
@@ -395,7 +395,8 @@ def build(guion, out):
         # superficie (perspectiva) y frente
         d.polygon([(-40, top + 70), (W + 40, top + 70), (W - 60, top), (60, top)], fill=(34, 32, 46))
         d.line([(60, top), (W - 60, top)], fill=(90, 88, 110), width=3)
-        L.alpha_composite(gradient((30, 28, 42), (8, 8, 14), W, H - top - 70).convert("RGBA"), (0, top + 70))
+        if H - top - 70 > 2:
+            L.alpha_composite(gradient((30, 28, 42), (8, 8, 14), W, H - top - 70).convert("RGBA"), (0, top + 70))
         d = ImageDraw.Draw(L)
         d.rounded_rectangle((60, top + 120, W - 60, H - 60), 30, outline=g1 + (90,), width=4)
         d.line([(90, top + 150), (W - 90, top + 150)], fill=g2 + (70,), width=2)
@@ -421,7 +422,8 @@ def build(guion, out):
         # mouse y taza
         d.ellipse((835, top + 22, 885, top + 58), fill=(14, 14, 20), outline=g2, width=3)
         d.rounded_rectangle((150, top - 30, 215, top + 40), 10, fill=(240, 240, 245)); d.arc((200, top - 15, 240, top + 20), 270, 90, fill=(240, 240, 245), width=8)
-        c.alpha_composite(L)
+        if shift < H:
+            c.alpha_composite(L.crop((0, 0, W, H - shift)), (0, shift))
 
     def f_intro(s, t, dur):
         c = Image.new("RGBA", (W, H)); split_bg(c, False, t)
