@@ -284,6 +284,9 @@ def build(guion, out):
         s["audio"] = speak(s["voz"]) if s["voz"] else np.zeros(1, np.float32)
         ld = s.get("lead", LEAD); s["lead_"] = ld
         s["dur"] = round(max(s["min"], ld + len(s["audio"]) / SR + s["tail"]) * FPS) / FPS
+        if s["voz"]:
+            sys.path.insert(0, os.path.join(KIT, "explicativo")); import lib as XL
+            s["words"] = XL.tiempos_palabras(s["voz"], s["audio"], SR, ld)
         if s.get("caps") and s["voz"]:
             words = s["voz"].split(); chunks = [" ".join(words[i:i + 3]) for i in range(0, len(words), 3)]
             tot = sum(len(ch) + 2 for ch in chunks); a0 = ld; span = len(s["audio"]) / SR; cap = []
@@ -336,6 +339,8 @@ def build(guion, out):
         base = gradient((26, 20, 34), (8, 8, 16)).convert("RGBA")
         mk = Image.new("L", (W, H), 0); ImageDraw.Draw(mk).ellipse((-300, -400, W + 300, 900), fill=110)
         base.paste(Image.new("RGBA", (W, H), acc + (255,)), (0, 0), mk.filter(ImageFilter.GaussianBlur(220))); return base
+    sys.path.insert(0, os.path.join(KIT, "explicativo")); import lib as XL
+    def cam(img, t, dur, z1=1.07): return XL.camera(img.convert("RGBA") if img.mode != "RGBA" else img, t, dur, 1.0, z1)
     FONDO = None
     if BRAND.get("fondo") and os.path.exists(A(BRAND["fondo"])):
         f0 = Image.open(A(BRAND["fondo"])).convert("RGB")
@@ -363,7 +368,7 @@ def build(guion, out):
         return character(kind, size, round(lv * 5) / 5, ((t + phase) % 3.1) < .13)
     def split_bg(c, angle_vertical=False, t=0):
         if BG_SOFT is not None and not vs:
-            c.alpha_composite(BG_SOFT); return
+            c.alpha_composite(cam(BG_SOFT, t, 4.0, 1.06)); return
         c1 = teams[0]["colors"]; c2 = teams[1]["colors"] if vs else teams[0]["colors"]
         c.alpha_composite(gradient(*c1).convert("RGBA"))
         if vs:
@@ -477,7 +482,7 @@ def build(guion, out):
         fade(c, t, dur); return c
 
     def f_section(s, t, dur):
-        tm = teams[s["team"]]; col = tm["colors"]; c = BG[s["team"]].copy(); paws(c, t, col[0], 2 + s["team"] * 2); header(c, t)
+        tm = teams[s["team"]]; col = tm["colors"]; c = cam(BG[s["team"]], t, dur); paws(c, t, col[0], 2 + s["team"] * 2); header(c, t)
         burst = Image.new("RGBA", (W, H), (0, 0, 0, 0)); bd = ImageDraw.Draw(burst)
         for i in range(16):
             a = math.radians(i * 22.5 + t * 40)
@@ -492,7 +497,7 @@ def build(guion, out):
 
     def f_fact(s, t, dur):
         tm = teams[s["team"]]; col = tm["colors"]; idx, n = s["idx"], s["n"]
-        c = BG[s["team"]].copy(); paws(c, t, col[0], idx + 3 + 8 * s["team"]); header(c, t); d = ImageDraw.Draw(c)
+        c = cam(BG[s["team"]], t, dur); paws(c, t, col[0], idx + 3 + 8 * s["team"]); header(c, t); d = ImageDraw.Draw(c)
         tag = f"{tm.get('plural', tm['nombre'] + 'S').upper()}  ·  DATO {idx}/{n}"
         a0 = ease_out(prog(t, 0, .35)); put(c, pill(620, 84, *col), W/2, 245, alpha=a0)
         put(c, text_layer(tag, fit_size(tag, 38, 580)), W/2, 245, alpha=a0)
@@ -515,6 +520,8 @@ def build(guion, out):
         tsz = 92 if len(tl) <= 2 else 76; bsz = 56 if len(bl) <= 5 else 48
         if s.get("visual"): tsz, bsz = min(tsz, 76), min(bsz, 48)
         tl = wrap(s["titulo"], F(tsz), 900); bl = wrap(s["texto"], FR(bsz), 860)
+        KAR = s.get("words") and not guion.get("sin_karaoke")
+        if KAR: bl = ["", ""]; bsz = 52
         card_h = 70 + len(tl) * int(tsz * 1.2) + 30 + len(bl) * int(bsz * 1.4) + 60; cy0 = 930 if s.get("visual") else 700
         q = ease_out(prog(t, .35, .45))
         card = Image.new("RGBA", (980, card_h), (0, 0, 0, 0))
@@ -524,6 +531,9 @@ def build(guion, out):
         for i, ln in enumerate(tl):
             p = ease_out(prog(t, .9 + i * .12, .4)); put(c, text_layer(ln, tsz), W/2, y + 40 + (1 - p) * 60, alpha=p); y += int(tsz * 1.2)
         y += 30
+        if KAR:
+            XL.karaoke(c, s["words"], t, y + int(bsz * 1.4) + 5, set(), size=bsz, max_chars=30)
+            bl = []
         for i, ln in enumerate(bl):
             p = ease_out(prog(t, 1.9 + i * .15, .4))
             put(c, text_layer(ln, bsz, fill=(232, 232, 242), medium=True), W/2, y + 28 + (1 - p) * 40, alpha=p); y += int(bsz * 1.4)
@@ -536,7 +546,7 @@ def build(guion, out):
         fade(c, t, dur); return c
 
     def f_outro(s, t, dur):
-        c = Image.new("RGBA", (W, H)); split_bg(c, True, 9); paws(c, t, WHITE, 9)
+        c = Image.new("RGBA", (W, H)); split_bg(c, True, t); paws(c, t, WHITE, 9)
         q = ease_back(prog(t, .1, .5))
         l1, l2 = guion.get("outro_texto", ["¿Y TÚ DE QUÉ", "EQUIPO ERES?"])
         put(c, pill(940, 330, DARK, (40, 36, 60), r=60), W/2, 360, scale=q)
@@ -566,6 +576,8 @@ def build(guion, out):
         put(c, pill(560, 56, (0, 0, 0), (25, 25, 25), r=28), W/2, H - 60, alpha=.85)
         put(c, text_layer(txt, fit_size(txt, 30, 520), fill=(255, 255, 255, 230)), W/2, H - 60)
     def captions(c, s, t, y, size=74):
+        if s.get("words"):
+            XL.karaoke(c, s["words"], t, y, set(), size=min(size, 64)); return
         for (a, b, txt) in s.get("caps_t", []):
             if a <= t < b + .05:
                 k = ease_back(prog(t, a, .18)); up = txt.upper()
@@ -601,7 +613,7 @@ def build(guion, out):
 
     def f_regancho(s, t, dur):
         tm = teams[s["team"]]; col = tm["colors"]
-        c = BG[s["team"]].copy()
+        c = cam(BG[s["team"]], t, dur, 1.1)
         stripes = Image.new("RGBA", (W, H), (0, 0, 0, 0)); sd = ImageDraw.Draw(stripes)
         for i in range(-4, 14):
             x = i * 160 + (t * 600) % 160; sd.polygon([(x, 0), (x + 70, 0), (x - 330, H), (x - 400, H)], fill=col[0] + (28,))
