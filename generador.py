@@ -409,7 +409,8 @@ def build(guion, out):
         for k in range(n):
             x = W/2 + (k - (n - 1) / 2) * 60; on = k < idx; r = 16 if k == idx - 1 else 11
             d.ellipse((x - r, 335 - r, x + r, 335 + r), fill=col[0] if on else (80, 78, 95))
-        put(c, text_layer(str(idx), 300, fill=col[0], stroke=5, stroke_fill=WHITE), W/2, 530, scale=ease_back(prog(t, .1, .55)))
+        shown = (n - idx + 1) if guion.get("cuenta_regresiva") else idx
+        put(c, text_layer(("#" if guion.get("cuenta_regresiva") else "") + str(shown), 300, fill=col[0], stroke=5, stroke_fill=WHITE), W/2, 530, scale=ease_back(prog(t, .1, .55)))
         tl = wrap(s["titulo"], F(92), 900); bl = wrap(s["texto"], FR(56), 860)
         tsz = 92 if len(tl) <= 2 else 76; bsz = 56 if len(bl) <= 5 else 48
         tl = wrap(s["titulo"], F(tsz), 900); bl = wrap(s["texto"], FR(bsz), 860)

@@ -1,0 +1,24 @@
+{
+  "marca": "comics-store",
+  "cuenta_regresiva": true,
+  "titulo": "Top 5 villanos de Batman",
+  "subtitulo_logo": "TOP 5 VILLANOS DE BATMAN",
+  "intro_voz": "¿Quién es el villano más grande de Batman? Hoy en Comics Store te traigo el top cinco. ¡Arrancamos la cuenta regresiva!",
+  "equipos": [
+    {"equipo": "coleccionista", "nombre": "Villanos", "plural": "Top villanos",
+     "datos": [
+      {"titulo": "El Acertijo", "texto": "Debutó en Detective Comics #140 (1948). Deja acertijos en cada crimen para poner a prueba al Batman detective.",
+       "voz": "Número cinco. El Acertijo. Debutó en mil novecientos cuarenta y ocho, y deja acertijos en cada crimen para poner a prueba al Batman detective."},
+      {"titulo": "Bane", "texto": "Debutó en 1993 y se hizo leyenda en la saga Knightfall: le rompió la espalda a Batman.",
+       "voz": "Número cuatro. Bane. Debutó en mil novecientos noventa y tres, y se volvió leyenda en la saga Knightfall: ¡le rompió la espalda a Batman!"},
+      {"titulo": "Ra's al Ghul", "texto": "Debutó en Batman #232 (1971). Vive siglos gracias al Pozo de Lázaro y es abuelo de Damian Wayne.",
+       "voz": "Número tres. Ra's al Ghul. Debutó en mil novecientos setenta y uno. Vive siglos gracias al Pozo de Lázaro, ¡y es el abuelo de Damian Wayne, hijo de Batman!"},
+      {"titulo": "Dos Caras", "texto": "Debutó en 1942. Harvey Dent era fiscal de Gotham hasta que el ácido le marcó medio rostro. Decide con una moneda.",
+       "voz": "Número dos. Dos Caras. Debutó en mil novecientos cuarenta y dos. Harvey Dent era fiscal de Gotham, hasta que el ácido le marcó medio rostro. Ahora decide todo lanzando una moneda."},
+      {"titulo": "El Guasón", "texto": "Debutó en Batman #1 (1940). Iba a morir en esa primera historia… y terminó siendo el villano más famoso de los cómics.",
+       "voz": "Y el número uno… ¡El Guasón! Debutó en el primer número de Batman, en mil novecientos cuarenta. Iba a morir en esa primera historia, y terminó siendo el villano más famoso de los cómics."}
+     ]}
+  ],
+  "outro_texto": ["¿Cuál es tu", "villano favorito?"],
+  "outro_voz": "¿Cuál es tu villano favorito de Batman? Déjalo en los comentarios, y encuentra tu próximo coleccionable en comics store punto com punto ce o."
+}
