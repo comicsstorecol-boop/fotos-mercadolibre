@@ -1,0 +1,34 @@
+"""Comics Store · Terror: El resplandor (Stephen King, 1977) — resumen propio de la novela, sin imágenes de la película"""
+import os, sys
+HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE); sys.path.insert(0, os.path.dirname(HERE))
+from compositor import historia
+from motor import render
+AMB = (255, 200, 120); AZ = (150, 190, 255); FUEGO = (255, 120, 40)
+H = [
+ ({"fondo": "hotel_nieve", "fx": ["nieve"], "cam": (1, 1.12, 0, 60)}, "Un hotel enorme en las montañas. Cerrado todo el invierno. Y una familia que se queda sola cuidándolo… durante meses.", {"hotel", "sola"}),
+ ({"fondo": "estudio", "el": [("maquina", 540, 1100, 1.1, {"anim": "aparecer"})], "velas": [(820, 900, 90, AMB)], "cam": (1, 1.08, 0, 0)}, "Así arranca El resplandor, la novela de Stephen King. Su protagonista es Jack Torrance, un escritor que intenta empezar de nuevo.", {"resplandor", "jack"}),
+ ({"fondo": "estudio", "el": [("hombre", 540, 1250, 1.0, {"anim": "temblar"})], "vineta": .85, "cam": (1, 1.06, 0, 0)}, "Jack había perdido su trabajo de profesor por un ataque de ira. Y luchaba contra el alcohol.", {"ira", "alcohol"}),
+ ({"fondo": "hotel_nieve", "el": [("hombre", 380, 1420, .45), ("mujer", 520, 1425, .43), ("nino", 640, 1440, .4)], "cam": (1, 1.08, 0, 0)}, "Por eso acepta el empleo de vigilante de invierno del hotel Overlook, en Colorado. Lleva a su esposa Wendy y a su hijo Danny, de cinco años.", {"overlook", "danny"}),
+ ({"fondo": "abismo", "el": [("nino", 540, 1250, .9, {"anim": "aparecer"})], "fx": ["particulas"], "glows": [(540, 900, 260, AZ, 110)], "tag": "EL RESPLANDOR", "tag_y": 620, "tag_col": AZ, "cam": (1, 1.1, 0, 0)}, "Pero Danny tiene un don. Puede leer mentes y ver cosas que pasaron… o que van a pasar. A eso lo llaman: el resplandor.", {"don", "resplandor"}),
+ ({"fondo": "biblioteca", "el": [("anciano", 360, 1250, .9), ("nino", 720, 1280, .75)], "velas": [(880, 1150, 90, AMB)], "cam": (1, 1.06, 0, 0)}, "El cocinero del hotel, Dick Hallorann, también lo tiene. Antes de irse, le advierte a Danny: aquí hay cosas que quedaron grabadas.", {"hallorann"}),
+ ({"fondo": "pasillo", "tag": "HABITACIÓN 217", "tag_y": 1450, "tag_col": (255, 120, 120), "pulso": .7, "bpm": 80, "cam": (1, 1.2, 0, 0)}, "Y le hace prometer algo: nunca entrar a la habitación doscientos diecisiete.", {"doscientos"}),
+ ({"fondo": "estudio", "el": [("carta", 540, 1050, 1.1, {"anim": "aparecer"})], "vineta": .85, "cam": (1, 1.06, 0, 0)}, "El hotel tenía una historia oscura. Un vigilante anterior, encerrado por el invierno, perdió la cabeza… y le hizo daño a su propia familia.", {"daño"}),
+ ({"fondo": "hotel_nieve", "fx": ["nieve"], "vineta": .7, "cam": (1, 1.15, 0, 40)}, "Llega la nieve. Los caminos se cierran. Ya nadie puede entrar… ni salir.", {"nieve", "salir"}),
+ ({"fondo": "hotel_nieve", "el": [("seto", 300, 1450, .45, {"anim": "aparecer"}), ("seto", 760, 1450, .45, {"anim": "aparecer", "t0": .8})], "fx": ["nieve"], "pulso": .7, "bpm": 90, "cam": (1, 1.15, 0, 80)}, "Danny empieza a ver cosas. En el jardín, los animales de los arbustos podados parecen moverse cuando no los mira.", {"moverse"}),
+ ({"fondo": "pasillo", "el": [("nino", 540, 1350, .45, {"anim": "caminar_der", "dist": 0})], "pulso": 1.0, "bpm": 120, "flash": True, "cam": (1, 1.25, 0, 0)}, "Y un día, la curiosidad gana. Danny entra a la habitación doscientos diecisiete.", {"doscientos"}),
+ ({"fondo": "habitacion", "el": [("dama", 760, 1150, .6, {"anim": "aparecer"})], "pulso": 1.0, "bpm": 130, "vineta": .9, "cam": (1, 1.15, 80, 40)}, "Allí lo espera una mujer muerta hace años. Danny escapa… con marcas en el cuello.", {"muerta"}),
+ ({"fondo": "estudio", "el": [("maquina", 540, 1100, 1.0), ("hombre", 540, 1250, .8, {"anim": "aparecer"})], "vineta": .9, "cam": (1, 1.1, 0, 0)}, "Mientras tanto, Jack cambia. El hotel le habla. Le promete que será alguien importante… si hace lo que le pide.", {"habla"}),
+ ({"fondo": "fiesta", "el": [("sombra", 300, 1300, .55, {"anim": "balancear"}), ("sombra", 540, 1300, .55, {"anim": "balancear"}), ("sombra", 780, 1300, .55, {"anim": "balancear"})], "velas": [(270, 380, 140, AMB), (810, 380, 140, AMB)], "cam": (1, 1.1, 0, 0)}, "Jack empieza a ver fiestas de otra época, con invitados que no existen. Y un bar lleno… en un hotel vacío.", {"fiestas", "vacío"}),
+ ({"fondo": "estudio", "el": [("telefono", 380, 1050, .7, {"anim": "desvanecer", "t0": .8}), ("hombre", 760, 1250, .8)], "flash": True, "cam": (1, 1.08, 0, 0)}, "Para que nadie pueda irse, destruye la radio… y daña la moto de nieve.", {"radio"}),
+ ({"fondo": "pasillo", "el": [("hombre", 540, 1350, .6, {"anim": "acercar"})], "pulso": 1.2, "bpm": 150, "cam": (1, 1.25, 0, 0)}, "Ya no es Jack. Es el hotel usando su cuerpo. Y empieza a perseguir a Wendy y a Danny por los pasillos.", {"perseguir"}),
+ ({"fondo": "abismo", "el": [("nino", 540, 1250, .8, {"anim": "temblar"})], "glows": [(540, 900, 300, AZ, 140)], "fx": ["particulas"], "cam": (1, 1.1, 0, 0)}, "Danny, aterrado, usa su resplandor para pedir ayuda… con la mente.", {"mente"}),
+ ({"fondo": "hotel_nieve", "fx": ["nieve"], "glows": [(300, 1400, 100, (255, 250, 210), 180)], "cam": (1, 1.1, 0, 0)}, "A miles de kilómetros, Hallorann escucha el llamado. Y cruza la tormenta para llegar al hotel.", {"llamado"}),
+ ({"fondo": "cuarto", "el": [("caldera", 540, 1150, 1.0, {"anim": "temblar"})], "glows": [(540, 1100, 260, FUEGO, 120)], "pulso": .9, "bpm": 140, "cam": (1, 1.15, 0, 0)}, "Pero había algo que Jack olvidó: la vieja caldera del sótano. Había que liberar su presión todos los días.", {"caldera"}),
+ ({"fondo": "hotel_nieve", "glows": [(540, 1050, 520, FUEGO, 230), (300, 1000, 300, (255, 220, 80), 180)], "fx": ["chispas"], "flash": True, "cam": (1.2, 1.0, 0, 0)}, "La caldera explota. El hotel Overlook arde en medio de la nieve.", {"explota"}),
+ ({"fondo": "hotel_nieve", "el": [("mujer", 420, 1440, .4), ("nino", 540, 1450, .36), ("anciano", 660, 1440, .4)], "fx": ["nieve"], "glows": [(540, 1000, 400, FUEGO, 130)], "cam": (1, 1.08, 0, 0)}, "Wendy, Danny y Hallorann logran escapar. Jack… se queda con el hotel para siempre.", {"escapar"}),
+ ({"fondo": "biblioteca", "el": [("libro", 540, 1150, 1.0, {"anim": "entrar", "var": "El resplandor|Stephen King"})], "tag": "STEPHEN KING · 1977", "tag_y": 700, "cam": (1, 1.06, 0, 0)}, "Stephen King publicó El resplandor en mil novecientos setenta y siete. Y dejó una pregunta: ¿qué da más miedo, un hotel embrujado… o lo que el aislamiento le hace a una persona?", {"aislamiento"}),
+]
+esc, cierre = historia(H, "comics-store", "¿LIBRO O PELÍCULA?")
+esc.append((cierre, "¿Qué prefieres: el libro o la película? Comenta y síguenos en Comics Store.", {"libro", "película"}))
+if __name__ == "__main__":
+    render(esc, sys.argv[1] if len(sys.argv) > 1 else "/home/claude/terror_06_resplandor.mp4", regancho_idx=10, musica="terror")

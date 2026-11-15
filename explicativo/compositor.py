@@ -312,6 +312,18 @@ def objeto(tipo, var=""):
     if tipo == "mascara":
         h = Hi(360, 460); h.ellipse((20, 20, 340, 440), fill=(222, 196, 176)); h.ellipse((80, 150, 150, 210), fill=(20, 16, 18)); h.ellipse((210, 150, 280, 210), fill=(20, 16, 18))
         h.poly([(180, 220), (160, 300), (200, 300)], fill=(200, 170, 150)); h.line([(130, 350), (230, 350)], fill=(120, 70, 70), width=10); return h.done()
+    if tipo == "retrato":
+        h = Hi(400, 520); h.rect((10, 10, 390, 510), r=10, fill=(120, 86, 40)); h.rect((40, 40, 360, 480), fill=(200, 190, 170))
+        h.ellipse((150, 120, 250, 230), fill=(90, 80, 70)); h.poly([(130, 230), (270, 230), (330, 480), (70, 480)], fill=(236, 232, 226)); h.rect((140, 110, 260, 300), r=40, fill=(60, 50, 44)); h.ellipse((160, 135, 240, 225), fill=(214, 196, 176))
+        return h.done()
+    if tipo == "dulces":
+        h = Hi(460, 300)
+        for i, (x, y, c) in enumerate([(120, 180, (255, 190, 60)), (240, 140, (255, 120, 80)), (350, 190, (250, 220, 120))]):
+            h.ellipse((x - 60, y - 50, x + 60, y + 50), fill=c); h.poly([(x - 60, y), (x - 110, y - 40), (x - 110, y + 40)], fill=c); h.poly([(x + 60, y), (x + 110, y - 40), (x + 110, y + 40)], fill=c)
+        return h.done()
+    if tipo == "caldera":
+        h = Hi(420, 600); h.rect((60, 120, 360, 560), r=60, fill=(80, 70, 66)); h.ellipse((60, 60, 360, 200), fill=(100, 90, 86)); h.ellipse((150, 260, 270, 380), fill=(230, 230, 220)); h.line([(210, 320), (250, 280)], fill=(200, 30, 30), width=10)
+        h.rect((300, 20, 340, 120), fill=(70, 60, 56)); return h.done()
     return V.icono(tipo).resize((360, 360)) if tipo in V.ICONOS else Image.new("RGBA", (10, 10))
 
 # ================================================================ EFECTOS DINÁMICOS
@@ -359,6 +371,7 @@ def _img_el(tipo, var=""):
     if tipo in ("hombre", "mujer", "policia", "anciano", "nino", "sombra", "perro"):
         return figura(tipo, (255, 170, 110) if var != "frio" else (130, 180, 255))
     if tipo == "ojo": return None
+    if tipo == "seto": return figura("perro", (90, 160, 90), (34, 86, 44))
     return objeto(tipo, var)
 
 def escena(spec):
