@@ -303,3 +303,108 @@ def escena_cierre(m, t, d, pregunta=None):
     etiqueta(c, m["cta"], W / 2, 1480, (20, 18, 34), bg=(255, 255, 255), size=46, alpha=eo(pr(t, .9, .4)))
     if m.get("disclaimer"): etiqueta(c, m["disclaimer"], W / 2, H - 80, (255, 255, 255), size=30)
     return camera(c, t, d, 1.0, 1.05)
+
+# ================================================================ PAQUETE TERROR / NOCHE
+def vineta(c, fuerza=.75, col=(0, 0, 0)):
+    m = Image.new("L", (W, H), 0); ImageDraw.Draw(m).ellipse((-W * .25, -H * .1, W * 1.25, H * 1.1), fill=255)
+    m = m.filter(ImageFilter.GaussianBlur(220)).point(lambda v: int((255 - v) * fuerza))
+    L = Image.new("RGBA", (W, H), tuple(col) + (255,)); L.putalpha(m); c.alpha_composite(L)
+
+def niebla(c, t, y=1400, col=(150, 160, 200), a=70):
+    L = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(L)
+    for i in range(7):
+        x = (i * 260 + t * 40 * (1 + i % 3)) % (W + 600) - 300
+        d.ellipse((x - 260, y - 70 + i * 18, x + 260, y + 70 + i * 18), fill=tuple(col) + (a,))
+    c.alpha_composite(L.filter(ImageFilter.GaussianBlur(40)))
+
+@lru_cache(maxsize=4)
+def noche_casa():
+    c = vgrad(W, H, [(0, (6, 8, 22)), (.6, (22, 24, 52)), (1, (8, 8, 16))]); rnd = random.Random(3); h = Hi()
+    for _ in range(90):
+        x, y, r = rnd.uniform(0, W), rnd.uniform(0, H * .55), rnd.uniform(1, 3); h.ellipse((x - r, y - r, x + r, y + r), fill=(230, 230, 255, rnd.randint(90, 230)))
+    c.alpha_composite(h.done())
+    glow(c, 820, 500, 190, (200, 210, 255), 90); h = Hi(); h.ellipse((740, 420, 900, 580), fill=(236, 236, 220))
+    h.ellipse((780, 455, 815, 490), fill=(214, 214, 200)); h.ellipse((845, 520, 872, 547), fill=(214, 214, 200))
+    # casa
+    h.poly([(170, 1500), (170, 900), (520, 620), (870, 900), (870, 1500)], fill=(18, 16, 28))
+    h.rect((640, 640, 720, 820), fill=(18, 16, 28))
+    for (x, y) in ((260, 1000), (620, 1000), (260, 1220), (620, 1220)):
+        h.rect((x, y, x + 140, y + 150), fill=(30, 26, 40))
+    h.rect((450, 1260, 590, 1500), fill=(28, 22, 34))
+    h.rect((0, 1500, W, H), fill=(10, 10, 16))
+    c.alpha_composite(h.done())
+    glow(c, 690, 1075, 110, (255, 190, 90), 140); h = Hi(); h.rect((620, 1000, 760, 1150), fill=(255, 196, 110)); h.line([(690, 1000), (690, 1150)], fill=(30, 26, 40), width=8); h.line([(620, 1075), (760, 1075)], fill=(30, 26, 40), width=8)
+    # árbol seco
+    for (p, w) in [([(80, 1500), (110, 1100), (60, 900)], 26), ([(110, 1100), (220, 980)], 14), ([(95, 1250), (20, 1150)], 12), ([(60, 900), (20, 820)], 10), ([(60, 900), (130, 800)], 10)]:
+        h.line(p, fill=(8, 8, 12), width=w)
+    c.alpha_composite(h.done()); return c
+
+def ojo_grande(c, x, y, ancho, apertura=1., pupila=(0, 0), mirada_film=True, t=0):
+    """Ojo enorme estilo 'ojo de buitre': azul pálido con velo."""
+    h = Hi(); a = max(.02, apertura); ww = ancho; hh = ancho * .48 * a
+    h.ellipse((x - ww / 2 - 40, y - hh / 2 - 60, x + ww / 2 + 40, y + hh / 2 + 60), fill=(150, 110, 100))
+    h.ellipse((x - ww / 2, y - hh / 2, x + ww / 2, y + hh / 2), fill=(236, 230, 222))
+    c.alpha_composite(h.done())
+    if a > .15:
+        m = Image.new("L", (W, H), 0); ImageDraw.Draw(m).ellipse((x - ww / 2, y - hh / 2, x + ww / 2, y + hh / 2), fill=255)
+        I = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(I); r = ancho * .2
+        px, py = x + pupila[0], y + pupila[1]
+        d.ellipse((px - r, py - r, px + r, py + r), fill=(150, 185, 210)); d.ellipse((px - r * .45, py - r * .45, px + r * .45, py + r * .45), fill=(30, 40, 50))
+        if mirada_film:
+            d.ellipse((px - r * 1.02, py - r * 1.02, px + r * 1.02, py + r * 1.02), fill=(220, 230, 236, 120))
+        d.ellipse((px + r * .2, py - r * .6, px + r * .5, py - r * .3), fill=(255, 255, 255, 220))
+        I.putalpha(Image.composite(I.getchannel("A"), Image.new("L", (W, H), 0), m)); c.alpha_composite(I)
+    h = Hi(); h.arc((x - ww / 2, y - hh / 2, x + ww / 2, y + hh / 2), 180, 360, fill=(40, 24, 24), width=10)
+    if a <= .15: h.line([(x - ww / 2, y), (x + ww / 2, y)], fill=(40, 24, 24), width=12)
+    for i in range(9):
+        ang = math.pi + i * math.pi / 8; h.line([(x + ww / 2 * math.cos(ang), y + hh / 2 * math.sin(ang)), (x + (ww / 2 + 30) * math.cos(ang), y + (hh / 2 + 34) * math.sin(ang) - 6)], fill=(40, 24, 24), width=6)
+    c.alpha_composite(h.done())
+
+def haz_linterna(c, x, y, ang, largo=1200, abertura=9, a=110, col=(255, 220, 140)):
+    cono(c, x, y, ang, largo, abertura, col, a); glow(c, x, y, 40, col, 230, 20)
+
+@lru_cache(maxsize=4)
+def cuarto_oscuro():
+    c = vgrad(W, H, [(0, (14, 10, 18)), (1, (6, 4, 8))]); h = Hi()
+    h.rect((0, 1350, W, H), fill=(26, 18, 16))
+    for i in range(10): h.line([(i * 120 - 60, H), (W / 2 + (i - 5) * 30, 1350)], fill=(36, 24, 20), width=4)
+    h.rect((520, 900, 1020, 1240), r=20, fill=(30, 22, 30)); h.rect((500, 1180, 1040, 1400), r=20, fill=(40, 30, 40))
+    h.rect((540, 1150, 720, 1210), r=30, fill=(70, 64, 76)); h.rect((560, 1240, 1020, 1300), fill=(30, 22, 30))
+    c.alpha_composite(h.done()); return c
+
+def tablas(c, t, levantar=0., x0=0, y0=1150, n=7, alto=110):
+    h = Hi(); cols = [(92, 60, 40), (102, 66, 44), (86, 56, 36)]
+    for i in range(n):
+        y = y0 + i * alto; dy = -levantar * 220 if i == 3 else 0; rot = levantar * 12 if i == 3 else 0
+        h.rect((x0 - 20, y + dy, W + 20, y + alto - 8 + dy), r=8, fill=cols[i % 3])
+        for k in range(3): h.line([(80 + k * 320 + (i * 60) % 200, y + 20 + dy), (240 + k * 320 + (i * 60) % 200, y + 30 + dy)], fill=(70, 44, 30), width=3)
+        for xx in (60, W - 60): h.ellipse((xx - 7, y + alto / 2 - 7 + dy, xx + 7, y + alto / 2 + 7 + dy), fill=(40, 30, 26))
+    c.alpha_composite(h.done())
+
+def reloj(c, x, y, r, horas=12, minutos=0):
+    h = Hi(); h.ellipse((x - r - 14, y - r - 14, x + r + 14, y + r + 14), fill=(60, 44, 30)); h.ellipse((x - r, y - r, x + r, y + r), fill=(236, 226, 200))
+    for i in range(12):
+        a = i * math.pi / 6; h.line([(x + math.sin(a) * r * .82, y - math.cos(a) * r * .82), (x + math.sin(a) * r * .95, y - math.cos(a) * r * .95)], fill=(40, 30, 20), width=6)
+    ah = (horas % 12 + minutos / 60) * math.pi / 6; am = minutos * math.pi / 30
+    h.line([(x, y), (x + math.sin(ah) * r * .5, y - math.cos(ah) * r * .5)], fill=(30, 20, 14), width=14)
+    h.line([(x, y), (x + math.sin(am) * r * .78, y - math.cos(am) * r * .78)], fill=(30, 20, 14), width=8)
+    h.ellipse((x - 14, y - 14, x + 14, y + 14), fill=(30, 20, 14)); c.alpha_composite(h.done())
+
+@lru_cache(maxsize=4)
+def libro_antiguo(titulo="", sub=""):
+    h = Hi(900, 620); h.rect((20, 40, 880, 600), r=24, fill=(70, 36, 24)); h.rect((40, 20, 860, 580), r=18, fill=(236, 222, 186))
+    h.line([(450, 20), (450, 580)], fill=(170, 150, 120), width=6)
+    for y in range(120, 560, 40):
+        h.line([(500, y), (820, y)], fill=(170, 150, 120), width=3)
+    im = h.done(); d = ImageDraw.Draw(im)
+    if titulo:
+        f = F(54); ws = titulo.split(); lines = [titulo] if d.textlength(titulo, font=f) < 360 else [" ".join(ws[:len(ws) // 2 + len(ws) % 2]), " ".join(ws[len(ws) // 2 + len(ws) % 2:])]
+        for i, ln in enumerate(lines): d.text((245, 230 + i * 70), ln, font=f, fill=(60, 30, 20), anchor="mm")
+        if sub: d.text((245, 420), sub, font=F(40), fill=(120, 60, 40), anchor="mm")
+    return im
+
+def pulso(c, t, bpm=70, col=(200, 20, 30), fuerza=1.):
+    """Viñeta roja que late."""
+    ph = (t * bpm / 60) % 1; k = max(0, 1 - ph * 5) + .6 * max(0, 1 - abs(ph - .25) * 6)
+    vineta(c, .35 + .45 * k * fuerza, col)
+    return k
