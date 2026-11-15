@@ -384,14 +384,15 @@ def build(guion, out):
         top = 1150 + off
         # brazo y micrófono (detrás del escritorio, delante del personaje)
         mx, my = W/2 + 200, 735 + off
-        d.line([(W/2 + 420, top + 10), (W/2 + 420, 930 + off), (mx + 45, my + 75)], fill=(40, 40, 48), width=14, joint="curve")
-        d.line([(W/2 + 420, top + 10), (W/2 + 420, 930 + off), (mx + 45, my + 75)], fill=(70, 70, 82), width=5, joint="curve")
+        mic = BRAND.get("escritorio_mic", True)
+        if mic: d.line([(W/2 + 420, top + 10), (W/2 + 420, 930 + off), (mx + 45, my + 75)], fill=(40, 40, 48), width=14, joint="curve")
+        if mic: d.line([(W/2 + 420, top + 10), (W/2 + 420, 930 + off), (mx + 45, my + 75)], fill=(70, 70, 82), width=5, joint="curve")
         cap = Image.new("RGBA", (90, 190), (0, 0, 0, 0)); cd = ImageDraw.Draw(cap)
         cd.rounded_rectangle((5, 5, 85, 185), 40, fill=(28, 28, 34), outline=(90, 90, 100), width=4)
         for yy in range(30, 120, 12): cd.line((18, yy, 72, yy), fill=(60, 60, 70), width=3)
         cd.rectangle((10, 128, 80, 140), fill=g1)
         cap = cap.rotate(-28, resample=Image.BICUBIC, expand=True)
-        L.alpha_composite(cap, (int(mx - cap.width / 2), int(my - cap.height / 2)))
+        if mic: L.alpha_composite(cap, (int(mx - cap.width / 2), int(my - cap.height / 2)))
         # superficie (perspectiva) y frente
         d.polygon([(-40, top + 70), (W + 40, top + 70), (W - 60, top), (60, top)], fill=(34, 32, 46))
         d.line([(60, top), (W - 60, top)], fill=(90, 88, 110), width=3)

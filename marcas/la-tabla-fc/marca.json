@@ -103,5 +103,8 @@
    "stretch_max": 0.9,
    "_shifted": true
   }
- }
+ },
+ "fondo": "fondo.png",
+ "escritorio": true,
+ "escritorio_mic": false
 }

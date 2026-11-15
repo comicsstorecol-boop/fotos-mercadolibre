@@ -105,5 +105,8 @@
    "_shifted": true
   }
  },
- "requiere_jornada": true
+ "requiere_jornada": true,
+ "fondo": "fondo.png",
+ "escritorio": true,
+ "escritorio_mic": false
 }
