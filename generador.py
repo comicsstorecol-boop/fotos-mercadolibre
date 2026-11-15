@@ -263,7 +263,7 @@ def build(guion, out):
         n = len(tm["datos"])
         for i, dato in enumerate(tm["datos"]):
             scenes.append(dict(id=f"t{ti}d{i}", kind="fact", team=ti, idx=i + 1, n=n, titulo=dato["titulo"],
-                               texto=dato["texto"], voz=dato.get("voz") or f"Número {i+1}. {dato['titulo']}. {dato['texto']}",
+                               texto=dato["texto"], visual=dato.get("visual"), voz=dato.get("voz") or f"Número {i+1}. {dato['titulo']}. {dato['texto']}",
                                min=4.5, tail=.7))
     scenes.append(dict(id="outro", kind="outro", voz=guion["outro_voz"], min=4.0, tail=1.6))
 
@@ -480,11 +480,22 @@ def build(guion, out):
             x = W/2 + (k - (n - 1) / 2) * 60; on = k < idx; r = 16 if k == idx - 1 else 11
             d.ellipse((x - r, 335 - r, x + r, 335 + r), fill=col[0] if on else (80, 78, 95))
         shown = (n - idx + 1) if guion.get("cuenta_regresiva") else idx
-        put(c, text_layer(("#" if guion.get("cuenta_regresiva") else "") + str(shown), 300, fill=col[0], stroke=5, stroke_fill=WHITE), W/2, 530, scale=ease_back(prog(t, .1, .55)))
+        numtxt = ("#" if guion.get("cuenta_regresiva") else "") + str(shown)
+        vis = s.get("visual")
+        if vis:
+            import visuales
+            visuales.dibujar(c, vis, t, (40, 390, W - 40, 900), col[0], F, FR, lambda tx, sz, **k: text_layer(tx, sz, **k), put, ease_out, ease_back, prog, fit_size)
+            badge = Image.new("RGBA", (150, 150), (0, 0, 0, 0)); bd = ImageDraw.Draw(badge)
+            bd.ellipse((5, 5, 145, 145), fill=col[0], outline=WHITE, width=6)
+            nl = text_layer(numtxt, fit_size(numtxt, 70, 110), fill=(10, 10, 15)); badge.alpha_composite(nl, (75 - nl.width // 2, 75 - nl.height // 2))
+            put(c, badge.resize((120, 120), Image.LANCZOS), 110, 290, scale=ease_back(prog(t, .05, .5)))
+        else:
+            put(c, text_layer(numtxt, 300, fill=col[0], stroke=5, stroke_fill=WHITE), W/2, 530, scale=ease_back(prog(t, .1, .55)))
         tl = wrap(s["titulo"], F(92), 900); bl = wrap(s["texto"], FR(56), 860)
         tsz = 92 if len(tl) <= 2 else 76; bsz = 56 if len(bl) <= 5 else 48
+        if s.get("visual"): tsz, bsz = min(tsz, 76), min(bsz, 48)
         tl = wrap(s["titulo"], F(tsz), 900); bl = wrap(s["texto"], FR(bsz), 860)
-        card_h = 70 + len(tl) * int(tsz * 1.2) + 30 + len(bl) * int(bsz * 1.4) + 60; cy0 = 700
+        card_h = 70 + len(tl) * int(tsz * 1.2) + 30 + len(bl) * int(bsz * 1.4) + 60; cy0 = 930 if s.get("visual") else 700
         q = ease_out(prog(t, .35, .45))
         card = Image.new("RGBA", (980, card_h), (0, 0, 0, 0))
         ImageDraw.Draw(card).rounded_rectangle((0, 0, 979, card_h - 1), 56, fill=(12, 10, 22, 185) if FONDO else (255, 255, 255, 24), outline=col[0] + (200,), width=5)
