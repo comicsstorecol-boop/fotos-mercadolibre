@@ -376,6 +376,53 @@ def build(guion, out):
         put(c, text_layer(sub, fit_size(sub, 52, 980), fill=(255, 255, 255, 210)), W/2, 1590 + (1 - q) * 60, alpha=q)
         fade(c, t, dur, .2); return c
 
+    def gamer_desk(c, t, rise=1.0):
+        """Escritorio gamer estilo podcast (genérico) que tapa el torso del narrador."""
+        g1, g2 = [tuple(x) for x in BRAND["glow"]]
+        off = int((1 - rise) * 800)
+        L = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(L)
+        top = 1150 + off
+        # brazo y micrófono (detrás del escritorio, delante del personaje)
+        mx, my = W/2 + 200, 735 + off
+        d.line([(W/2 + 420, top + 10), (W/2 + 420, 930 + off), (mx + 45, my + 75)], fill=(40, 40, 48), width=14, joint="curve")
+        d.line([(W/2 + 420, top + 10), (W/2 + 420, 930 + off), (mx + 45, my + 75)], fill=(70, 70, 82), width=5, joint="curve")
+        cap = Image.new("RGBA", (90, 190), (0, 0, 0, 0)); cd = ImageDraw.Draw(cap)
+        cd.rounded_rectangle((5, 5, 85, 185), 40, fill=(28, 28, 34), outline=(90, 90, 100), width=4)
+        for yy in range(30, 120, 12): cd.line((18, yy, 72, yy), fill=(60, 60, 70), width=3)
+        cd.rectangle((10, 128, 80, 140), fill=g1)
+        cap = cap.rotate(-28, resample=Image.BICUBIC, expand=True)
+        L.alpha_composite(cap, (int(mx - cap.width / 2), int(my - cap.height / 2)))
+        # superficie (perspectiva) y frente
+        d.polygon([(-40, top + 70), (W + 40, top + 70), (W - 60, top), (60, top)], fill=(34, 32, 46))
+        d.line([(60, top), (W - 60, top)], fill=(90, 88, 110), width=3)
+        L.alpha_composite(gradient((30, 28, 42), (8, 8, 14), W, H - top - 70).convert("RGBA"), (0, top + 70))
+        d = ImageDraw.Draw(L)
+        d.rounded_rectangle((60, top + 120, W - 60, H - 60), 30, outline=g1 + (90,), width=4)
+        d.line([(90, top + 150), (W - 90, top + 150)], fill=g2 + (70,), width=2)
+        # tira LED animada en el borde
+        for x in range(0, W, 6):
+            k = (x / W + t * .35) % 1; k = 1 - abs(2 * k - 1)
+            col = tuple(int(g1[i] * (1 - k) + g2[i] * k) for i in range(3))
+            d.rectangle((x, top + 70, x + 6, top + 82), fill=col)
+        glow = Image.new("RGBA", (W, H), (0, 0, 0, 0)); gd = ImageDraw.Draw(glow)
+        gd.rectangle((0, top + 60, W, top + 95), fill=g1 + (110,))
+        L.alpha_composite(glow.filter(ImageFilter.GaussianBlur(14)))
+        L.alpha_composite(Image.new("RGBA", (W, H), (0, 0, 0, 0)))
+        d = ImageDraw.Draw(L)
+        # teclado RGB
+        kx0, kx1, ky0, ky1 = 300, 780, top + 18, top + 58
+        d.polygon([(kx0 - 10, ky1), (kx1 + 10, ky1), (kx1 - 8, ky0), (kx0 + 8, ky0)], fill=(14, 14, 20), outline=(70, 70, 85))
+        for r in range(3):
+            for i in range(14):
+                k = ((i / 14) + t * .5 + r * .1) % 1; k = 1 - abs(2 * k - 1)
+                col = tuple(int(g1[j] * (1 - k) + g2[j] * k) for j in range(3))
+                x = kx0 + 22 + i * 31 + (2 - r) * 3; y = ky0 + 7 + r * 11
+                d.rectangle((x, y, x + 22, y + 7), fill=col)
+        # mouse y taza
+        d.ellipse((835, top + 22, 885, top + 58), fill=(14, 14, 20), outline=g2, width=3)
+        d.rounded_rectangle((150, top - 30, 215, top + 40), 10, fill=(240, 240, 245)); d.arc((200, top - 15, 240, top + 20), 270, 90, fill=(240, 240, 245), width=8)
+        c.alpha_composite(L)
+
     def f_intro(s, t, dur):
         c = Image.new("RGBA", (W, H)); split_bg(c, False, t)
         paws(c, t, WHITE, 1)
@@ -395,9 +442,15 @@ def build(guion, out):
             put(c, vsl, W/2 + 390, 1000, scale=ease_back(prog(t, .9, .45)), rot=math.sin(t * 6) * 5)
         else:
             tm = teams[0]
-            put(c, ch(tm["kind"], 820, s, t, gain=1.2), W/2, 900 + math.sin(t * 5) * 10, scale=ease_back(prog(t, .2, .6)), rot=math.sin(t * 2.5) * 3)
-            lab = guion.get("subtitulo_intro", tm.get("plural", tm["nombre"] + "S")).upper()
-            put(c, text_layer(lab, fit_size(lab, 120, 960), stroke=7, stroke_fill=tm["stroke"]), W/2, 1450, scale=ease_back(prog(t, .5, .45)))
+            if BRAND.get("escritorio"):
+                put(c, ch(tm["kind"], 860, s, t, gain=1.2), W/2, 830 + math.sin(t * 3) * 6, alpha=ease_out(prog(t, .1, .4)), rot=math.sin(t * 1.8) * 1.5)
+                gamer_desk(c, t, ease_out(prog(t, 0, .6)))
+                lab = guion.get("subtitulo_intro", tm.get("plural", tm["nombre"] + "S")).upper()
+                put(c, text_layer(lab, fit_size(lab, 120, 960), stroke=7, stroke_fill=tm["stroke"]), W/2, 1520, scale=ease_back(prog(t, .5, .45)))
+            else:
+                put(c, ch(tm["kind"], 820, s, t, gain=1.2), W/2, 900 + math.sin(t * 5) * 10, scale=ease_back(prog(t, .2, .6)), rot=math.sin(t * 2.5) * 3)
+                lab = guion.get("subtitulo_intro", tm.get("plural", tm["nombre"] + "S")).upper()
+                put(c, text_layer(lab, fit_size(lab, 120, 960), stroke=7, stroke_fill=tm["stroke"]), W/2, 1450, scale=ease_back(prog(t, .5, .45)))
         fade(c, t, dur); return c
 
     def f_section(s, t, dur):

@@ -106,5 +106,6 @@
   }
  },
  "deco": "estrella",
- "fondo": "fondo.png"
+ "fondo": "fondo.png",
+ "escritorio": true
 }
