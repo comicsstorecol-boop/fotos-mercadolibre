@@ -105,5 +105,6 @@
    "blink_from": "below"
   }
  },
- "deco": "estrella"
+ "deco": "estrella",
+ "fondo": "fondo.png"
 }

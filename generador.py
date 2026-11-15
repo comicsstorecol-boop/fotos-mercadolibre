@@ -316,7 +316,19 @@ def build(guion, out):
         base = gradient((26, 20, 34), (8, 8, 16)).convert("RGBA")
         mk = Image.new("L", (W, H), 0); ImageDraw.Draw(mk).ellipse((-300, -400, W + 300, 900), fill=110)
         base.paste(Image.new("RGBA", (W, H), acc + (255,)), (0, 0), mk.filter(ImageFilter.GaussianBlur(220))); return base
-    BG = [darkbg(tm["colors"][0]) for tm in teams]
+    FONDO = None
+    if BRAND.get("fondo") and os.path.exists(A(BRAND["fondo"])):
+        f0 = Image.open(A(BRAND["fondo"])).convert("RGB")
+        sc = max(W / f0.width, H / f0.height); f0 = f0.resize((int(f0.width * sc) + 1, int(f0.height * sc) + 1), Image.LANCZOS)
+        f0 = f0.crop(((f0.width - W) // 2, (f0.height - H) // 2, (f0.width - W) // 2 + W, (f0.height - H) // 2 + H))
+        FONDO = f0
+    def fondo(blur, dark, tint=None):
+        im = FONDO.filter(ImageFilter.GaussianBlur(blur)) if blur else FONDO.copy()
+        im = Image.blend(im, Image.new("RGB", (W, H), (8, 6, 14)), dark)
+        if tint: im = Image.blend(im, Image.new("RGB", (W, H), tint), .12)
+        return im.convert("RGBA")
+    BG = [fondo(7, .55, tm["colors"][0]) if FONDO else darkbg(tm["colors"][0]) for tm in teams]
+    BG_SOFT = fondo(3, .35) if FONDO else None
     PAWS = {}
     def paws(c, t, color, seed):
         for i in range(6):
@@ -330,6 +342,8 @@ def build(guion, out):
         mo = s["mouth"]; lv = clamp(mo[min(len(mo) - 1, int(t * FPS))] * gain)
         return character(kind, size, round(lv * 5) / 5, ((t + phase) % 3.1) < .13)
     def split_bg(c, angle_vertical=False, t=0):
+        if BG_SOFT is not None and not vs:
+            c.alpha_composite(BG_SOFT); return
         c1 = teams[0]["colors"]; c2 = teams[1]["colors"] if vs else teams[0]["colors"]
         c.alpha_composite(gradient(*c1).convert("RGBA"))
         if vs:
@@ -340,7 +354,7 @@ def build(guion, out):
 
     titulo = guion.get("titulo", "5 COSAS QUE NO SABÍAS").upper()
     def f_logo(s, t, dur):
-        c = Image.new("RGBA", (W, H), (8, 8, 14, 255)); p = ease_out(prog(t, 0, .8))
+        c = fondo(10, .75) if FONDO else Image.new("RGBA", (W, H), (8, 8, 14, 255)); p = ease_out(prog(t, 0, .8))
         g = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(g)
         g1, g2 = [tuple(x) for x in BRAND["glow"]]
         d.ellipse((-200, 500, W/2 + 200, 1500), fill=g1 + (int(150 * p),))
@@ -417,7 +431,7 @@ def build(guion, out):
         card_h = 70 + len(tl) * int(tsz * 1.2) + 30 + len(bl) * int(bsz * 1.4) + 60; cy0 = 700
         q = ease_out(prog(t, .35, .45))
         card = Image.new("RGBA", (980, card_h), (0, 0, 0, 0))
-        ImageDraw.Draw(card).rounded_rectangle((0, 0, 979, card_h - 1), 56, fill=(255, 255, 255, 24), outline=col[0] + (200,), width=5)
+        ImageDraw.Draw(card).rounded_rectangle((0, 0, 979, card_h - 1), 56, fill=(12, 10, 22, 185) if FONDO else (255, 255, 255, 24), outline=col[0] + (200,), width=5)
         put(c, card, W/2, cy0 + card_h/2 + (1 - q) * 120, alpha=q)
         y = cy0 + 70
         for i, ln in enumerate(tl):
