@@ -279,3 +279,27 @@ def tiempos_palabras(texto, audio, sr, lead):
     for w, (b, p) in zip(words, wts):
         d = span * b / tot; out.append((t, t + d, w)); t += d + span * p / tot
     return out
+
+# ---------------------------------------------------------------- marca (cualquier página)
+@lru_cache(maxsize=16)
+def marca(nombre):
+    """Datos de la página: logo, nombre y colores, desde marcas/<nombre>/marca.json."""
+    import os, json
+    base = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "marcas", nombre)
+    b = json.load(open(os.path.join(base, "marca.json"), encoding="utf-8"))
+    lp = os.path.join(base, "logo.png")
+    logo = Image.open(lp).convert("RGBA") if os.path.exists(lp) else None
+    g1, g2 = [tuple(x) for x in b.get("glow", [[255, 200, 60], [120, 80, 220]])]
+    return dict(nombre=b["nombre"], logo=logo, c1=g1, c2=g2, cta=b.get("cta", "COMENTA · SÍGUENOS"), disclaimer=b.get("disclaimer"))
+
+def escena_cierre(m, t, d, pregunta=None):
+    """Cierre genérico con logo y colores de la página (sin personaje)."""
+    c = vgrad(W, H, [(0, mix(m["c2"], (10, 8, 20), .7)), (1, (8, 6, 14))]).copy()
+    glow(c, W / 2, 820, 420, m["c1"], 90); glow(c, W / 2, 1300, 300, m["c2"], 70)
+    if m["logo"] is not None:
+        lg = m["logo"].resize((620, int(620 * m["logo"].height / m["logo"].width)), Image.LANCZOS)
+        place(c, lg, W / 2, 860, scale=eb(pr(t, .1, .5)), rot=math.sin(t * 2) * 2)
+    if pregunta: etiqueta(c, pregunta, W / 2, 1320, (255, 255, 255), size=52, alpha=eo(pr(t, .5, .4)), borde=m["c1"])
+    etiqueta(c, m["cta"], W / 2, 1480, (20, 18, 34), bg=(255, 255, 255), size=46, alpha=eo(pr(t, .9, .4)))
+    if m.get("disclaimer"): etiqueta(c, m["disclaimer"], W / 2, H - 80, (255, 255, 255), size=30)
+    return camera(c, t, d, 1.0, 1.05)
