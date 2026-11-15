@@ -1,0 +1,25 @@
+{
+  "marca": "bitcol",
+  "titulo": "Pronósticos NBA de hoy",
+  "subtitulo_logo": "NBA · 14 DE NOVIEMBRE",
+  "intro_voz": "¡Pronósticos NBA de hoy! Cinco partidos analizados: bajas, cansancio y forma. Vamos con los picks.",
+  "equipos": [
+    {"equipo": "pronostico", "nombre": "Pronóstico", "plural": "Picks NBA",
+     "datos": [
+      {"titulo": "Nuggets gana en New Orleans", "texto": "82% · Sólido · cuota mín. 1.30 · 7:00 p. m. Pelicans sin 5 jugadores, cansados y con 5 derrotas seguidas.",
+       "voz": "Número uno. Nuggets gana en New Orleans. Ochenta y dos por ciento, pick sólido, cuota mínima uno treinta. A Pelicans le faltan cinco jugadores, juega dos noches seguidas y viene de cinco derrotas al hilo. Denver llega descansado y completo."},
+      {"titulo": "Timberwolves gana a Chicago", "texto": "82% · Sólido · cuota mín. 1.30 · 8:00 p. m. Minnesota va 9-3 con 5 seguidas; Bulls 2-9 y vienen de prórroga.",
+       "voz": "Número dos. Timberwolves gana a Chicago. Ochenta y dos por ciento, sólido, cuota mínima uno treinta. Minnesota va nueve y tres, con cinco victorias seguidas. Chicago va dos y nueve, y anoche jugó prórroga."},
+      {"titulo": "Mavericks gana en Cleveland", "texto": "70% · Favorito con riesgo · cuota mín. 1.54 · 7:30 p. m. Cleveland con 7 bajas, pero falta confirmar a Kyrie.",
+       "voz": "Número tres. Mavericks gana en Cleveland. Setenta por ciento, favorito con riesgo, cuota mínima uno cincuenta y cuatro. Cleveland tiene siete bajas oficiales, pero no está confirmado si juega Kyrie."},
+      {"titulo": "Grizzlies gana a Brooklyn", "texto": "62% · Favorito con riesgo · cuota mín. 1.75 · 8:00 p. m. Memphis 8-4, pero juega 2 noches seguidas y va 2-4 en casa.",
+       "voz": "Número cuatro. Grizzlies gana a Brooklyn. Sesenta y dos por ciento, favorito con riesgo, cuota mínima uno setenta y cinco. Memphis va ocho y cuatro, pero juega dos noches seguidas y en casa solo va dos y cuatro."},
+      {"titulo": "Heat vs Pistons: no apostar", "texto": "Leve inclinación por Pistons (55%), pero el partido está muy parejo. 8:00 p. m.",
+       "voz": "Número cinco. Heat contra Pistons: no apostar. Hay una leve inclinación por Pistons, cincuenta y cinco por ciento, pero el partido está demasiado parejo."},
+      {"titulo": "Combinada de sólidos", "texto": "Nuggets + Timberwolves: 67% de que ganen los dos. Dato informativo.",
+       "voz": "Número seis. La combinada de sólidos: Nuggets más Timberwolves tiene un sesenta y siete por ciento de que ganen los dos. Es un dato informativo."}
+     ]}
+  ],
+  "outro_texto": ["¿Con cuál", "te vas hoy?"],
+  "outro_voz": "Recuerda: son pronósticos, no certezas. Solo para mayores de edad, y apuesta con responsabilidad. Síguenos para más pronósticos."
+}
