@@ -360,5 +360,18 @@
   "¿Quién será",
   "el campeón?"
  ],
- "outro_voz": "¿Quién será el campeón? Deja tu favorito en los comentarios y síguenos en La Tabla FC."
+ "outro_voz": "¿Quién será el campeón? Deja tu favorito en los comentarios y síguenos en La Tabla FC.",
+ "gancho": {
+  "texto": "¡Tolima quedó afuera por UN punto!",
+  "voz": "¡Tolima quedó afuera por un solo punto! Mira cómo quedó la tabla.",
+  "icono": "alerta"
+ },
+ "reganchos": [
+  {
+   "despues_de": 3,
+   "texto": "¡El último cupo se definió sobre la hora!",
+   "voz": "Espera, porque el último cupo se definió sobre la hora.",
+   "icono": "cronometro"
+  }
+ ]
 }

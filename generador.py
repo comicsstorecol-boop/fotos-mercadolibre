@@ -255,8 +255,15 @@ def build(guion, out):
     vs = len(teams) == 2
     speak = tts_engine()
     LEAD = .35
-    scenes = [dict(id="logo", kind="logo", voz="", min=2.6, tail=0)]
-    scenes.append(dict(id="intro", kind="intro", voz=guion["intro_voz"], min=3.5, tail=.6))
+    scenes = []
+    G = guion.get("gancho")
+    if G:
+        scenes.append(dict(id="gancho", kind="gancho", voz=G["voz"], texto=G.get("texto", ""), icono=G.get("icono"), min=2.2, tail=.25, lead=.08, caps=True))
+        scenes.append(dict(id="logo", kind="logo", voz="", min=1.3, tail=0))
+    else:
+        scenes.append(dict(id="logo", kind="logo", voz="", min=2.6, tail=0))
+    scenes.append(dict(id="intro", kind="intro", voz=guion["intro_voz"], min=3.5, tail=.6, caps=True))
+    RG = {r["despues_de"]: r for r in guion.get("reganchos", [])}; nfact = 0
     for ti, tm in enumerate(teams):
         if tm.get("seccion_voz"):
             scenes.append(dict(id=f"sec{ti}", kind="section", team=ti, voz=tm["seccion_voz"], min=2.2, tail=.5))
@@ -265,15 +272,27 @@ def build(guion, out):
             scenes.append(dict(id=f"t{ti}d{i}", kind="fact", team=ti, idx=i + 1, n=n, titulo=dato["titulo"],
                                texto=dato["texto"], visual=dato.get("visual"), voz=dato.get("voz") or f"Número {i+1}. {dato['titulo']}. {dato['texto']}",
                                min=4.5, tail=.7))
+            nfact += 1
+            if nfact in RG:
+                r = RG[nfact]
+                scenes.append(dict(id=f"rg{nfact}", kind="regancho", team=ti, voz=r["voz"], texto=r.get("texto", "¡ESPERA!"),
+                                   icono=r.get("icono", "alerta"), min=1.8, tail=.2, lead=.1, caps=True))
     scenes.append(dict(id="outro", kind="outro", voz=guion["outro_voz"], min=4.0, tail=1.6))
 
     print("Generando voz…", flush=True)
     for s in scenes:
         s["audio"] = speak(s["voz"]) if s["voz"] else np.zeros(1, np.float32)
-        s["dur"] = round(max(s["min"], LEAD + len(s["audio"]) / SR + s["tail"]) * FPS) / FPS
+        ld = s.get("lead", LEAD); s["lead_"] = ld
+        s["dur"] = round(max(s["min"], ld + len(s["audio"]) / SR + s["tail"]) * FPS) / FPS
+        if s.get("caps") and s["voz"]:
+            words = s["voz"].split(); chunks = [" ".join(words[i:i + 3]) for i in range(0, len(words), 3)]
+            tot = sum(len(ch) + 2 for ch in chunks); a0 = ld; span = len(s["audio"]) / SR; cap = []
+            for ch in chunks:
+                d_ = span * (len(ch) + 2) / tot; cap.append((a0, a0 + d_, ch)); a0 += d_
+            s["caps_t"] = cap
         nf = int(round(s["dur"] * FPS)); env = []
         for f in range(nf):
-            a = int((f / FPS - LEAD) * SR); b = a + SR // FPS
+            a = int((f / FPS - ld) * SR); b = a + SR // FPS
             seg = s["audio"][max(0, a):max(0, b)] if b > 0 else s["audio"][:0]
             env.append(float(np.sqrt(np.mean(seg ** 2))) if len(seg) else 0.0)
         env = np.array(env); ref = np.percentile(env[env > 0], 90) if (env > 0).any() else 1
@@ -285,14 +304,15 @@ def build(guion, out):
     vo = np.zeros(N, np.float32); fx = np.zeros(N, np.float32)
     POP, WH, ST = sfx(); off = 0.0
     for s in scenes:
-        _add(vo, s["audio"], off + LEAD); _add(fx, WH * .6, max(0, off - .15))
+        _add(vo, s["audio"], off + s["lead_"]); _add(fx, WH * .6, max(0, off - .15))
+        if s["kind"] in ("gancho", "regancho"): _add(fx, ST * .7, off + .02)
         if s["kind"] == "fact": _add(fx, POP, off + .15)
         if s["kind"] == "section": _add(fx, POP, off + .45)
         if s["kind"] == "logo": _add(fx, ST, off + .15)
         off += s["dur"]
     m = music(total, N)
     fadev = np.ones(N); fe = int(total * SR); fl = int(1.5 * SR); fadev[fe - fl:fe] = np.linspace(1, 0, fl); fadev[fe:] = 0
-    st = np.zeros(N); a0 = int(2.3 * SR); st[a0:] = 1; st[a0:a0 + 12000] = np.linspace(0, 1, 12000)
+    st = np.zeros(N); a0 = int((0.0 if G else 2.3) * SR); st[a0:] = 1; st[a0:a0 + 12000] = np.linspace(0, 1, 12000)
     env = np.convolve(np.abs(vo), np.ones(int(.25 * SR)) / int(.25 * SR), "same")
     mix = (m * fadev * st * (1 - .55 * np.clip(env / .03, 0, 1)) * .55 + vo + fx * .5)[:int(total * SR)]
     mix = mix / max(1e-6, np.abs(mix).max()) * .92
@@ -545,7 +565,69 @@ def build(guion, out):
         if not txt: return
         put(c, pill(560, 56, (0, 0, 0), (25, 25, 25), r=28), W/2, H - 60, alpha=.85)
         put(c, text_layer(txt, fit_size(txt, 30, 520), fill=(255, 255, 255, 230)), W/2, H - 60)
-    FN = dict(logo=f_logo, intro=f_intro, section=f_section, fact=f_fact, outro=f_outro)
+    def captions(c, s, t, y, size=74):
+        for (a, b, txt) in s.get("caps_t", []):
+            if a <= t < b + .05:
+                k = ease_back(prog(t, a, .18)); up = txt.upper()
+                lay = text_layer(up, fit_size(up, size, 980), fill=(255, 255, 255), stroke=8, stroke_fill=(0, 0, 0))
+                put(c, lay, W/2, y, scale=.8 + .2 * k)
+                break
+
+    def big_lines(c, txt, t, y_center, colhi, size=118):
+        lines = wrap(txt.upper(), F(size), 960); sz = size if len(lines) <= 3 else 92
+        lines = wrap(txt.upper(), F(sz), 960); y = y_center - (len(lines) - 1) * sz * .6
+        for i, ln in enumerate(lines):
+            k = ease_back(prog(t, .05 + i * .12, .35)); shake = math.sin(t * 60) * 6 * (1 - prog(t, 0, .5))
+            put(c, text_layer(ln, sz, fill=colhi if i == len(lines) - 1 else WHITE, stroke=9, stroke_fill=(0, 0, 0)),
+                W/2 + shake, y + i * sz * 1.2, scale=.6 + .4 * k, alpha=prog(t, .03 + i * .12, .1))
+
+    def f_gancho(s, t, dur):
+        tm = teams[0]; col = tm["colors"]
+        c = (fondo(4, .55) if FONDO else darkbg(col[0])).copy()
+        z = 1.12 - .12 * ease_out(prog(t, 0, dur))
+        if z != 1:
+            cz = c.resize((int(W * z), int(H * z))); c = cz.crop(((cz.width - W) // 2, (cz.height - H) // 2, (cz.width - W) // 2 + W, (cz.height - H) // 2 + H))
+        g = Image.new("RGBA", (W, H), (0, 0, 0, 0)); gd = ImageDraw.Draw(g)
+        pulse = .5 + .5 * math.sin(t * 8)
+        gd.ellipse((-100, 300, W + 100, 1200), fill=col[0] + (int(70 + 60 * pulse),)); c.alpha_composite(g.filter(ImageFilter.GaussianBlur(120)))
+        if s.get("icono"):
+            import visuales
+            put(c, visuales.icono(s["icono"]).resize((300, 300)), W/2, 360, scale=ease_back(prog(t, .1, .4)), rot=math.sin(t * 5) * 8)
+        big_lines(c, s["texto"] or s["voz"], t, 760, col[0])
+        put(c, ch(tm["kind"], 760, s, t, gain=1.3), W/2, H - 220 + (1 - ease_back(prog(t, 0, .35))) * 500, rot=math.sin(t * 3) * 4)
+        captions(c, s, t, 1210)
+        if t < .12: c.alpha_composite(Image.new("RGBA", (W, H), (255, 255, 255, int(200 * (1 - t / .12)))))
+        fade(c, t, dur, .12); return c
+
+    def f_regancho(s, t, dur):
+        tm = teams[s["team"]]; col = tm["colors"]
+        c = BG[s["team"]].copy()
+        stripes = Image.new("RGBA", (W, H), (0, 0, 0, 0)); sd = ImageDraw.Draw(stripes)
+        for i in range(-4, 14):
+            x = i * 160 + (t * 600) % 160; sd.polygon([(x, 0), (x + 70, 0), (x - 330, H), (x - 400, H)], fill=col[0] + (28,))
+        c.alpha_composite(stripes)
+        import visuales
+        put(c, visuales.icono(s.get("icono") or "alerta").resize((340, 340)), W/2, 470, scale=ease_back(prog(t, .05, .35)), rot=math.sin(t * 9) * 6)
+        big_lines(c, s["texto"], t, 860, col[0], 120)
+        captions(c, s, t, 1250)
+        put(c, ch(tm["kind"], 640, s, t, gain=1.3), W/2, H - 200 + (1 - ease_back(prog(t, 0, .3))) * 500)
+        if t < .1: c.alpha_composite(Image.new("RGBA", (W, H), (255, 255, 255, int(180 * (1 - t / .1)))))
+        fade(c, t, dur, .12); return c
+
+    _f_intro = f_intro
+    def f_intro2(s, t, dur):
+        c = _f_intro(s, t, dur); captions(c, s, t, 1760 if not BRAND.get("escritorio") else 1790, 64); return c
+    def punch(fn):
+        def g(s, t, dur):
+            c = fn(s, t, dur)
+            if t < .28:
+                z = 1 + .07 * (1 - t / .28) ** 2
+                cz = c.resize((int(W * z), int(H * z))); c = cz.crop(((cz.width - W) // 2, (cz.height - H) // 2, (cz.width - W) // 2 + W, (cz.height - H) // 2 + H))
+            return c
+        return g
+    _logo = f_logo
+    f_logo_fast = (lambda s, t, dur: _logo(s, t * 2.6 / dur, 2.6)) if G else f_logo
+    FN = dict(logo=f_logo_fast, intro=f_intro2, section=f_section, fact=punch(f_fact), outro=f_outro, gancho=f_gancho, regancho=punch(f_regancho))
     with tempfile.TemporaryDirectory() as td:
         if os.environ.get("PREVIEW"):
             ims = [FN[s["kind"]](s, s["dur"] * .6, s["dur"]).convert("RGB").resize((360, 640)) for s in scenes]
