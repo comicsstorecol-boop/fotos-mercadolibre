@@ -48,10 +48,14 @@ def convert(x, sr, ref_paths, topk=4):
     R = _ref[key]
     with torch.inference_mode():
         q = m.get_features(t)
-        best = fast_cosine_dist(q, R).topk(k=topk, largest=False, dim=-1)
-        matched = R[best.indices].mean(dim=1)
+        # por bloques para no agotar la memoria con referencias largas
+        idx, vals = [], []
+        for i in range(0, q.shape[0], 64):
+            b = fast_cosine_dist(q[i:i + 64], R).topk(k=topk, largest=False, dim=-1); idx.append(b.indices); vals.append(b.values)
+        idx, vals = torch.cat(idx), torch.cat(vals)
+        matched = R[idx].mean(dim=1)
         # blend the original (clear) pronunciation back in where the reference voice has no good match
-        d = best.values.mean(dim=1)
+        d = vals.mean(dim=1)
         w = ((d - BLEND_LO) / (BLEND_HI - BLEND_LO)).clamp(0, 1) * BLEND_MAX + BLEND_BASE
         w = Fn.avg_pool1d(w[None, None], 5, 1, 2, count_include_pad=False)[0, 0].clamp(0, 1)
         feats = (1 - w[:, None]) * matched + w[:, None] * q
