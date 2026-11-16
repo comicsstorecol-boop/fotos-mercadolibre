@@ -21,7 +21,7 @@ def model():
         _m = KNeighborsVC(w, g, h, 'cpu')
     return _m
 _ref = {}
-BLEND_LO, BLEND_HI, BLEND_MAX, BLEND_BASE = 0.38, 0.52, 0.75, 0.12
+BLEND_LO, BLEND_HI, BLEND_MAX, BLEND_BASE = [float(v) for v in os.environ.get("VOZ_BLEND", "0.42,0.56,0.5,0.04").split(",")]
 def ref_features(ref):
     """Features of the reference voice, computed in 20 s chunks and cached next to the file."""
     import os, subprocess, tempfile, glob

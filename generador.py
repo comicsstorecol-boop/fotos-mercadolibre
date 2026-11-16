@@ -187,11 +187,11 @@ def tts_engine():
         flush(); return " ".join(out)
     def base_voice(txt, pron=None):
         if kok and pron and any(w.strip(".,;:!?¡¿…\"'").lower() in pron for w in txt.split()):
-            y, ksr = kok.create(fonemas(txt, pron), voice="em_alex", speed=1.1, is_phonemes=True)
+            y, ksr = kok.create(fonemas(txt, pron), voice="em_alex", speed=float(os.environ.get("VOZ_SPEED", "1.0")), is_phonemes=True)
             import librosa
             return librosa.resample(y.astype(np.float32), orig_sr=ksr, target_sr=SR).astype(np.float32)
         if kok:
-            y, ksr = kok.create(txt, voice="em_alex", speed=1.1, lang="es-419")
+            y, ksr = kok.create(txt, voice="em_alex", speed=float(os.environ.get("VOZ_SPEED", "1.0")), lang="es-419")
             import librosa
             return librosa.resample(y.astype(np.float32), orig_sr=ksr, target_sr=SR).astype(np.float32)
         return np.concatenate([ch.audio_float_array for ch in v.synthesize(txt, syn_config=cfg)]).astype(np.float32)
