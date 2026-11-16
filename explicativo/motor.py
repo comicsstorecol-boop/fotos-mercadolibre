@@ -26,13 +26,15 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
     global NIVEL
     import lib; lib.ESTILO_SUB = estilo or "clasico"
     if colores: lib.NEON, lib.NEON2 = colores
-    HORIZ = formato == "horizontal"
-    if HORIZ:
+    if lib.HORIZONTAL: y_sub = 960
+    HORIZ = lib.HORIZONTAL
+    if formato == "horizontal" and not HORIZ: raise SystemExit("Para horizontal ejecutar con la variable de entorno FORMATO=horizontal")
+    if False:
         def _h(fn):
             fit = fn.__name__ in ("cierre",)
             def g(t, d): return lib.horizontal(fn(t, d), fit=fit)
             g.__name__ = fn.__name__; return g
-        ESCENAS = [(_h(fn),) + tuple(r) for fn, *r in ESCENAS]; y_sub = 935
+        pass
     pron = {**PRON_BASE, **(pron or {})}
     SR = G.SR; speak = G.tts_engine(); plan = []
     for fn, txt, clave in ESCENAS:
@@ -62,7 +64,7 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
     mix_ = mix_ / max(1e-6, np.abs(mix_).max()) * .92
     with tempfile.TemporaryDirectory() as td:
         sf.write(f"{td}/a.wav", mix_, SR)
-        pr_ = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", ("1920x1080" if HORIZ else f"{W}x{H}"), "-r", "30", "-i", "-",
+        pr_ = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{lib.W}x{lib.H}", "-r", "30", "-i", "-",
                                 "-c:v", "libx264", "-preset", "veryfast", "-crf", "19", "-pix_fmt", "yuv420p", f"{td}/v.mp4"], stdin=subprocess.PIPE)
         prev = None
         for p in plan:

@@ -35,7 +35,7 @@ def _grano(c, t):
 
 def _fondo_marca(t):
     c = vgrad(W, H, [(0, (14, 6, 22)), (.5, (8, 10, 18)), (1, (4, 14, 8))]).copy()
-    glow(c, W * .3 + math.sin(t * .8) * 80, 600, 420, _c.r, 70); glow(c, W * .7 + math.cos(t * .7) * 80, 1400, 420, _c.v, 55)
+    glow(c, W * .3 + math.sin(t * .8) * 80, Y(600), 420, _c.r, 70); glow(c, W * .7 + math.cos(t * .7) * 80, Y(1400), 420, _c.v, 55)
     return c
 
 def logo_mini(c, a=1.):
@@ -46,11 +46,11 @@ def logo_mini(c, a=1.):
 def portada(titulo, linea2, sub, obj=None):
     def f(t, d):
         c = _fondo_marca(t)
-        if obj: place(c, objeto(obj), W / 2, 1380, scale=.9 * eb(pr(t, .3, .6)), alpha=.9)
-        neon(c, "RESEÑA", W / 2, 640, 70, _c.r, eo(pr(t, .1, .4)))
-        neon(c, titulo, W / 2, 800, 118, _c.v, eo(pr(t, .3, .5)))
-        if linea2: neon(c, linea2, W / 2, 940, 118, _c.v, eo(pr(t, .4, .5)))
-        etiqueta(c, sub, W / 2, 1080, (255, 255, 255), size=46, alpha=eo(pr(t, .7, .4)), borde=_c.r)
+        if obj: place(c, objeto(obj), W / 2, Y(1380), scale=.9 * KS * eb(pr(t, .3, .6)), alpha=.9)
+        neon(c, "RESEÑA", W / 2, Y(640), 70, _c.r, eo(pr(t, .1, .4)))
+        neon(c, titulo, W / 2, Y(800), 118, _c.v, eo(pr(t, .3, .5)))
+        if linea2: neon(c, linea2, W / 2, Y(940), 118, _c.v, eo(pr(t, .4, .5)))
+        etiqueta(c, sub, W / 2, Y(1080), (255, 255, 255), size=46, alpha=eo(pr(t, .7, .4)), borde=_c.r)
         logo_mini(c); _grano(c, t); vineta(c, .6)
         return camera(c, t, d, 1.0, 1.06)
     f.__name__ = "portada"; return f
@@ -58,9 +58,9 @@ def portada(titulo, linea2, sub, obj=None):
 def capitulo(n, titulo, obj=None):
     def f(t, d):
         c = _fondo_marca(t + n)
-        if obj: place(c, objeto(obj), W / 2, 1300, scale=.8 * eb(pr(t, .2, .6)), alpha=.85)
-        neon(c, f"CAPÍTULO {n}", W / 2, 760, 64, _c.r, eo(pr(t, .05, .35)))
-        for i, ln in enumerate(titulo.split("|")): neon(c, ln, W / 2, 900 + i * 120, 104, _c.v, eo(pr(t, .2 + i * .1, .4)))
+        if obj: place(c, objeto(obj), W / 2, Y(1300), scale=.8 * KS * eb(pr(t, .2, .6)), alpha=.85)
+        neon(c, f"CAPÍTULO {n}", W / 2, Y(760), 64, _c.r, eo(pr(t, .05, .35)))
+        for i, ln in enumerate(titulo.split("|")): neon(c, ln, W / 2, Y(900 + i * 120) if not HORIZONTAL else 470 + i * 110, 104, _c.v, eo(pr(t, .2 + i * .1, .4)))
         logo_mini(c); _grano(c, t)
         return camera(c, t, d, 1.08, 1.0)
     f.__name__ = f"cap{n}"; return f
@@ -68,16 +68,16 @@ def capitulo(n, titulo, obj=None):
 def calificacion(nota, total=5):
     est = objeto("estrella")
     def f(t, d):
-        c = _fondo_marca(t); neon(c, "MI CALIFICACIÓN", W / 2, 760, 72, _c.r)
+        c = _fondo_marca(t); neon(c, "MI CALIFICACIÓN", W / 2, Y(760), 72, _c.r)
         for i in range(total):
             x = W / 2 + (i - (total - 1) / 2) * 190; a = eb(pr(t, .3 + i * .25, .4))
             if a <= 0: continue
             frac = max(0, min(1, nota - i))
-            gris = est.copy(); gris.putalpha(gris.getchannel("A").point(lambda v: int(v * .25))); place(c, gris, x, 1000, scale=.6 * a)
+            gris = est.copy(); gris.putalpha(gris.getchannel("A").point(lambda v: int(v * .25))); place(c, gris, x, Y(1000), scale=.6 * a)
             if frac > 0:
                 s = est.crop((0, 0, int(est.width * frac), est.height)); L = Image.new("RGBA", est.size, (0, 0, 0, 0)); L.paste(s, (0, 0))
-                place(c, L, x, 1000, scale=.6 * a)
-        neon(c, f"{str(nota).replace('.', ',')} / {total}", W / 2, 1210, 110, _c.v, eo(pr(t, 1.6, .5)))
+                place(c, L, x, Y(1000), scale=.6 * a)
+        neon(c, f"{str(nota).replace('.', ',')} / {total}", W / 2, Y(1210), 110, _c.v, eo(pr(t, 1.6, .5)))
         logo_mini(c); return camera(c, t, d, 1.0, 1.05)
     f.__name__ = "nota"; return f
 
@@ -162,7 +162,11 @@ _ANF = None
 _PRESETS = [(1.3, 1.1, .36), (1.1, 1.35, .38), (1.4, 1.15, .4), (1.0, 1.25, .45), (1.15, 1.4, .36), (1.4, 1.1, .45), (1.0, 1.3, .4)]
 def anfitrion():
     global _ANF
-    if _ANF is None: _ANF = Anfitrion(os.path.join(os.path.dirname(HERE), "marcas", "comics-store", "intros", "terror_narrador.png"))
+    if _ANF is None:
+        d = os.path.join(os.path.dirname(HERE), "marcas", "comics-store", "intros")
+        if HORIZONTAL:
+            _ANF = Anfitrion(os.path.join(d, "terror_narrador_h.png"), cabeza=(840, 250, 250, 260), boca=(840, 312), vela=(1226, 525), lampara=(615, 55), ventana=(1100, 0, 1672, 560))
+        else: _ANF = Anfitrion(os.path.join(d, "terror_narrador.png"))
     return _ANF
 
 def resena_completa(titulo, linea2, sub, obj_portada, gancho, presentacion, historia, detras, opinion, nota, cierre_nota,

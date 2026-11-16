@@ -3,7 +3,7 @@ Una escena es un dict:
   {"fondo": "cementerio", "el": [("dama", x, y, escala, {"anim": "flotar"}), ...], "fx": ["niebla", "lluvia"],
    "cam": (z0, z1, dx, dy), "tag": "1907", "pulso": 0, "luz": (x, y, r, (r,g,b))}
 Lo estático se compone una vez; lo animado se dibuja por cuadro."""
-import math, random
+import math, random, os
 from functools import lru_cache
 from PIL import Image, ImageDraw, ImageFilter
 from lib import *
@@ -44,8 +44,30 @@ def _bosque_siluetas(c, base, col, n=9, seed=2, s=1.):
         h.poly([(x, base - hh), (x - w, base), (x + w, base)], fill=col); h.rect((x - 10, base - 20, x + 10, base + 20), fill=col)
     c.alpha_composite(h.done())
 
+BIB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "biblioteca", "fondos")
+def fondo_img(nombre):
+    """Fondo de la biblioteca (imágenes generadas por Fernando) según la orientación, o None."""
+    import glob
+    hits = sorted(glob.glob(os.path.join(BIB, "h" if HORIZONTAL else "v", f"{nombre}.*")))
+    if not hits: return None
+    im = Image.open(hits[0]).convert("RGBA"); s = max(W / im.width, H / im.height)
+    im = im.resize((int(im.width * s + .5), int(im.height * s + .5)), Image.LANCZOS)
+    return im.crop(((im.width - W) // 2, (im.height - H) // 2, (im.width - W) // 2 + W, (im.height - H) // 2 + H))
+
 @lru_cache(maxsize=32)
 def fondo(nombre):
+    im = fondo_img(nombre)
+    if im is not None: return im
+    if not HORIZONTAL: return _fondo_codigo(nombre)
+    # respaldo horizontal: dibujar en vertical y recortar la franja del horizonte a pantalla completa
+    import lib as _l
+    g = globals(); saved = (g["W"], g["H"], _l.W, _l.H); g["W"], g["H"], _l.W, _l.H = 1080, 1920, 1080, 1920
+    try: v = _fondo_codigo(nombre)
+    finally: g["W"], g["H"], _l.W, _l.H = saved
+    band = v.crop((0, 500, 1080, 1500)).resize((1920, int(1000 * 1920 / 1080)), Image.LANCZOS)
+    return band.crop((0, (band.height - 1080) // 2, 1920, (band.height - 1080) // 2 + 1080))
+
+def _fondo_codigo(nombre):
     N = [(0, (6, 8, 22)), (.6, (24, 26, 56)), (1, (8, 8, 16))]
     if nombre == "bosque":
         c = _cielo(N, luna=(780, 580, 80)); _bosque_siluetas(c, 1250, (16, 20, 34), 10, 3, 1.1); _bosque_siluetas(c, 1400, (10, 12, 20), 9, 5, 1.3)
@@ -507,8 +529,22 @@ def _img_el(tipo, var=""):
     if tipo == "seto": return figura("perro", (90, 160, 90), (34, 86, 44))
     return objeto(tipo, var)
 
+def _a_horizontal(spec):
+    """Adapta una escena escrita en coordenadas verticales al lienzo horizontal."""
+    if not HORIZONTAL or spec.get("h"): return spec
+    sp = dict(spec)
+    sp["el"] = [(e[0], X(e[1]), Y(e[2]), e[3] * KS) + tuple(e[4:]) for e in spec.get("el", [])]
+    sp["glows"] = [(g[0] if False else X(g[0]), Y(g[1]), g[2] * KS) + tuple(g[3:]) for g in spec.get("glows", [])]
+    sp["velas"] = [(X(v[0]), Y(v[1]), v[2] * KS) + tuple(v[3:]) for v in spec.get("velas", [])]
+    if "tag_y" in spec: sp["tag_y"] = Y(spec["tag_y"])
+    else: sp["tag_y"] = Y(560)
+    sp["niebla_y"] = Y(spec.get("niebla_y", 1300))
+    if "cam" in spec: z0, z1, dx, dy = spec["cam"]; sp["cam"] = (z0, z1, dx * 1.2, dy * .5)
+    return sp
+
 def escena(spec):
     """Devuelve f(t, d) a partir de la especificación."""
+    spec = _a_horizontal(spec)
     base_cache = {}
     def build_base():
         c = fondo(spec.get("fondo", "estudio")).copy()

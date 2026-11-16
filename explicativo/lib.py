@@ -1,10 +1,15 @@
+import os
 """Biblioteca del estilo EXPLICATIVO (escenas ilustradas en vector, una por frase).
 Todo se dibuja a 2x y se reduce (antialias). Coordenadas siempre en el lienzo final 1080x1920."""
 import math, random
 from functools import lru_cache
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-W, H, SS = 1080, 1920, 2
+HORIZONTAL = os.environ.get("FORMATO") == "horizontal"
+W, H, SS = (1920, 1080, 2) if HORIZONTAL else (1080, 1920, 2)
+def Y(v): return 180 + (v - 500) * .74 if HORIZONTAL else v       # mapea coordenadas pensadas en vertical
+def X(v): return 960 + (v - 540) * 1.35 if HORIZONTAL else v
+KS = .74 if HORIZONTAL else 1.
 FB = "/usr/share/fonts/truetype/google-fonts/Poppins-Bold.ttf"
 FM = "/usr/share/fonts/truetype/google-fonts/Poppins-Medium.ttf"
 def F(s): return ImageFont.truetype(FB, s)
@@ -316,6 +321,15 @@ def marca(nombre):
 def escena_cierre(m, t, d, pregunta=None):
     """Cierre genérico con logo y colores de la página (sin personaje)."""
     c = vgrad(W, H, [(0, mix(m["c2"], (10, 8, 20), .7)), (1, (8, 6, 14))]).copy()
+    if HORIZONTAL:
+        glow(c, 620, 540, 420, m["c1"], 90); glow(c, 1300, 540, 340, m["c2"], 70)
+        if m["logo"] is not None:
+            lg = m["logo"].resize((560, int(560 * m["logo"].height / m["logo"].width)), Image.LANCZOS)
+            place(c, lg, 620, 540, scale=eb(pr(t, .1, .5)), rot=math.sin(t * 2) * 2)
+        if pregunta: etiqueta(c, pregunta, 1300, 470, (255, 255, 255), size=52, alpha=eo(pr(t, .5, .4)), borde=m["c1"])
+        etiqueta(c, m["cta"], 1300, 600, (20, 18, 34), bg=(255, 255, 255), size=46, alpha=eo(pr(t, .9, .4)))
+        if m.get("disclaimer"): etiqueta(c, m["disclaimer"], W / 2, H - 60, (255, 255, 255), size=30)
+        return camera(c, t, d, 1.0, 1.05)
     glow(c, W / 2, 820, 420, m["c1"], 90); glow(c, W / 2, 1300, 300, m["c2"], 70)
     if m["logo"] is not None:
         lg = m["logo"].resize((620, int(620 * m["logo"].height / m["logo"].width)), Image.LANCZOS)
