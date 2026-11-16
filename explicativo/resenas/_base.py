@@ -6,9 +6,10 @@ from motor import render
 AMB = (255, 200, 120); AZ = (150, 190, 255); ROJO = (220, 40, 50); FRIO = (170, 200, 255); VERDE_T = (120, 255, 140); ORO = (255, 210, 100)
 def en(*ws): return {w.lower().strip(".,"): ("en", w) for w in ws}
 GANCHO = "Hay historias que deberían permanecer enterradas… Esta noche, vamos a despertar una de ellas."
-def correr_corta(esc, ganchos, nombre, pron, red):
+def correr_corta(esc, ganchos, nombre, pron, red, colores=None):
     out = sys.argv[1] if len(sys.argv) > 1 else f"/home/claude/{red}_{nombre}.mp4"
-    render(esc, out, musica="terror", pron=pron, estilo="neon", y_sub=330, regancho_idx=ganchos)
-def correr(esc, ganchos, nombre, pron):
+    render(esc, out, musica="terror", pron=pron, estilo="neon", y_sub=330, regancho_idx=ganchos, colores=colores)
+def correr(esc, ganchos, nombre, pron, colores=None, formato="horizontal"):
+    """YouTube: horizontal 1920x1080 por defecto. colores = (principal, acento) acordes al tema."""
     out = sys.argv[1] if len(sys.argv) > 1 else f"/home/claude/resena_{nombre}.mp4"
-    render(esc, out, musica="terror", pron=pron, estilo="neon", y_sub=330, regancho_idx=ganchos)
+    render(esc, out, musica="terror", pron=pron, estilo="neon", y_sub=330, regancho_idx=ganchos, formato=formato, colores=colores)

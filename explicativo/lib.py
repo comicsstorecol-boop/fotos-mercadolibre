@@ -227,6 +227,7 @@ NEON = (57, 255, 20); NEON2 = (255, 46, 166)
 
 def karaoke(c, palabras, t, y=250, clave=(), size=60, max_chars=26):
     if ESTILO_SUB == "neon": size, max_chars = 74, 20
+    if c.size[0] > c.size[1]: size, max_chars = 70, 34
     """palabras: [(t0, t1, 'texto')]. Muestra la línea actual; la palabra dicha en blanco, el resto atenuado; 'clave' enmarcadas."""
     if not palabras: return
     # partir en líneas por cantidad de caracteres
@@ -245,7 +246,7 @@ def karaoke(c, palabras, t, y=250, clave=(), size=60, max_chars=26):
     f = F(size); d0 = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
     widths = [d0.textlength(w[2], font=f) for w in act]; sp = size * .28
     total = sum(widths) + sp * (len(act) - 1)
-    if total > W - 80:   # dos renglones
+    if total > c.size[0] - 80:   # dos renglones
         half = len(act) // 2
         karaoke_line(c, act[:half], t, y - size * .62, clave, size); karaoke_line(c, act[half:], t, y + size * .62, clave, size); return
     karaoke_line(c, act, t, y, clave, size)
@@ -254,7 +255,7 @@ def karaoke_line(c, act, t, y, clave, size):
     if ESTILO_SUB == "neon": return karaoke_neon(c, act, t, y, clave, size)
     f = F(size); d0 = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
     widths = [d0.textlength(w[2], font=f) for w in act]; sp = size * .28; total = sum(widths) + sp * (len(act) - 1)
-    L = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(L); x = (W - total) / 2
+    CW, CH = c.size; L = Image.new("RGBA", (CW, CH), (0, 0, 0, 0)); d = ImageDraw.Draw(L); x = (CW - total) / 2
     for (t0, t1, txt), w in zip(act, widths):
         said = t >= t0; now = t0 <= t < t1 + .05
         limpio = txt.strip(".,;:!?¡¿").lower()
@@ -265,13 +266,13 @@ def karaoke_line(c, act, t, y, clave, size):
         col = (255, 255, 255, 255) if said else (255, 255, 255, 110)
         d.text((x, y), txt, font=f, fill=col, anchor="lm", stroke_width=5 if said else 0, stroke_fill=(0, 0, 0, 160))
         x += w + sp
-    sh = Image.new("RGBA", (W, H), (0, 0, 0, 0)); sh.putalpha(L.getchannel("A").point(lambda v: int(v * .45)))
+    sh = Image.new("RGBA", (CW, CH), (0, 0, 0, 0)); sh.putalpha(L.getchannel("A").point(lambda v: int(v * .45)))
     c.alpha_composite(sh.filter(ImageFilter.GaussianBlur(10)), (0, 6)); c.alpha_composite(L)
 
 def karaoke_neon(c, act, t, y, clave, size):
     f = F(size); d0 = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
     widths = [d0.textlength(w[2].upper(), font=f) for w in act]; sp = size * .3; total = sum(widths) + sp * (len(act) - 1)
-    G_ = Image.new("RGBA", (W, H), (0, 0, 0, 0)); L = Image.new("RGBA", (W, H), (0, 0, 0, 0)); dg, d = ImageDraw.Draw(G_), ImageDraw.Draw(L); x = (W - total) / 2
+    CW, CH = c.size; G_ = Image.new("RGBA", (CW, CH), (0, 0, 0, 0)); L = Image.new("RGBA", (CW, CH), (0, 0, 0, 0)); dg, d = ImageDraw.Draw(G_), ImageDraw.Draw(L); x = (CW - total) / 2
     for (t0, t1, txt), w in zip(act, widths):
         said = t >= t0; now = t0 <= t < t1 + .05; txt = txt.upper()
         clave_w = txt.strip(".,;:!?¡¿…").lower() in clave
@@ -280,7 +281,7 @@ def karaoke_neon(c, act, t, y, clave, size):
         if said: dg.text((x, yy), txt, font=f, fill=col + (255,), anchor="lm", stroke_width=10, stroke_fill=col + (255,))
         d.text((x, yy), txt, font=f, fill=(255, 255, 255, 255) if now else (col + (255,)), anchor="lm", stroke_width=6, stroke_fill=(0, 0, 0, 255))
         x += w + sp
-    c.alpha_composite(G_.filter(ImageFilter.GaussianBlur(16))); c.alpha_composite(G_.filter(ImageFilter.GaussianBlur(6)).point(lambda v: v) if False else Image.new("RGBA", (W, H), (0, 0, 0, 0)))
+    c.alpha_composite(G_.filter(ImageFilter.GaussianBlur(16)))
     c.alpha_composite(L)
 
 def tiempos_palabras(texto, audio, sr, lead):
@@ -428,3 +429,25 @@ def pulso(c, t, bpm=70, col=(200, 20, 30), fuerza=1.):
     ph = (t * bpm / 60) % 1; k = max(0, 1 - ph * 5) + .6 * max(0, 1 - abs(ph - .25) * 6)
     vineta(c, .35 + .45 * k * fuerza, col)
     return k
+
+
+# ================================================================ FORMATO HORIZONTAL (YouTube 1920x1080)
+HW, HH = 1920, 1080
+_MASK = None
+def horizontal(fr, fit=False, y0=420):
+    """Convierte un cuadro vertical 1080x1920 en 1920x1080: la franja central va al centro y los lados se
+    rellenan con la misma escena ampliada, difuminada y oscurecida (fundido suave en los bordes)."""
+    global _MASK
+    fr = fr.convert("RGBA")
+    if fit:
+        band = fr.resize((int(1080 * 1080 / 1920), 1080), Image.LANCZOS); bx = (HW - band.width) // 2
+    else:
+        band = fr.crop((0, y0, 1080, y0 + 1080)); bx = (HW - 1080) // 2
+    bg = band.resize((HW, int(band.height * HW / band.width)), Image.BILINEAR)
+    bg = bg.crop((0, (bg.height - HH) // 2, HW, (bg.height - HH) // 2 + HH)).filter(ImageFilter.GaussianBlur(28))
+    bg = Image.blend(Image.new("RGBA", (HW, HH), (0, 0, 0, 255)), bg, .38)
+    if _MASK is None or _MASK.size != band.size:
+        m = Image.new("L", band.size, 255); d = ImageDraw.Draw(m)
+        for i in range(90): v = int(255 * i / 90); d.line([(i, 0), (i, band.height)], fill=v); d.line([(band.width - 1 - i, 0), (band.width - 1 - i, band.height)], fill=v)
+        _MASK = m
+    bg.paste(band, (bx, 0), _MASK); return bg

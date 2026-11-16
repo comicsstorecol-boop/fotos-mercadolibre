@@ -8,7 +8,13 @@ from compositor import escena, objeto
 import generador as G
 import motor
 
-VERDE, ROSA = (57, 255, 20), (255, 46, 166)
+import lib as _lib
+class _C:
+    @property
+    def v(self): return _lib.NEON
+    @property
+    def r(self): return _lib.NEON2
+_c = _C()
 M = marca("comics-store")
 G.load_brand("comics-store"); _K = next(iter(G.CHAR)); G.CHAR[_K]["drop"] = int(G.CHAR[_K]["drop"] * 1.9)
 
@@ -29,7 +35,7 @@ def _grano(c, t):
 
 def _fondo_marca(t):
     c = vgrad(W, H, [(0, (14, 6, 22)), (.5, (8, 10, 18)), (1, (4, 14, 8))]).copy()
-    glow(c, W * .3 + math.sin(t * .8) * 80, 600, 420, ROSA, 70); glow(c, W * .7 + math.cos(t * .7) * 80, 1400, 420, VERDE, 55)
+    glow(c, W * .3 + math.sin(t * .8) * 80, 600, 420, _c.r, 70); glow(c, W * .7 + math.cos(t * .7) * 80, 1400, 420, _c.v, 55)
     return c
 
 def logo_mini(c, a=1.):
@@ -41,10 +47,10 @@ def portada(titulo, linea2, sub, obj=None):
     def f(t, d):
         c = _fondo_marca(t)
         if obj: place(c, objeto(obj), W / 2, 1380, scale=.9 * eb(pr(t, .3, .6)), alpha=.9)
-        neon(c, "RESEÑA", W / 2, 640, 70, ROSA, eo(pr(t, .1, .4)))
-        neon(c, titulo, W / 2, 800, 118, VERDE, eo(pr(t, .3, .5)))
-        if linea2: neon(c, linea2, W / 2, 940, 118, VERDE, eo(pr(t, .4, .5)))
-        etiqueta(c, sub, W / 2, 1080, (255, 255, 255), size=46, alpha=eo(pr(t, .7, .4)), borde=ROSA)
+        neon(c, "RESEÑA", W / 2, 640, 70, _c.r, eo(pr(t, .1, .4)))
+        neon(c, titulo, W / 2, 800, 118, _c.v, eo(pr(t, .3, .5)))
+        if linea2: neon(c, linea2, W / 2, 940, 118, _c.v, eo(pr(t, .4, .5)))
+        etiqueta(c, sub, W / 2, 1080, (255, 255, 255), size=46, alpha=eo(pr(t, .7, .4)), borde=_c.r)
         logo_mini(c); _grano(c, t); vineta(c, .6)
         return camera(c, t, d, 1.0, 1.06)
     f.__name__ = "portada"; return f
@@ -53,8 +59,8 @@ def capitulo(n, titulo, obj=None):
     def f(t, d):
         c = _fondo_marca(t + n)
         if obj: place(c, objeto(obj), W / 2, 1300, scale=.8 * eb(pr(t, .2, .6)), alpha=.85)
-        neon(c, f"CAPÍTULO {n}", W / 2, 760, 64, ROSA, eo(pr(t, .05, .35)))
-        for i, ln in enumerate(titulo.split("|")): neon(c, ln, W / 2, 900 + i * 120, 104, VERDE, eo(pr(t, .2 + i * .1, .4)))
+        neon(c, f"CAPÍTULO {n}", W / 2, 760, 64, _c.r, eo(pr(t, .05, .35)))
+        for i, ln in enumerate(titulo.split("|")): neon(c, ln, W / 2, 900 + i * 120, 104, _c.v, eo(pr(t, .2 + i * .1, .4)))
         logo_mini(c); _grano(c, t)
         return camera(c, t, d, 1.08, 1.0)
     f.__name__ = f"cap{n}"; return f
@@ -62,7 +68,7 @@ def capitulo(n, titulo, obj=None):
 def calificacion(nota, total=5):
     est = objeto("estrella")
     def f(t, d):
-        c = _fondo_marca(t); neon(c, "MI CALIFICACIÓN", W / 2, 760, 72, ROSA)
+        c = _fondo_marca(t); neon(c, "MI CALIFICACIÓN", W / 2, 760, 72, _c.r)
         for i in range(total):
             x = W / 2 + (i - (total - 1) / 2) * 190; a = eb(pr(t, .3 + i * .25, .4))
             if a <= 0: continue
@@ -71,7 +77,7 @@ def calificacion(nota, total=5):
             if frac > 0:
                 s = est.crop((0, 0, int(est.width * frac), est.height)); L = Image.new("RGBA", est.size, (0, 0, 0, 0)); L.paste(s, (0, 0))
                 place(c, L, x, 1000, scale=.6 * a)
-        neon(c, f"{str(nota).replace('.', ',')} / {total}", W / 2, 1210, 110, VERDE, eo(pr(t, 1.6, .5)))
+        neon(c, f"{str(nota).replace('.', ',')} / {total}", W / 2, 1210, 110, _c.v, eo(pr(t, 1.6, .5)))
         logo_mini(c); return camera(c, t, d, 1.0, 1.05)
     f.__name__ = "nota"; return f
 

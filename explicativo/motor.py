@@ -22,9 +22,17 @@ PRON_BASE = {"store": ("en", "Store"), "steve": ("en", "Steve"), "rogers": ("en"
              "doomsday": ("es", "dúmsdei"), "thor": ("es", "tor"), "tva": ("es", "te ve a")}
 NIVEL = 0.0  # apertura de boca del narrador en el cuadro actual (0..1)
 
-def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250, pron=None, estilo=None):
+def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250, pron=None, estilo=None, formato="vertical", colores=None):
     global NIVEL
     import lib; lib.ESTILO_SUB = estilo or "clasico"
+    if colores: lib.NEON, lib.NEON2 = colores
+    HORIZ = formato == "horizontal"
+    if HORIZ:
+        def _h(fn):
+            fit = fn.__name__ in ("cierre",)
+            def g(t, d): return lib.horizontal(fn(t, d), fit=fit)
+            g.__name__ = fn.__name__; return g
+        ESCENAS = [(_h(fn),) + tuple(r) for fn, *r in ESCENAS]; y_sub = 935
     pron = {**PRON_BASE, **(pron or {})}
     SR = G.SR; speak = G.tts_engine(); plan = []
     for fn, txt, clave in ESCENAS:
@@ -37,9 +45,9 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
     if os.environ.get("PREVIEW"):
         tiles = []
         for p in plan:
-            t = p["dur"] * .7; fr = p["fn"](t, p["dur"]); karaoke(fr, p["words"], t, y_sub, p["clave"]); tiles.append(fr.convert("RGB").resize((270, 480)))
-        cols = 8; rows = (len(tiles) + cols - 1) // cols; sh = Image.new("RGB", (270 * cols, 480 * rows))
-        for i, im in enumerate(tiles): sh.paste(im, ((i % cols) * 270, (i // cols) * 480))
+            t = p["dur"] * .7; fr = p["fn"](t, p["dur"]); karaoke(fr, p["words"], t, y_sub, p["clave"]); tiles.append(fr.convert("RGB").resize((480, 270) if HORIZ else (270, 480)))
+        tw, th = tiles[0].size; cols = 8 if not HORIZ else 5; rows = (len(tiles) + cols - 1) // cols; sh = Image.new("RGB", (tw * cols, th * rows))
+        for i, im in enumerate(tiles): sh.paste(im, ((i % cols) * tw, (i // cols) * th))
         sh.save(OUT.replace(".mp4", "_preview.jpg")); print("preview", round(total, 1), "s"); return
     vo = np.zeros(N, np.float32); fx = np.zeros(N, np.float32); POP, WH, ST = G.sfx(); off = 0
     for i, p in enumerate(plan):
@@ -54,7 +62,7 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
     mix_ = mix_ / max(1e-6, np.abs(mix_).max()) * .92
     with tempfile.TemporaryDirectory() as td:
         sf.write(f"{td}/a.wav", mix_, SR)
-        pr_ = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", "30", "-i", "-",
+        pr_ = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", ("1920x1080" if HORIZ else f"{W}x{H}"), "-r", "30", "-i", "-",
                                 "-c:v", "libx264", "-preset", "veryfast", "-crf", "19", "-pix_fmt", "yuv420p", f"{td}/v.mp4"], stdin=subprocess.PIPE)
         prev = None
         for p in plan:
