@@ -17,11 +17,15 @@ def musica_terror(total, N, SR):
     eerie = np.sin(2 * np.pi * (880 + 6 * np.sin(2 * np.pi * 5 * t)) * t) * .03 * (np.sin(2 * np.pi * .03 * t) > .6)
     return (drone + wind + eerie).astype(np.float32)
 
+# Palabras que siempre se dicen en inglés (o con su pronunciación usual) en todos los videos
+PRON_BASE = {"store": ("en", "Store"), "steve": ("en", "Steve"), "rogers": ("en", "Rogers"), "avengers": ("es", "avényers"),
+             "doomsday": ("es", "dúmsdei"), "thor": ("es", "tor"), "tva": ("es", "te ve a")}
 NIVEL = 0.0  # apertura de boca del narrador en el cuadro actual (0..1)
 
 def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250, pron=None, estilo=None):
     global NIVEL
     import lib; lib.ESTILO_SUB = estilo or "clasico"
+    pron = {**PRON_BASE, **(pron or {})}
     SR = G.SR; speak = G.tts_engine(); plan = []
     for fn, txt, clave in ESCENAS:
         a = speak(txt, pron) if pron else speak(txt); dur = round((lead + len(a) / SR + .35) * 30) / 30
