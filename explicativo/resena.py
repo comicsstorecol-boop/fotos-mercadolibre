@@ -94,15 +94,15 @@ def con_narrador(fn, px=470):
         return c
     f.__name__ = fn.__name__ + "_n"; return f
 
-def armar(items):
+def armar(items, cierre_txt=None, cierre_preg="¿QUÉ PELÍCULA SIGUE?"):
     """items: lista de (spec_dict o función, frase, claves, narrador?)"""
     out = []
     for i, it in enumerate(items):
         sp, frase, clave = it[:3]; nar = it[3] if len(it) > 3 else False
         fn = sp if callable(sp) else escena(dict(sp, id=sp.get("id", f"e{i + 1:02d}")))
         out.append((con_narrador(fn) if nar else fn, frase, clave))
-    def cierre(t, d): return escena_cierre(M, t, d, "¿QUÉ PELÍCULA SIGUE?")
-    out.append((cierre, "¿Qué película quieres que reseñemos ahora? Déjala en los comentarios y síguenos en Comics Store.", {"comentarios"}))
+    def cierre(t, d): return escena_cierre(M, t, d, cierre_preg)
+    out.append((cierre, cierre_txt or "¿Qué película quieres que reseñemos ahora? Déjala en los comentarios y síguenos en Comics Store.", {"comentarios", "youtube"}))
     return out
 
 # ================================================================ ANFITRIÓN (imagen con vida: cabeza, boca, luces, humo)
@@ -181,3 +181,16 @@ def resena_completa(titulo, linea2, sub, obj_portada, gancho, presentacion, hist
     esc = armar(I)
     ganchos = [2, 4 + len(historia), 6 + len(historia) + len(detras)]
     return esc, ganchos
+
+
+# ================================================================ VERSIONES CORTAS (Facebook/Instagram ~2 min, TikTok 60-90 s)
+CTA_YT = "La reseña completa, con todos los secretos del rodaje, está en nuestro canal de YouTube. Síguenos en Comics Store."
+def resena_corta(gancho, lista, nota, cierre_nota, cta=CTA_YT):
+    """Sin portada ni capítulos: gancho del presentador, historia en ritmo rápido, calificación y llamado a YouTube."""
+    A = anfitrion(); n = [0]
+    def host():
+        z0, z1, cy = _PRESETS[(n[0] + 2) % len(_PRESETS)]; n[0] += 1; return A.escena(z0, z1, cy, f"h{n[0]:02d}")
+    I = [(A.escena(1.15, 1.35, .42, "intro"), gancho, {"miedo", "terror"})]
+    I += [((host() if it[0] == "H" else it[0]),) + tuple(it[1:]) for it in lista]
+    if nota is not None: I.append((calificacion(nota), cierre_nota, {"cinco", "calificación"}))
+    return armar(I, cierre_txt=cta, cierre_preg="RESEÑA COMPLETA EN YOUTUBE"), [len(I) // 2]
