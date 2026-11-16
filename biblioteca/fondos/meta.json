@@ -1,0 +1,14 @@
+{
+ "casa": {
+  "suelo_h": 0.9,
+  "suelo_v": 0.88,
+  "luces": [
+   [
+    0.53,
+    0.57,
+    "rojo"
+   ]
+  ],
+  "nota": "casa victoriana, ventanas rojas, luna arriba a la derecha"
+ }
+}
