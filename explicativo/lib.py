@@ -222,7 +222,11 @@ def contador(c, valor, t, x, y, col, size=200, sufijo="%", start=.2, dur=1.2):
     place(c, L, x, y, scale=.9 + .1 * eb(pr(t, start + dur, .3)))
 
 # ---------------------------------------------------------------- subtítulos karaoke
+ESTILO_SUB = "clasico"
+NEON = (57, 255, 20); NEON2 = (255, 46, 166)
+
 def karaoke(c, palabras, t, y=250, clave=(), size=60, max_chars=26):
+    if ESTILO_SUB == "neon": size, max_chars = 74, 20
     """palabras: [(t0, t1, 'texto')]. Muestra la línea actual; la palabra dicha en blanco, el resto atenuado; 'clave' enmarcadas."""
     if not palabras: return
     # partir en líneas por cantidad de caracteres
@@ -247,6 +251,7 @@ def karaoke(c, palabras, t, y=250, clave=(), size=60, max_chars=26):
     karaoke_line(c, act, t, y, clave, size)
 
 def karaoke_line(c, act, t, y, clave, size):
+    if ESTILO_SUB == "neon": return karaoke_neon(c, act, t, y, clave, size)
     f = F(size); d0 = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
     widths = [d0.textlength(w[2], font=f) for w in act]; sp = size * .28; total = sum(widths) + sp * (len(act) - 1)
     L = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(L); x = (W - total) / 2
@@ -262,6 +267,21 @@ def karaoke_line(c, act, t, y, clave, size):
         x += w + sp
     sh = Image.new("RGBA", (W, H), (0, 0, 0, 0)); sh.putalpha(L.getchannel("A").point(lambda v: int(v * .45)))
     c.alpha_composite(sh.filter(ImageFilter.GaussianBlur(10)), (0, 6)); c.alpha_composite(L)
+
+def karaoke_neon(c, act, t, y, clave, size):
+    f = F(size); d0 = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
+    widths = [d0.textlength(w[2].upper(), font=f) for w in act]; sp = size * .3; total = sum(widths) + sp * (len(act) - 1)
+    G_ = Image.new("RGBA", (W, H), (0, 0, 0, 0)); L = Image.new("RGBA", (W, H), (0, 0, 0, 0)); dg, d = ImageDraw.Draw(G_), ImageDraw.Draw(L); x = (W - total) / 2
+    for (t0, t1, txt), w in zip(act, widths):
+        said = t >= t0; now = t0 <= t < t1 + .05; txt = txt.upper()
+        clave_w = txt.strip(".,;:!?¡¿…").lower() in clave
+        col = (NEON2 if clave_w else NEON) if said else (255, 255, 255)
+        yy = y - (8 if now else 0)
+        if said: dg.text((x, yy), txt, font=f, fill=col + (255,), anchor="lm", stroke_width=10, stroke_fill=col + (255,))
+        d.text((x, yy), txt, font=f, fill=(255, 255, 255, 255) if now else (col + (255,)), anchor="lm", stroke_width=6, stroke_fill=(0, 0, 0, 255))
+        x += w + sp
+    c.alpha_composite(G_.filter(ImageFilter.GaussianBlur(16))); c.alpha_composite(G_.filter(ImageFilter.GaussianBlur(6)).point(lambda v: v) if False else Image.new("RGBA", (W, H), (0, 0, 0, 0)))
+    c.alpha_composite(L)
 
 def tiempos_palabras(texto, audio, sr, lead):
     """Estima el tiempo de cada palabra: reparte la duración hablada según longitud + pausas en puntuación."""

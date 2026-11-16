@@ -171,14 +171,32 @@ def tts_engine():
     if ref or os.environ.get("TTS") == "kokoro":
         from kokoro_onnx import Kokoro
         kok = Kokoro(os.path.join(KIT, "voz", "kokoro-v1.0.onnx"), os.path.join(KIT, "voz", "voices-v1.0.bin"))
-    def base_voice(txt):
+    def fonemas(txt, pron):
+        """pron: {'steve': ('en', 'Steve'), 'tva': ('es', 'te ve a')}; agrupa palabras normales en español."""
+        out, buf = [], []
+        def flush():
+            if buf: out.append(kok.tokenizer.phonemize(" ".join(buf), "es-419")); buf.clear()
+        for w in txt.split():
+            core = w.strip(".,;:!?¡¿…\"'").lower()
+            if core in pron:
+                lang, dicho = pron[core]; pre = w[:len(w) - len(w.lstrip("¡¿\"'"))]; post = w[len(w.rstrip(".,;:!?…\"'")):]
+                if lang == "es": buf.append(pre + dicho + post); continue
+                flush(); out.append(kok.tokenizer.phonemize(dicho, "en-us") + kok.tokenizer.phonemize(post, "es-419") if post.strip(".") else kok.tokenizer.phonemize(dicho, "en-us"))
+                if post and post[0] in ".,;:!?…": out[-1] = out[-1] + post[0]
+            else: buf.append(w)
+        flush(); return " ".join(out)
+    def base_voice(txt, pron=None):
+        if kok and pron and any(w.strip(".,;:!?¡¿…\"'").lower() in pron for w in txt.split()):
+            y, ksr = kok.create(fonemas(txt, pron), voice="em_alex", speed=1.1, is_phonemes=True)
+            import librosa
+            return librosa.resample(y.astype(np.float32), orig_sr=ksr, target_sr=SR).astype(np.float32)
         if kok:
             y, ksr = kok.create(txt, voice="em_alex", speed=1.1, lang="es-419")
             import librosa
             return librosa.resample(y.astype(np.float32), orig_sr=ksr, target_sr=SR).astype(np.float32)
         return np.concatenate([ch.audio_float_array for ch in v.synthesize(txt, syn_config=cfg)]).astype(np.float32)
-    def speak(txt):
-        x = base_voice(txt)
+    def speak(txt, pron=None):
+        x = base_voice(txt, pron)
         if ref:
             y = _vc.convert(x, SR, ref.split(","))
             x = torchaudio.functional.resample(torch.tensor(y)[None], 16000, SR)[0].numpy().astype(np.float32)

@@ -17,11 +17,17 @@ def musica_terror(total, N, SR):
     eerie = np.sin(2 * np.pi * (880 + 6 * np.sin(2 * np.pi * 5 * t)) * t) * .03 * (np.sin(2 * np.pi * .03 * t) > .6)
     return (drone + wind + eerie).astype(np.float32)
 
-def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250):
+NIVEL = 0.0  # apertura de boca del narrador en el cuadro actual (0..1)
+
+def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250, pron=None, estilo=None):
+    global NIVEL
+    import lib; lib.ESTILO_SUB = estilo or "clasico"
     SR = G.SR; speak = G.tts_engine(); plan = []
     for fn, txt, clave in ESCENAS:
-        a = speak(txt); dur = round((lead + len(a) / SR + .35) * 30) / 30
-        plan.append(dict(fn=fn, txt=txt, clave={c.lower() for c in clave}, audio=a, dur=dur, words=tiempos_palabras(txt, a, SR, lead)))
+        a = speak(txt, pron) if pron else speak(txt); dur = round((lead + len(a) / SR + .35) * 30) / 30
+        env = np.abs(a); hop = SR // 30; lv = np.array([env[i:i + hop].mean() if i < len(env) else 0 for i in range(0, len(env), hop)])
+        lv = np.clip(lv / (np.percentile(lv, 90) + 1e-6), 0, 1); lv = np.convolve(lv, [.25, .5, .25], "same")
+        plan.append(dict(lv=lv, fn=fn, txt=txt, clave={c.lower() for c in clave}, audio=a, dur=dur, words=tiempos_palabras(txt, a, SR, lead)))
         print(f"{fn.__name__}: {dur:.1f}s", flush=True)
     total = sum(p["dur"] for p in plan); N = int(total * SR) + SR
     if os.environ.get("PREVIEW"):
@@ -50,7 +56,8 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
         for p in plan:
             nf = int(round(p["dur"] * 30))
             for f in range(nf):
-                t = f / 30; fr = p["fn"](t, p["dur"])
+                t = f / 30; k = int((t - lead) * 30); NIVEL = float(p["lv"][k]) if 0 <= k < len(p["lv"]) else 0.
+                fr = p["fn"](t, p["dur"])
                 if prev is not None and t < .25: fr = Image.blend(prev, fr, eio(t / .25))
                 karaoke(fr, p["words"], t, y_sub, p["clave"]); pr_.stdin.write(fr.convert("RGB").tobytes())
             prev = p["fn"](p["dur"], p["dur"]); print("ok", p["fn"].__name__, flush=True)
