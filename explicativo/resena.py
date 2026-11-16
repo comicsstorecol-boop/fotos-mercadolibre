@@ -150,3 +150,34 @@ class Anfitrion:
             if t < .4: c.alpha_composite(Image.new("RGBA", (W, H), (0, 0, 0, int(255 * (1 - t / .4)))))
             vineta(c, .5); return c
         f.__name__ = nombre; return f
+
+# ================================================================ PLANTILLA COMPLETA DE RESEÑA (aprobada con El exorcista)
+_ANF = None
+_PRESETS = [(1.3, 1.1, .36), (1.1, 1.35, .38), (1.4, 1.15, .4), (1.0, 1.25, .45), (1.15, 1.4, .36), (1.4, 1.1, .45), (1.0, 1.3, .4)]
+def anfitrion():
+    global _ANF
+    if _ANF is None: _ANF = Anfitrion(os.path.join(os.path.dirname(HERE), "marcas", "comics-store", "intros", "terror_narrador.png"))
+    return _ANF
+
+def resena_completa(titulo, linea2, sub, obj_portada, gancho, presentacion, historia, detras, opinion, nota, cierre_nota,
+                    obj1="amuleto", gancho_detras=None, gancho_opinion=None):
+    """Arma la reseña con el orden aprobado y ganchos de retención. En las listas, usar "H" como escena para que hable el presentador."""
+    A = anfitrion(); n = [0]
+    def host():
+        z0, z1, cy = _PRESETS[n[0] % len(_PRESETS)]; n[0] += 1; return A.escena(z0, z1, cy, f"h{n[0]:02d}")
+    def conv(lst): return [((host() if it[0] == "H" else it[0]),) + tuple(it[1:]) for it in lst]
+    I = [(A.escena(1.0, 1.22, .42, "intro"), gancho, {"enterradas", "despertar", "miedo", "terror"}),
+         (portada(titulo, linea2, sub, obj_portada), presentacion, {"reseña"}),
+         (host(), "Aviso: voy a contar la historia completa, incluido el final. Si no la has visto, guarda este video y vuelve después. Y quédate hasta el final, porque te doy mi calificación… y un dato que casi nadie conoce.", {"final", "calificación"}),
+         (capitulo(1, "LA|HISTORIA", obj1), "Capítulo uno: la historia.", {"historia"})]
+    I += conv(historia)
+    I.append((host(), gancho_detras or "Y si la historia te pareció perturbadora… espera a saber lo que pasó detrás de cámaras.", {"cámaras"}))
+    I.append((capitulo(2, "DETRÁS DE|CÁMARAS", "claqueta"), "Capítulo dos: detrás de cámaras.", {"cámaras"}))
+    I += conv(detras)
+    I.append((host(), gancho_opinion or "Ahora sí, la pregunta importante: ¿vale la pena verla hoy? Te doy mi opinión sin filtro.", {"opinión"}))
+    I.append((capitulo(3, "MI|OPINIÓN", "estrella"), "Capítulo tres: mi opinión.", {"opinión"}))
+    I += conv(opinion)
+    I.append((calificacion(nota), cierre_nota, {"calificación", "cinco"}))
+    esc = armar(I)
+    ganchos = [2, 4 + len(historia), 6 + len(historia) + len(detras)]
+    return esc, ganchos

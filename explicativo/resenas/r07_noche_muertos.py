@@ -1,0 +1,44 @@
+"""Reseña: La noche de los muertos vivientes (1968). Resumen propio; ilustraciones originales, sin gore."""
+from _base import *
+PRON = en("George", "Romero", "Barbra", "Johnny", "Ben", "Harry", "Helen", "Cooper", "Karen", "Tom", "Judy", "Duane", "Jones", "Judith", "O'Dea", "Pittsburgh",
+          "Pennsylvania", "Night", "of", "the", "Flesh", "Eaters", "Walking", "Dead", "John", "Russo", "Evans", "City")
+GRIS = (200, 200, 210)
+H = [
+ ({"fondo": "cementerio", "el": [("mujer", 420, 1430, .5), ("hombre", 620, 1430, .52)], "fx": ["niebla"], "cam": (1, 1.1, 0, 40)}, "Dos hermanos, Barbra y Johnny, manejan horas para dejar flores en la tumba de su padre, en un cementerio del campo de Pensilvania.", {"barbra", "johnny"}),
+ ({"fondo": "cementerio", "el": [("hombre", 380, 1430, .52, {"anim": "balancear"})], "fx": ["niebla"], "cam": (1, 1.08, 0, 0)}, "Johnny, aburrido, se burla de su hermana porque de niña le tenía miedo a ese lugar. Le dice, en broma, que los muertos vienen por ella.", {"broma"}),
+ ({"fondo": "cementerio", "el": [("sombra", 760, 1400, .55, {"anim": "caminar_izq", "dist": 200})], "fx": ["niebla"], "pulso": 1.0, "bpm": 120, "cam": (1, 1.15, 0, 0)}, "Y justo en ese momento, un hombre se acerca caminando torpemente entre las tumbas. Ataca a Barbra. Johnny la defiende, cae, y se golpea la cabeza contra una lápida.", {"ataca"}),
+ ({"fondo": "granja", "el": [("mujer", 540, 1420, .5, {"anim": "caminar_der", "dist": 120})], "pulso": 1.0, "bpm": 130, "cam": (1, 1.12, 0, 0)}, "Barbra huye, en shock, y se refugia en una granja abandonada. Adentro no hay nadie… pero afuera empiezan a aparecer más figuras.", {"granja"}),
+ ({"fondo": "granja", "el": [("hombre", 540, 1420, .55, {"anim": "aparecer"})], "cam": (1, 1.08, 0, 0)}, "Entonces llega Ben, un hombre que también viene escapando. Él toma el control: busca armas, cierra las puertas y clava tablas en las ventanas.", {"ben", "tablas"}),
+ ("H", "Y aquí hay algo histórico: en mil novecientos sesenta y ocho, el héroe de la película es un hombre negro, interpretado por Duane Jones. En esa época, en Estados Unidos, eso casi no se veía.", {"héroe", "duane"}),
+ ({"fondo": "cuarto", "el": [("tablas", 540, 1050, 1.0) if False else ("radio", 540, 1100, 1.0, {"anim": "aparecer"})], "cam": (1, 1.08, 0, 0)}, "Por la radio y la televisión escuchan noticias confusas: en todo el país, los muertos recién fallecidos se están levantando y atacando a los vivos.", {"radio", "muertos"}),
+ ({"fondo": "cuarto", "el": [("hombre", 300, 1290, .7), ("hombre", 540, 1290, .7), ("mujer", 780, 1300, .68)], "cam": (1, 1.06, 0, 0)}, "De pronto descubren que no están solos: en el sótano estaban escondidos otros sobrevivientes. Una pareja, los Cooper, con su hija Karen, que fue mordida. Y una pareja joven, Tom y Judy.", {"sótano", "cooper"}),
+ ({"fondo": "cuarto", "el": [("hombre", 380, 1290, .8, {"anim": "temblar"}), ("hombre", 700, 1290, .8, {"anim": "temblar"})], "pulso": .9, "bpm": 110, "cam": (1, 1.12, 0, 0)}, "Y empiezan las peleas. Harry Cooper quiere encerrarse en el sótano. Ben quiere defender la casa. Discuten todo el tiempo, mientras afuera la multitud de muertos crece.", {"peleas"}),
+ ({"fondo": "granja", "el": [("auto", 540, 1430, .7, {"anim": "temblar"})], "glows": [(540, 1300, 300, (255, 140, 40), 140)], "fx": ["chispas"], "cam": (1, 1.12, 0, 0)}, "Intentan escapar en la camioneta para cargar gasolina. Pero el plan sale mal: hay un incendio, y Tom y Judy no regresan.", {"incendio"}),
+ ("H", "Desde ese momento, todo se derrumba. Y la película te deja claro algo que años después copiaría The Walking Dead: el peligro no son solo los muertos… también los vivos.", {"vivos"}),
+ ({"fondo": "cuarto", "el": [("sombra", 540, 1280, .7, {"anim": "acercar"})], "pulso": 1.2, "bpm": 150, "vineta": .95, "cam": (1, 1.2, 0, 0)}, "Los muertos rompen las ventanas. En el sótano, la pequeña Karen se transforma… y ataca a su propia madre.", {"karen"}),
+ ({"fondo": "cuarto", "el": [("mujer", 540, 1300, .7, {"anim": "desvanecer", "t0": 1.2})], "vineta": .95, "cam": (1, 1.12, 0, 0)}, "Barbra ve entre la multitud a su hermano Johnny, ya convertido. Él la arrastra hacia afuera.", {"johnny"}),
+ ({"fondo": "cuarto", "el": [("hombre", 540, 1300, .8, {"anim": "temblar"})], "vineta": .95, "pulso": .8, "bpm": 90, "cam": (1, 1.15, 0, 0)}, "Ben es el único que queda. Se encierra en el sótano y aguanta toda la noche, solo, escuchando cómo golpean la puerta.", {"solo"}),
+ ({"fondo": "granja", "el": [("policia", 300, 1430, .45), ("policia", 460, 1430, .45), ("policia", 620, 1430, .45)], "glows": [(540, 700, 400, (255, 230, 200), 90)], "cam": (1, 1.08, 0, 0)}, "Al amanecer, un grupo armado de vecinos y policías recorre el campo eliminando a los muertos. Ben escucha los disparos y sube, aliviado.", {"amanecer"}),
+ ({"fondo": "granja", "el": [("hombre", 540, 1430, .5, {"anim": "caer"})], "flash": True, "pulso": .6, "bpm": 60, "cam": (1, 1.2, 0, 0)}, "Se asoma por la ventana… y uno de los hombres, creyendo que es un muerto más, le dispara. El único sobreviviente de la noche muere por error.", {"error"}),
+ ({"fondo": "granja", "glows": [(540, 1300, 300, (255, 140, 40), 140)], "fx": ["chispas"], "vineta": .95, "cam": (1, 1.1, 0, 0)}, "Su cuerpo termina en la hoguera junto a los demás. Sin despedida, sin justicia. Así termina la película.", {"hoguera"}),
+]
+D = [
+ ({"fondo": "estudio", "el": [("camara_cine", 540, 1100, 1.0, {"anim": "entrar"})], "tag": "114.000 USD", "tag_y": 1380, "tag_col": VERDE_T, "cam": (1, 1.08, 0, 0)}, "La dirigió George A. Romero, en Pittsburgh, con un presupuesto de apenas ciento catorce mil dólares. Usó actores de teatro locales, amigos y hasta inversionistas del proyecto.", {"romero", "ciento"}),
+ ({"fondo": "estudio", "el": [("sombra", 540, 1280, .7)], "cam": (1, 1.06, 0, 0)}, "Dato curioso: en toda la película nunca se usa la palabra zombi. A las criaturas las llaman demonios necrófagos. Pero esta película inventó al zombi moderno tal como lo conocemos.", {"zombi"}),
+ ({"fondo": "estudio", "el": [("lupa", 540, 1080, .9, {"anim": "entrar"})], "cam": (1, 1.06, 0, 0)}, "Como no tenían dinero para cadáveres muy descompuestos, decidieron que los muertos fueran recién fallecidos. Y la ropa de los actores salió de tiendas de segunda mano.", {"recién"}),
+ ({"fondo": "granja", "el": [("camara_cine", 540, 1250, .8)], "cam": (1, 1.08, 0, 0)}, "La granja era una casa abandonada que iban a demoler, así que el equipo pudo romperla durante el rodaje. Romero no solo dirigió: también hizo la fotografía y la edición. Era, literalmente, una película hecha entre amigos.", {"amigos"}),
+ ("H", "Y aquí viene el dato más loco: la película no tiene dueño. Cuando le cambiaron el título original, el distribuidor olvidó poner el aviso de derechos de autor. En esa época eso bastaba para que la película quedara en dominio público.", {"dominio", "público"}),
+ ({"fondo": "cine", "el": [("dinero", 540, 1060, .9, {"anim": "entrar"})], "tag": "30 MILLONES USD", "tag_y": 1380, "tag_col": VERDE_T, "cam": (1, 1.08, 0, 0)}, "Por eso cualquiera puede verla gratis legalmente. Y aun así, con los años recaudó alrededor de treinta millones de dólares: más de doscientas cincuenta veces lo que costó.", {"gratis"}),
+ ({"fondo": "estudio", "el": [("trofeo", 540, 1060, .9, {"anim": "entrar"})], "cam": (1, 1.08, 0, 0)}, "Hoy está guardada en el registro nacional de cine de Estados Unidos, por su importancia cultural. Nada mal para una película que al principio muchos llamaron de mal gusto.", {"registro"}),
+]
+O = [
+ ("H", "Para mí, sin esta película no existirían The Walking Dead, Resident Evil ni la mitad del terror de zombis que conocemos. Aquí empezó todo.", {"empezó"}),
+ ("H", "Lo que más me impresiona es su final. Es seco, injusto y brutal. Después de toda la noche, el héroe muere por culpa de otros humanos. Es un final que todavía duele.", {"final"}),
+ ({"fondo": "granja", "el": [("radio", 540, 1300, .7)]}, "¿Lo malo? Se nota el bajo presupuesto, algunas actuaciones son exageradas y el blanco y negro puede alejar al público joven.", {"presupuesto"}),
+ ("H", "Pero si la ves sabiendo que es de mil novecientos sesenta y ocho, vas a entender por qué cambió el cine para siempre.", {"siempre"}),
+]
+esc, g = resena_completa("LA NOCHE DE", "LOS MUERTOS", "1968 · GEORGE A. ROMERO", "lapida", GANCHO,
+    "Hoy reseñamos La noche de los muertos vivientes, de George A. Romero. La película que inventó a los zombis modernos… y que nadie es dueño de ella.", H, D, O, 4.5,
+    "Mi calificación: cuatro punto cinco de cinco. Un clásico fundamental, con uno de los finales más duros de la historia del terror.", obj1="radio",
+    gancho_detras="Y lo que pasó fuera de la pantalla es igual de increíble. Porque esta película… técnicamente no le pertenece a nadie.")
+if __name__ == "__main__": correr(esc, g, "noche_muertos", PRON)

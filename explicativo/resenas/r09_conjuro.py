@@ -1,0 +1,41 @@
+"""Reseña: El conjuro / Expediente Warren (2013). Resumen propio; ilustraciones originales (sin la muñeca de la película)."""
+from _base import *
+PRON = en("James", "Wan", "Ed", "Lorraine", "Warren", "Roger", "Carolyn", "Perron", "Andrea", "Nancy", "Christine", "Cindy", "April", "Bathsheba", "Sherman",
+          "Harrisville", "Rhode", "Island", "Vera", "Farmiga", "Patrick", "Wilson", "Lili", "Taylor", "Ron", "Livingston", "Warner", "Bros.", "Conjuring", "Annabelle", "Nun", "Saw", "Insidious")
+H = [
+ ({"fondo": "granja", "el": [("auto", 540, 1430, .7, {"anim": "caminar_der", "dist": 0})], "cam": (1, 1.1, 0, 40)}, "Mil novecientos setenta y uno. Roger y Carolyn Perron se mudan con sus cinco hijas a una vieja granja en Harrisville, Rhode Island. La compraron barata en una subasta.", {"perron", "granja"}),
+ ({"fondo": "granja", "el": [("perro", 540, 1430, .5, {"anim": "temblar"})], "fx": ["niebla"], "pulso": .7, "bpm": 80, "cam": (1, 1.1, 0, 0)}, "Desde el primer día algo anda mal: el perro de la familia se niega a entrar a la casa. A la mañana siguiente lo encuentran muerto en el jardín.", {"perro"}),
+ ({"fondo": "cuarto", "el": [("reloj", 540, 1000, 1.0) if False else ("cronometro", 540, 1050, .9, {"anim": "latir"})], "tag": "3:07 A. M.", "tag_y": 1380, "tag_col": ROJO, "cam": (1, 1.12, 0, 0)}, "Todos los relojes de la casa se detienen a la misma hora: las tres y siete de la mañana. Carolyn amanece con moretones que no sabe cómo se hizo.", {"relojes", "tres"}),
+ ({"fondo": "cuarto", "el": [("nino", 380, 1320, .55), ("sombra", 760, 1290, .55, {"anim": "aparecer", "t0": 1})], "vineta": .9, "cam": (1, 1.12, 0, 0)}, "Las niñas juegan a esconderse con los ojos vendados: una aplaude, y las demás la buscan por el sonido. Pero un día, alguien que no es de la familia empieza a aplaudir también.", {"aplaude"}),
+ ({"fondo": "cuarto", "el": [("caja_musica", 540, 1100, .9, {"anim": "aparecer"})], "pulso": .9, "bpm": 100, "cam": (1, 1.15, 0, 0)}, "Una de las hijas encuentra una vieja caja musical con un espejo. Dice que en el reflejo ve a un niño. Las noches se vuelven cada vez peores.", {"caja"}),
+ ({"fondo": "cuarto", "el": [("mujer", 540, 1300, .8, {"anim": "temblar"})], "vineta": .9, "pulso": .8, "bpm": 90, "cam": (1, 1.12, 0, 0)}, "Una noche, Carolyn escucha aplausos en el sótano. Baja con un fósforo encendido, la puerta se cierra detrás de ella… y unas manos aplauden justo a su lado, en la oscuridad.", {"aplausos"}),
+ ("H", "Desesperada, Carolyn busca ayuda. Y aquí entran los protagonistas: Ed y Lorraine Warren, una pareja real de investigadores de lo paranormal.", {"warren"}),
+ ({"fondo": "estudio", "el": [("hombre", 380, 1270, .85), ("mujer", 700, 1280, .82)], "cam": (1, 1.06, 0, 0)}, "Ed es demonólogo: estudia casos de posesión. Lorraine es clarividente: puede sentir y ver cosas que los demás no. Ella carga con el desgaste de un caso anterior que casi la destruye.", {"demonólogo", "clarividente"}),
+ ({"fondo": "biblioteca", "el": [("libro", 540, 1100, 1.0, {"anim": "entrar", "var": "Historia|de la casa"})], "cam": (1, 1.08, 0, 0)}, "Investigando la historia de la granja, descubren que ahí vivió una mujer llamada Bathsheba, acusada de brujería en el siglo diecinueve. Según la película, maldijo a todo el que habitara su tierra.", {"bathsheba", "maldijo"}),
+ ({"fondo": "cuarto", "el": [("camara_foto", 380, 1100, .7), ("camara_cine", 760, 1100, .7)], "cam": (1, 1.08, 0, 0)}, "Los Warren llenan la casa de cámaras, grabadoras y cruces, buscando pruebas para que la Iglesia autorice un exorcismo. Y los fenómenos se intensifican.", {"pruebas"}),
+ ({"fondo": "cuarto", "el": [("mujer", 540, 1300, .8, {"anim": "caer"})], "pulso": 1.2, "bpm": 150, "flash": True, "cam": (1, 1.2, 0, 0)}, "Una noche, algo arrastra a una de las niñas por el pelo. Otra es atacada en su cama. Y Carolyn queda atrapada en el sótano, en total oscuridad.", {"sótano"}),
+ ("H", "Lo peor llega cuando la entidad elige a su víctima definitiva: Carolyn. Bathsheba quiere usarla para hacer lo mismo que hizo en vida: atacar a sus propias hijas.", {"carolyn"}),
+ ({"fondo": "cuarto", "el": [("mujer", 540, 1300, .9, {"anim": "temblar"})], "glows": [(540, 1050, 300, ROJO, 90)], "pulso": 1.3, "bpm": 160, "cam": (1, 1.2, 0, 0)}, "Carolyn, poseída, se lleva a dos de sus hijas a la casa. Los Warren llegan antes de que la Iglesia dé el permiso, y Ed decide hacer el exorcismo él mismo.", {"poseída", "exorcismo"}),
+ ({"fondo": "cuarto", "el": [("hombre", 380, 1290, .8), ("cruz", 700, 950, .7, {"anim": "latir"})], "fx": ["particulas"], "pulso": 1.3, "bpm": 160, "cam": (1, 1.2, 0, 0)}, "En medio del ritual, Carolyn está a punto de hacerle daño a su hija. Lorraine le grita que recuerde un día feliz con su familia… y ese recuerdo le da fuerza para expulsar al espíritu.", {"recuerdo"}),
+ ({"fondo": "granja", "glows": [(540, 700, 420, (255, 230, 200), 110)], "cam": (1, 1.06, 0, 0)}, "La familia se salva. Y los Warren se llevan la caja musical a su museo de objetos malditos, junto a muchos otros recuerdos de sus casos.", {"museo"}),
+]
+D = [
+ ({"fondo": "estudio", "el": [("camara_cine", 540, 1100, 1.0, {"anim": "entrar"})], "cam": (1, 1.08, 0, 0)}, "La dirigió James Wan, el mismo creador de El juego del miedo e Insidious. Y la protagonizan Vera Farmiga y Patrick Wilson como los Warren.", {"wan"}),
+ ("H", "La historia está basada en un caso que la familia Perron contó como real. Ellos sí vivieron en esa granja de Rhode Island desde mil novecientos setenta y uno. Claro, la película toma muchas libertades para hacerlo más intenso.", {"perron", "real"}),
+ ({"fondo": "granja", "fx": ["niebla"], "cam": (1, 1.1, 0, 0)}, "La casa real todavía existe, y sus dueños actuales dicen que la actividad sigue. Hasta hacen transmisiones en vivo de investigaciones paranormales.", {"existe"}),
+ ({"fondo": "negro", "el": [("alerta", 540, 1080, 1.0, {"anim": "latir"})], "tag": "CLASIFICACIÓN R", "tag_y": 1380, "tag_col": ROJO, "cam": (1, 1.1, 0, 0)}, "Y aquí un dato curioso: en Estados Unidos la clasificaron para mayores de diecisiete años… sin tener sangre, ni groserías, ni violencia explícita. Simplemente porque daba demasiado miedo.", {"miedo"}),
+ ("H", "Y otro dato: la verdadera Lorraine Warren visitó el set y hasta aparece unos segundos en la película, como una mujer entre el público de una de sus conferencias.", {"lorraine"}),
+ ({"fondo": "cine", "el": [("dinero", 540, 1060, .9, {"anim": "entrar"})], "tag": "319 MILLONES USD", "tag_y": 1380, "tag_col": VERDE_T, "cam": (1, 1.08, 0, 0)}, "Costó veinte millones de dólares y recaudó más de trescientos diecinueve millones en todo el mundo.", {"veinte", "trescientos"}),
+ ({"fondo": "estudio", "el": [("trofeo", 540, 1060, .9, {"anim": "entrar"})], "cam": (1, 1.08, 0, 0)}, "Y dio origen a todo un universo de películas: secuelas, la muñeca maldita del inicio con sus propias películas, la monja… Una de las franquicias de terror más taquilleras de la historia.", {"universo"}),
+]
+O = [
+ ("H", "Para mí, El conjuro demostró que todavía se podía hacer terror clásico, de casa embrujada, y que funcionara como en los años setenta.", {"clásico"}),
+ ("H", "James Wan es un maestro del suspenso: la cámara se mueve lento, te deja mirar el fondo… y cuando menos lo esperas, algo aparece.", {"suspenso"}),
+ ({"fondo": "granja", "el": [("caja_musica", 540, 1300, .7)]}, "¿Lo malo? Sigue fórmulas muy conocidas, y el final es más de acción que de miedo. También hay que tomar con pinzas eso de que todo pasó de verdad.", {"fórmulas"}),
+ ("H", "Pero los Warren son una pareja con la que te encariñas, y eso hace que te importe lo que les pase. Por eso funciona tan bien.", {"pareja"}),
+]
+esc, g = resena_completa("EL", "CONJURO", "EXPEDIENTE WARREN · 2013", "caja_musica", GANCHO,
+    "Hoy reseñamos El conjuro, también conocida como Expediente Warren, de James Wan. Una casa embrujada, una familia aterrada… y dos investigadores que dicen que todo pasó de verdad.", H, D, O, 4,
+    "Mi calificación: cuatro de cinco. Terror clásico muy bien hecho, ideal para ver con las luces apagadas… y sin nadie aplaudiendo.", obj1="cruz",
+    gancho_detras="Y la parte más inquietante está fuera de la película. Porque la casa… existe de verdad.")
+if __name__ == "__main__": correr(esc, g, "conjuro", PRON)

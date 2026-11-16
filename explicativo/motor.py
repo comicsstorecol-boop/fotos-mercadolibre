@@ -44,7 +44,7 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
     vo = np.zeros(N, np.float32); fx = np.zeros(N, np.float32); POP, WH, ST = G.sfx(); off = 0
     for i, p in enumerate(plan):
         G._add(vo, p["audio"], off + lead); G._add(fx, WH * .4, max(0, off - .12))
-        if regancho_idx is not None and i == regancho_idx: G._add(fx, ST * .9, off)
+        if regancho_idx is not None and (i == regancho_idx if isinstance(regancho_idx, int) else i in regancho_idx): G._add(fx, ST * .9, off)
         off += p["dur"]
     m = musica_terror(total, N, SR) if musica == "terror" else G.music(total, N)
     env = np.convolve(np.abs(vo), np.ones(int(.25 * SR)) / int(.25 * SR), "same")

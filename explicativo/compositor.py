@@ -157,6 +157,33 @@ def fondo(nombre):
         c = vgrad(W, H, ESTUDIO)
     elif nombre == "negro":
         c = Image.new("RGBA", (W, H), (4, 3, 6, 255))
+    elif nombre == "carretera":
+        c = _cielo(N, estrellas=False); h = Hi(); h.rect((0, 1150, W, H), fill=(12, 12, 16))
+        h.poly([(470, 1150), (610, 1150), (1000, H), (80, H)], fill=(30, 30, 36))
+        for i in range(6): y = 1180 + i * 130; h.rect((530 - i * 6, y, 550 + i * 6, y + 40 + i * 12), fill=(220, 210, 160))
+        c.alpha_composite(h.done()); glow(c, 540, 1150, 140, (255, 230, 170), 90)
+    elif nombre == "motel":
+        c = _cielo(N, estrellas=False); h = Hi(); h.rect((0, 1350, W, H), fill=(14, 14, 18)); h.rect((40, 1050, 1040, 1350), fill=(30, 26, 30)); h.rect((20, 1020, 1060, 1060), fill=(20, 18, 22))
+        for i in range(6):
+            x = 80 + i * 160; h.rect((x, 1150, x + 70, 1340), fill=(16, 14, 18)); h.rect((x + 90, 1170, x + 140, 1230), fill=(255, 210, 130) if i in (1, 4) else (40, 36, 44))
+        h.rect((780, 700, 1000, 820), r=12, fill=(30, 10, 14)); h.rect((880, 820, 900, 1020), fill=(40, 36, 40)); c.alpha_composite(h.done())
+        etiqueta(c, "MOTEL", 890, 760, (255, 80, 90), size=56); glow(c, 890, 760, 200, (255, 60, 80), 110)
+    elif nombre == "espacio":
+        c = _cielo([(0, (2, 3, 10)), (.6, (6, 10, 26)), (1, (2, 3, 8))]); glow(c, 760, 1500, 520, (90, 140, 200), 90)
+        h = Hi(); h.ellipse((300, 1250, 1300, 2250), fill=(40, 60, 80)); c.alpha_composite(h.done())
+    elif nombre == "nave":  # pasillo de nave espacial
+        c = vgrad(W, H, [(0, (10, 14, 16)), (1, (4, 6, 8))]); h = Hi()
+        for i in range(7):
+            k = 1 - i * .12; w_, hh = 900 * k, 1300 * k; h.rect((540 - w_ / 2, 1000 - hh / 2, 540 + w_ / 2, 1000 + hh / 2), r=60 * k, outline=(40 + i * 6, 60 + i * 6, 60 + i * 6), width=max(3, int(16 * k)))
+        for y in (500, 1500): h.line([(0, y), (W, y)], fill=(30, 40, 40), width=6)
+        c.alpha_composite(h.done()); glow(c, 540, 1000, 200, (120, 255, 200), 60)
+    elif nombre == "suburbio":
+        c = _cielo([(0, (20, 12, 30)), (.6, (60, 30, 40)), (1, (14, 10, 16))], luna=(820, 600, 70)); h = Hi(); h.rect((0, 1350, W, H), fill=(14, 12, 14))
+        for x, w_, hh in ((40, 360, 300), (560, 420, 340)):
+            h.rect((x, 1350 - hh, x + w_, 1350), fill=(26, 20, 26)); h.poly([(x - 30, 1350 - hh), (x + w_ / 2, 1350 - hh - 160), (x + w_ + 30, 1350 - hh)], fill=(20, 16, 20))
+            h.rect((x + 60, 1350 - hh + 80, x + 140, 1350 - hh + 160), fill=(255, 196, 110))
+        for x in (470, 1010): _arbol_seco(h, x, 1350, .9, (8, 6, 10), int(x))
+        c.alpha_composite(h.done())
     elif nombre == "desierto":  # excavación en el desierto al atardecer
         c = vgrad(W, H, [(0, (40, 20, 30)), (.45, (190, 90, 40)), (.62, (240, 160, 80)), (1, (90, 50, 30))]); glow(c, 540, 1080, 260, (255, 210, 120), 200)
         h = Hi(); h.ellipse((440, 980, 640, 1180), fill=(255, 220, 150))
@@ -335,6 +362,64 @@ def objeto(tipo, var=""):
     if tipo == "mascara":
         h = Hi(360, 460); h.ellipse((20, 20, 340, 440), fill=(222, 196, 176)); h.ellipse((80, 150, 150, 210), fill=(20, 16, 18)); h.ellipse((210, 150, 280, 210), fill=(20, 16, 18))
         h.poly([(180, 220), (160, 300), (200, 300)], fill=(200, 170, 150)); h.line([(130, 350), (230, 350)], fill=(120, 70, 70), width=10); return h.done()
+    if tipo == "auto":
+        h = Hi(620, 300); h.rect((20, 120, 600, 240), r=40, fill=(40, 44, 56)); h.poly([(140, 120), (200, 40), (430, 40), (500, 120)], fill=(34, 38, 48))
+        h.poly([(215, 55), (300, 55), (300, 115), (165, 115)], fill=(120, 150, 180)); h.poly([(320, 55), (420, 55), (470, 115), (320, 115)], fill=(120, 150, 180))
+        for x in (140, 480): h.ellipse((x - 55, 190, x + 55, 300), fill=(14, 14, 16))
+        h.ellipse((560, 150, 600, 180), fill=(255, 230, 160)); return h.done()
+    if tipo == "llave":
+        h = Hi(260, 420); h.ellipse((60, 10, 200, 150), outline=(214, 180, 90), width=24); h.rect((118, 140, 142, 400), fill=(214, 180, 90)); h.rect((142, 330, 200, 352), fill=(214, 180, 90)); h.rect((142, 370, 180, 392), fill=(214, 180, 90))
+        h.rect((40, 160, 220, 230), r=10, fill=(150, 40, 40)); return h.done()
+    if tipo == "pajaro":  # ave disecada sobre su base
+        h = Hi(420, 460); col = (70, 60, 54); h.ellipse((90, 120, 330, 330), fill=col); h.ellipse((250, 60, 360, 170), fill=col); h.poly([(350, 110), (410, 125), (350, 140)], fill=(200, 160, 60))
+        h.poly([(100, 160), (0, 80), (60, 260)], fill=(60, 50, 46)); h.ellipse((300, 95, 320, 115), fill=(250, 220, 120)); h.rect((60, 380, 360, 440), fill=(90, 60, 40)); h.line([(180, 320), (170, 380)], fill=(60, 50, 40), width=10); return h.done()
+    if tipo == "mecedora":
+        h = Hi(420, 560); col = (40, 30, 26); h.rect((90, 20, 120, 360), fill=col); h.rect((300, 20, 330, 360), fill=col); h.rect((90, 20, 330, 60), fill=col)
+        h.rect((80, 300, 340, 340), fill=col); h.rect((90, 340, 110, 470), fill=col); h.rect((310, 340, 330, 470), fill=col); h.arc((-20, 380, 440, 560), 200, 340, fill=col, width=18); return h.done()
+    if tipo == "huevo":
+        h = Hi(320, 420); h.ellipse((30, 20, 290, 400), fill=(80, 90, 70)); h.ellipse((60, 60, 160, 200), fill=(110, 120, 96)); return h.done()
+    if tipo == "gato":
+        h = Hi(380, 360); col = (210, 150, 70); h.ellipse((60, 140, 300, 330), fill=col); h.ellipse((200, 40, 340, 170), fill=col)
+        h.poly([(215, 60), (225, 0), (255, 50)], fill=col); h.poly([(285, 50), (315, 0), (330, 70)], fill=col); h.arc((0, 160, 140, 340), 90, 270, fill=col, width=20)
+        h.ellipse((235, 90, 255, 112), fill=(30, 30, 20)); h.ellipse((290, 90, 310, 112), fill=(30, 30, 20)); return h.done()
+    if tipo == "computadora":
+        h = Hi(560, 460); h.rect((20, 20, 540, 360), r=20, fill=(30, 34, 40)); h.rect((50, 50, 510, 330), fill=(10, 30, 20))
+        for i, w_ in enumerate((380, 260, 330, 200)): h.rect((80, 80 + i * 55, 80 + w_, 100 + i * 55), fill=(90, 255, 140))
+        h.rect((200, 360, 360, 440), fill=(40, 44, 50)); return h.done()
+    if tipo == "calabaza":
+        h = Hi(440, 400); h.rect((205, 10, 235, 90), fill=(70, 90, 40))
+        for x0 in (40, 120, 200): h.ellipse((x0, 70, x0 + 200, 380), fill=(230, 120, 30))
+        h.poly([(140, 170), (190, 230), (100, 230)], fill=(255, 220, 90)); h.poly([(300, 170), (340, 230), (250, 230)], fill=(255, 220, 90)); h.poly([(110, 280), (330, 280), (300, 330), (140, 330)], fill=(255, 220, 90)); return h.done()
+    if tipo == "casa_munecas":
+        h = Hi(560, 560); h.poly([(20, 200), (280, 20), (540, 200)], fill=(110, 70, 60)); h.rect((40, 200, 520, 540), fill=(200, 180, 150))
+        for (x, y) in ((60, 220), (290, 220), (60, 380), (290, 380)): h.rect((x, y, x + 210, y + 140), fill=(120, 100, 90)); h.rect((x + 70, y + 60, x + 110, y + 140), fill=(80, 60, 50))
+        h.ellipse((150, 260, 180, 290), fill=(230, 200, 170)); h.rect((152, 290, 178, 340), fill=(60, 60, 80)); return h.done()
+    if tipo == "fuego":
+        h = Hi(360, 480); h.poly([(180, 0), (330, 300), (280, 470), (80, 470), (30, 300)], fill=(255, 120, 30)); h.poly([(180, 140), (270, 330), (230, 470), (130, 470), (90, 330)], fill=(255, 200, 60)); return h.done()
+    if tipo == "radio":
+        h = Hi(520, 340); h.rect((10, 60, 510, 330), r=30, fill=(90, 60, 40)); h.ellipse((40, 100, 240, 300), fill=(50, 34, 24)); h.rect((280, 110, 480, 170), r=8, fill=(230, 210, 150))
+        for x in (310, 400): h.ellipse((x, 220, x + 60, 280), fill=(200, 180, 130)); 
+        h.line([(380, 60), (470, 0)], fill=(160, 160, 160), width=6); return h.done()
+    if tipo == "camara_video":
+        h = Hi(560, 360); h.rect((20, 80, 400, 300), r=30, fill=(40, 40, 46)); h.poly([(400, 130), (540, 80), (540, 300), (400, 250)], fill=(30, 30, 36)); h.ellipse((60, 20, 160, 80), fill=(200, 30, 30))
+        h.rect((60, 120, 200, 200), fill=(20, 60, 50)); return h.done()
+    if tipo == "tienda":
+        h = Hi(620, 420); h.poly([(20, 400), (310, 30), (600, 400)], fill=(60, 110, 70)); h.poly([(250, 400), (310, 160), (370, 400)], fill=(20, 30, 20)); return h.done()
+    if tipo == "mapa":
+        h = Hi(560, 420); h.poly([(20, 40), (190, 10), (370, 40), (540, 10), (540, 390), (370, 410), (190, 390), (20, 410)], fill=(220, 200, 150))
+        h.line([(80, 330), (180, 250), (300, 280), (430, 150)], fill=(200, 60, 50), width=8); h.ellipse((410, 120, 460, 170), outline=(200, 60, 50), width=8); return h.done()
+    if tipo == "caja_musica":
+        h = Hi(460, 360); h.rect((30, 140, 430, 340), r=16, fill=(120, 70, 50)); h.poly([(30, 140), (80, 30), (480, 30), (430, 140)], fill=(150, 90, 60)); h.ellipse((200, 210, 260, 270), fill=(220, 190, 110)); h.rect((430, 220, 460, 240), fill=(200, 180, 120)); return h.done()
+    if tipo == "taza":
+        h = Hi(460, 380); h.ellipse((20, 300, 440, 370), fill=(220, 220, 225)); h.poly([(90, 120), (370, 120), (330, 320), (130, 320)], fill=(240, 240, 245)); h.ellipse((90, 90, 370, 150), fill=(200, 200, 205))
+        h.ellipse((120, 100, 340, 140), fill=(90, 60, 40)); h.arc((330, 150, 430, 270), 270, 90, fill=(240, 240, 245), width=22); h.line([(250, 120), (380, 10)], fill=(190, 190, 200), width=12); return h.done()
+    if tipo == "venado":
+        h = Hi(460, 460); col = (60, 44, 34); h.ellipse((60, 200, 340, 340), fill=col); h.rect((280, 110, 330, 240), fill=col); h.ellipse((270, 70, 380, 150), fill=col)
+        for x in (90, 140, 250, 300): h.rect((x, 320, x + 22, 450), fill=col)
+        h.line([(300, 75), (270, 10), (240, 0)], fill=col, width=10); h.line([(340, 75), (380, 10), (420, 0)], fill=col, width=10); return h.done()
+    if tipo == "camara_foto":
+        h = Hi(520, 360); h.rect((20, 80, 500, 340), r=30, fill=(40, 40, 46)); h.rect((160, 30, 300, 90), r=10, fill=(40, 40, 46)); h.ellipse((170, 120, 350, 300), fill=(20, 20, 26)); h.ellipse((210, 160, 310, 260), fill=(70, 90, 120))
+        h.rect((390, 110, 460, 150), fill=(240, 240, 220)); return h.done()
     if tipo == "cruz":
         h = Hi(240, 420); h.rect((95, 10, 145, 410), r=8, fill=(214, 180, 90)); h.rect((20, 100, 220, 150), r=8, fill=(214, 180, 90)); return h.done()
     if tipo == "ouija":

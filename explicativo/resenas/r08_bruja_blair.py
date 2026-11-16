@@ -1,0 +1,43 @@
+"""Reseña: El proyecto de la bruja de Blair (1999). Resumen propio; ilustraciones originales (sin el símbolo de ramas de la película)."""
+from _base import *
+PRON = en("Heather", "Donahue", "Michael", "Mike", "Williams", "Joshua", "Josh", "Leonard", "Burkittsville", "Maryland", "Blair", "Witch", "Rustin", "Parr", "Elly",
+          "Kedward", "Black", "Hills", "Daniel", "Myrick", "Artisan", "Sundance", "Guinness", "Project", "Paranormal", "Activity", "Seneca", "Creek")
+PRON.update({"gps": ("es", "ge pe ese")})
+H = [
+ ({"fondo": "negro", "el": [("camara_video", 540, 1050, 1.0, {"anim": "aparecer"})], "tag": "OCTUBRE · 1994", "tag_y": 1400, "tag_col": ROJO, "cam": (1, 1.12, 0, 0)}, "La película empieza con un mensaje: en octubre de mil novecientos noventa y cuatro, tres estudiantes de cine desaparecieron en un bosque de Maryland. Un año después, encontraron su material grabado.", {"desaparecieron", "material"}),
+ ({"fondo": "calle", "el": [("mujer", 300, 1430, .5), ("hombre", 540, 1430, .52), ("hombre", 780, 1430, .52)], "cam": (1, 1.06, 0, 0)}, "Heather, Josh y Mike llegan al pueblo de Burkittsville para filmar un documental sobre una leyenda local: la bruja de Blair.", {"heather", "bruja"}),
+ ({"fondo": "calle", "el": [("anciano", 380, 1300, .8), ("camara_video", 760, 1150, .6)], "cam": (1, 1.06, 0, 0)}, "Entrevistan a la gente del pueblo. Cuentan que, hace siglos, una mujer fue acusada de brujería y expulsada al bosque en pleno invierno. Desde entonces, empezaron a desaparecer niños.", {"brujería", "niños"}),
+ ({"fondo": "casa", "fx": ["niebla"], "pulso": .7, "bpm": 80, "cam": (1, 1.12, 0, 0)}, "La historia más oscura es la de un ermitaño, en los años cuarenta, que confesó haberse llevado a varios niños a su casa en el bosque. Dijo que una voz se lo había ordenado. Y que siempre ponía a uno de ellos de cara a la pared.", {"ermitaño", "pared"}),
+ ({"fondo": "bosque", "el": [("tienda", 540, 1400, .7)], "cam": (1, 1.1, 0, 40)}, "Con sus cámaras, un mapa y equipo para acampar, los tres se internan en el bosque. Al principio todo es un juego.", {"bosque", "juego"}),
+ ({"fondo": "bosque", "el": [("piedra", 300, 1450, .5), ("piedra", 540, 1470, .6), ("piedra", 780, 1450, .5)], "fx": ["niebla"], "cam": (1, 1.1, 0, 0)}, "Encuentran un pequeño cementerio con montoncitos de piedras. Josh tumba uno sin querer. Esa noche, escuchan ruidos alrededor de la carpa.", {"piedras", "ruidos"}),
+ ({"fondo": "bosque", "el": [("mapa", 540, 1150, .9, {"anim": "desvanecer", "t0": 1.2})], "cam": (1, 1.1, 0, 0)}, "Al día siguiente se pierden. Caminan horas en círculos y terminan en el mismo lugar. Y entonces descubren que el mapa ya no está: Mike lo pateó al río porque le pareció inútil.", {"mapa", "río"}),
+ ("H", "Ese es el momento en que la película deja de ser un paseo. No tienen mapa, la comida se acaba, y los tres empiezan a pelear entre ellos.", {"pelear"}),
+ ({"fondo": "bosque", "el": [("tienda", 540, 1400, .7, {"anim": "temblar"})], "fx": ["niebla"], "pulso": 1.1, "bpm": 140, "vineta": .95, "cam": (1, 1.15, 0, 0)}, "Las noches empeoran: risas de niños a lo lejos, pasos, y algo que sacude la carpa desde afuera. Salen corriendo a la oscuridad sin ver nada.", {"carpa", "risas"}),
+ ({"fondo": "bosque", "el": [("sombra", 540, 1350, .5, {"anim": "aparecer"})], "fx": ["niebla"], "pulso": .8, "bpm": 100, "cam": (1, 1.12, 0, 40)}, "Por las mañanas encuentran señales extrañas colgando de los árboles, hechas con ramas, y nuevos montones de piedras justo frente a la carpa.", {"ramas"}),
+ ({"fondo": "bosque", "el": [("hombre", 540, 1430, .5, {"anim": "desvanecer", "t0": 1})], "fx": ["niebla"], "cam": (1, 1.12, 0, 0)}, "Una mañana, Josh ya no está. Desapareció. Heather y Mike lo buscan, gritan su nombre… y solo escuchan sus gritos a lo lejos durante la noche.", {"josh"}),
+ ({"fondo": "negro", "el": [("camara_video", 540, 1050, .9)], "vineta": .95, "pulso": .5, "bpm": 60, "cam": (1, 1.3, 0, 0)}, "Ahí llega la escena más famosa: Heather, con la linterna en la cara, se graba a sí misma llorando. Pide perdón a las familias, porque siente que todo fue su culpa.", {"perdón"}),
+ ({"fondo": "bosque", "el": [("casa", 540, 1200, .8) if False else ("sombra", 540, 1350, .3)], "fx": ["niebla"], "pulso": 1.2, "bpm": 150, "cam": (1, 1.2, 0, 0)}, "En la última noche, siguiendo los gritos de Josh, encuentran una casa abandonada en medio del bosque. La misma casa de la leyenda.", {"casa"}),
+ ({"fondo": "pasillo", "el": [("hombre", 540, 1350, .5, {"anim": "acercar"})], "pulso": 1.3, "bpm": 160, "flash": True, "cam": (1, 1.25, 0, 0)}, "Corren por las escaleras hasta el sótano. Mike se queda callado. Heather entra detrás… y lo ve parado en una esquina, de cara a la pared. Igual que en la historia del ermitaño.", {"esquina", "pared"}),
+ ({"fondo": "negro", "flash": True, "pulso": .5, "bpm": 50, "cam": (1.2, 1.0, 0, 0)}, "La cámara de Heather cae al suelo. Y la imagen se corta. Nunca vemos qué los atacó.", {"nunca"}),
+]
+D = [
+ ({"fondo": "estudio", "el": [("camara_video", 540, 1080, 1.0, {"anim": "entrar"})], "cam": (1, 1.08, 0, 0)}, "La dirigieron Daniel Myrick y Eduardo Sánchez. Y el nombre Blair viene de una escuela donde estudió brevemente la hermana de Sánchez.", {"sánchez", "escuela"}),
+ ({"fondo": "bosque", "el": [("mapa", 540, 1150, .9, {"anim": "entrar"})], "cam": (1, 1.08, 0, 0)}, "Lo más impresionante es cómo la grabaron: los tres actores pasaron ocho días en un bosque de Maryland, grabándose solos. Cada día recibían instrucciones escondidas, que encontraban con un GPS.", {"ocho", "gps"}),
+ ("H", "Casi no había guion. Los actores tenían un resumen de la leyenda y todo lo demás lo improvisaron. Incluso el famoso monólogo de Heather pidiendo perdón fue completamente improvisado.", {"improvisado"}),
+ ({"fondo": "bosque", "el": [("tienda", 540, 1400, .7, {"anim": "temblar"})], "cam": (1, 1.1, 0, 0)}, "Los directores los asustaban de noche con ruidos de verdad y les iban dando menos comida cada día. Por eso el cansancio y el miedo que ves en pantalla… son bastante reales.", {"reales"}),
+ ({"fondo": "estudio", "el": [("computadora", 540, 1100, 1.0, {"anim": "aparecer"})], "tag": "DESAPARECIDOS", "tag_y": 1420, "tag_col": ROJO, "cam": (1, 1.08, 0, 0)}, "Y su publicidad fue genial: en el festival de Sundance presentaron a los actores como desaparecidos o muertos. Mucha gente creyó que la historia era real.", {"sundance", "real"}),
+ ({"fondo": "estudio", "el": [("cronometro", 540, 1080, .9, {"anim": "entrar"})], "cam": (1, 1.08, 0, 0)}, "Grabaron alrededor de veinte horas de material, y pasaron unos ocho meses editándolo hasta dejar una película de poco más de ochenta minutos. Ocho días de rodaje… y ocho meses de edición.", {"ocho", "meses"}),
+ ({"fondo": "cine", "el": [("dinero", 540, 1060, .9, {"anim": "entrar"})], "tag": "248 MILLONES USD", "tag_y": 1380, "tag_col": VERDE_T, "cam": (1, 1.08, 0, 0)}, "El rodaje original costó unos sesenta mil dólares. La compró un estudio por un millón cien mil… y recaudó doscientos cuarenta y ocho millones en el mundo.", {"sesenta", "doscientos"}),
+ ({"fondo": "estudio", "el": [("trofeo", 540, 1060, .9, {"anim": "entrar"})], "cam": (1, 1.08, 0, 0)}, "El libro Guinness de récords la registró como la película con mejor relación entre costo y ganancia. Y popularizó un género entero: el de las grabaciones encontradas.", {"guinness"}),
+]
+O = [
+ ("H", "Para mí, la bruja de Blair es un experimento brillante: te da miedo con lo que no ves. No hay monstruo, no hay sangre… y aun así, el final te deja helado.", {"experimento"}),
+ ("H", "Su mayor logro es que se siente real. Los actores no parecen actores, y por eso te metes en ese bosque con ellos.", {"real"}),
+ ({"fondo": "bosque", "el": [("camara_video", 540, 1200, .7)]}, "¿Lo malo? La cámara se mueve muchísimo y a algunas personas literalmente les da mareo. Y si esperas ver algo concreto al final… te vas a frustrar.", {"mareo"}),
+ ("H", "Es de esas películas que amas u odias. Pero sin ella no existirían Actividad Paranormal ni todo el terror de grabaciones encontradas.", {"paranormal"}),
+]
+esc, g = resena_completa("LA BRUJA", "DE BLAIR", "1999 · MYRICK Y SÁNCHEZ", "camara_video", GANCHO,
+    "Hoy reseñamos El proyecto de la bruja de Blair. Tres estudiantes, un bosque, una cámara… y una de las campañas más engañosas y geniales de la historia del cine.", H, D, O, 4,
+    "Mi calificación: cuatro de cinco. Un experimento que cambió el terror… aunque no es para todos los estómagos.", obj1="mapa",
+    gancho_detras="Y lo que pasó detrás de cámaras es casi más aterrador que la película. Porque buena parte del miedo de los actores… era real.")
+if __name__ == "__main__": correr(esc, g, "bruja_blair", PRON)

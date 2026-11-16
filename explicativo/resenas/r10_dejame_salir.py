@@ -1,0 +1,42 @@
+"""Reseña: ¡Huye! / Déjame salir (Get Out, 2017). Resumen propio; ilustraciones originales."""
+from _base import *
+PRON = en("Jordan", "Peele", "Chris", "Washington", "Rose", "Armitage", "Dean", "Missy", "Jeremy", "Rod", "Georgina", "Walter", "Logan", "Andre", "Daniel", "Kaluuya",
+          "Allison", "Williams", "Bradley", "Whitford", "Catherine", "Keener", "Lil", "Rel", "Howery", "Blumhouse", "Universal", "Get", "Out", "Coagula", "Black", "Mirror")
+PRON.update({"tsa": ("es", "te ese a")})
+H = [
+ ({"fondo": "suburbio", "el": [("hombre", 540, 1430, .5, {"anim": "caminar_der", "dist": 100})], "pulso": .8, "bpm": 90, "cam": (1, 1.1, 0, 40)}, "La película empieza de noche, en un barrio rico. Un joven negro camina perdido buscando una dirección… cuando un carro empieza a seguirlo. Minutos después, desaparece.", {"desaparece"}),
+ ({"fondo": "estudio", "el": [("camara_foto", 540, 1100, 1.0, {"anim": "aparecer"})], "cam": (1, 1.08, 0, 0)}, "Luego conocemos a Chris Washington, un fotógrafo talentoso. Lleva cinco meses de novio con Rose, y ella lo invita a pasar el fin de semana con sus papás.", {"chris", "rose"}),
+ ({"fondo": "estudio", "el": [("hombre", 380, 1270, .85), ("mujer", 700, 1280, .82)], "cam": (1, 1.06, 0, 0)}, "Chris tiene una duda: ¿sus papás saben que él es negro? Rose se ríe y le dice que no se preocupe, que sus papás no son racistas.", {"racistas"}),
+ ({"fondo": "carretera", "el": [("venado", 540, 1300, .8, {"anim": "caer"})], "flash": True, "cam": (1, 1.12, 0, 0)}, "En el camino atropellan a un venado. Chris se queda mirando al animal herido en el bosque, afectado de una forma extraña. Más adelante entenderemos por qué.", {"venado"}),
+ ({"fondo": "casa", "el": [("hombre", 380, 1430, .5), ("mujer", 520, 1435, .48)], "glows": [(540, 700, 400, (255, 230, 200), 80)], "cam": (1, 1.08, 0, 0)}, "La familia Armitage los recibe en una casa enorme en el campo. Dean, el papá, es neurocirujano. Missy, la mamá, es psiquiatra y practica la hipnosis. Son amables… quizá demasiado.", {"armitage", "hipnosis"}),
+ ({"fondo": "casa", "el": [("hombre", 300, 1430, .5), ("mujer", 760, 1430, .5, {"anim": "balancear"})], "pulso": .7, "bpm": 80, "cam": (1, 1.1, 0, 0)}, "Lo raro son los empleados: Walter, el jardinero, y Georgina, el ama de llaves, ambos negros. Sonríen todo el tiempo, hablan como de otra época… y a veces parecen a punto de llorar.", {"walter", "georgina"}),
+ ({"fondo": "estudio", "el": [("taza", 540, 1100, 1.0, {"anim": "latir"})], "pulso": .9, "bpm": 100, "cam": (1, 1.15, 0, 0)}, "Una noche, Missy convence a Chris de una sesión para dejar de fumar. Revuelve el té con una cuchara, una y otra vez… y lo hipnotiza sin permiso.", {"cuchara", "hipnotiza"}),
+ ({"fondo": "abismo", "el": [("hombre", 540, 1200, .6, {"anim": "caer"})], "fx": ["particulas"], "cam": (1, 1.2, 0, 0)}, "Chris cae en un vacío oscuro, flotando, mientras ve el mundo desde muy lejos, como en una pantalla. Lo llaman el lugar hundido: estás despierto, pero no controlas tu cuerpo.", {"hundido"}),
+ ("H", "Esa imagen se volvió famosísima, porque representa algo muy real: sentirte presente, pero sin voz y sin poder hacer nada.", {"voz"}),
+ ({"fondo": "fiesta", "el": [("anciano", 300, 1280, .7), ("mujer", 540, 1290, .7), ("anciano", 780, 1280, .7)], "velas": [(540, 380, 140, AMB)], "cam": (1, 1.1, 0, 0)}, "Al día siguiente, los Armitage hacen una reunión con amigos ricos y mayores. Todos tratan a Chris como un objeto: le tocan los brazos, hablan de su cuerpo, de su fuerza.", {"objeto"}),
+ ({"fondo": "fiesta", "el": [("hombre", 540, 1280, .8, {"anim": "temblar"}), ("camara_foto", 820, 1000, .5)], "flash": True, "pulso": 1.0, "bpm": 120, "cam": (1, 1.15, 0, 0)}, "Chris reconoce al único invitado negro y le toma una foto. El flash lo despierta un instante: le sangra la nariz y le grita, desesperado, que se vaya de ahí.", {"flash", "vaya"}),
+ ({"fondo": "estudio", "el": [("hombre", 540, 1280, .8)], "cam": (1, 1.06, 0, 0)}, "Mientras tanto, su mejor amigo Rod, un agente de seguridad de aeropuerto, investiga por su cuenta. Es el personaje más divertido… y el único que entiende lo que está pasando.", {"rod"}),
+ ({"fondo": "casa", "el": [("camara_foto", 540, 1100, .8, {"anim": "aparecer"})], "pulso": 1.1, "bpm": 140, "cam": (1, 1.2, 0, 0)}, "Chris decide irse. Pero en el armario de Rose encuentra fotos de ella con muchas otras parejas negras… incluidos Walter y Georgina. Rose era parte del plan desde el principio.", {"fotos", "plan"}),
+ ("H", "Y la verdad es escalofriante: la familia subasta los cuerpos de jóvenes negros. Con hipnosis y una cirugía, el cerebro de un comprador blanco se trasplanta al cuerpo de la víctima. La persona original queda atrapada en el lugar hundido para siempre.", {"subasta", "cerebro"}),
+ ({"fondo": "cuarto", "el": [("hombre", 540, 1300, .8, {"anim": "temblar"})], "pulso": 1.2, "bpm": 150, "flash": True, "cam": (1, 1.2, 0, 0)}, "Chris despierta atado en el sótano. Pero se tapa los oídos con algodón de la silla para no escuchar la cuchara… y logra escapar, enfrentándose a toda la familia.", {"algodón", "escapar"}),
+ ({"fondo": "carretera", "el": [("auto", 540, 1300, .9, {"anim": "aparecer"})], "glows": [(540, 1100, 260, (255, 60, 60), 120)], "cam": (1, 1.15, 0, 0)}, "Al final, cuando llegan luces de una patrulla, parece que todo va a salir mal para Chris. Pero quien baja del carro es Rod, que vino a rescatarlo.", {"rod"}),
+]
+D = [
+ ({"fondo": "estudio", "el": [("camara_cine", 540, 1100, 1.0, {"anim": "entrar"})], "cam": (1, 1.08, 0, 0)}, "Fue la primera película como director de Jordan Peele, que hasta ese momento era conocido por la comedia. Escribió el primer borrador del guion en unos dos meses.", {"peele", "comedia"}),
+ ({"fondo": "estudio", "el": [("hombre", 540, 1290, .9, {"anim": "aparecer"})], "cam": (1, 1.06, 0, 0)}, "Para el papel de Chris eligió a Daniel Kaluuya, después de verlo en un episodio de la serie Black Mirror. Y esa escena de él llorando inmóvil se volvió una de las imágenes del año.", {"kaluuya"}),
+ ("H", "Peele la definió como un thriller social: una película de terror donde el monstruo no es sobrenatural, sino el racismo disfrazado de amabilidad.", {"racismo"}),
+ ({"fondo": "cine", "el": [("dinero", 540, 1060, .9, {"anim": "entrar"})], "tag": "4,5 MILLONES USD", "tag_y": 1380, "tag_col": VERDE_T, "cam": (1, 1.08, 0, 0)}, "Costó apenas cuatro millones y medio de dólares… y recaudó unos doscientos cincuenta y cinco millones en todo el mundo.", {"cuatro", "doscientos"}),
+ ({"fondo": "estudio", "el": [("trofeo", 540, 1060, 1.0, {"anim": "entrar"})], "tag": "ÓSCAR · MEJOR GUION ORIGINAL", "tag_y": 1380, "tag_col": ORO, "tag_size": 44, "cam": (1, 1.08, 0, 0)}, "Tuvo cuatro nominaciones al Óscar, incluida mejor película. Y Jordan Peele ganó el de mejor guion original: fue la primera persona negra en ganar en esa categoría.", {"óscar", "primera"}),
+ ("H", "Y un secreto: originalmente tenía un final mucho más oscuro, en el que Chris terminaba en prisión. Peele lo cambió porque sintió que el público necesitaba un héroe que sí escapara.", {"final"}),
+]
+O = [
+ ("H", "Para mí, Déjame salir es una de las películas más inteligentes del terror moderno. Cada detalle de la primera vez tiene otro significado cuando la ves por segunda vez.", {"inteligentes"}),
+ ("H", "Lo genial es la mezcla: te ríes con Rod, te incomoda cada conversación en la fiesta… y de pronto estás aterrado.", {"mezcla"}),
+ ({"fondo": "estudio", "el": [("taza", 540, 1150, .8)]}, "¿Lo malo? Si buscas sustos sobrenaturales o mucha sangre, no es esa película. Su miedo es más psicológico, y la explicación final puede sentirse un poco rápida.", {"psicológico"}),
+ ("H", "Pero es de esas películas que te dejan pensando y conversando mucho después. Y eso, en el terror, es muy difícil de lograr.", {"pensando"}),
+]
+esc, g = resena_completa("DÉJAME", "SALIR", "GET OUT · 2017 · JORDAN PEELE", "taza", GANCHO,
+    "Hoy reseñamos Déjame salir, también conocida como ¡Huye!, de Jordan Peele. Una visita a los suegros que se convierte en una pesadilla… y que terminó ganando un Óscar.", H, D, O, 4.5,
+    "Mi calificación: cuatro punto cinco de cinco. Terror inteligente, original y lleno de detalles. Y después de verla… vas a mirar distinto una taza de té.", obj1="camara_foto",
+    gancho_detras="Y detrás de cámaras hay una historia de éxito increíble. Porque esta película la hizo un comediante… y terminó en los Óscar.")
+if __name__ == "__main__": correr(esc, g, "dejame_salir", PRON)
