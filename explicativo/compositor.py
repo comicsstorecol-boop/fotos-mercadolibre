@@ -157,6 +157,29 @@ def fondo(nombre):
         c = vgrad(W, H, ESTUDIO)
     elif nombre == "negro":
         c = Image.new("RGBA", (W, H), (4, 3, 6, 255))
+    elif nombre == "desierto":  # excavación en el desierto al atardecer
+        c = vgrad(W, H, [(0, (40, 20, 30)), (.45, (190, 90, 40)), (.62, (240, 160, 80)), (1, (90, 50, 30))]); glow(c, 540, 1080, 260, (255, 210, 120), 200)
+        h = Hi(); h.ellipse((440, 980, 640, 1180), fill=(255, 220, 150))
+        h.poly([(0, 1250), (300, 1150), (620, 1240), (900, 1160), (W, 1230), (W, H), (0, H)], fill=(150, 80, 40))
+        h.poly([(0, 1420), (380, 1330), (760, 1420), (W, 1360), (W, H), (0, H)], fill=(110, 58, 32))
+        for x in (180, 820): h.rect((x - 50, 1180, x + 50, 1330), fill=(120, 66, 36)); h.rect((x - 70, 1165, x + 70, 1190), fill=(130, 74, 40))
+        c.alpha_composite(h.done())
+    elif nombre == "iglesia":
+        c = vgrad(W, H, [(0, (10, 8, 16)), (1, (24, 16, 20))]); h = Hi()
+        for x in (200, 540, 880):
+            h.rect((x - 90, 500, x + 90, 1000), r=90, fill=(40, 46, 80)); h.line([(x, 520), (x, 1000)], fill=(20, 18, 30), width=10); h.line([(x - 90, 760), (x + 90, 760)], fill=(20, 18, 30), width=10)
+        h.rect((0, 1380, W, H), fill=(18, 12, 14)); h.rect((330, 1160, 750, 1380), fill=(50, 30, 26)); h.rect((300, 1140, 780, 1170), fill=(200, 190, 170))
+        h.rect((520, 860, 560, 1100), fill=(200, 170, 90)); h.rect((470, 910, 610, 945), fill=(200, 170, 90))
+        c.alpha_composite(h.done())
+        for x in (360, 720): glow(c, x, 1100, 90, (255, 190, 100), 160)
+    elif nombre == "cine":
+        c = vgrad(W, H, [(0, (6, 6, 12)), (1, (16, 10, 14))]); glow(c, 540, 820, 520, (170, 190, 255), 120)
+        h = Hi(); h.rect((90, 560, 990, 1080), fill=(190, 200, 230))
+        for r in range(4):
+            y = 1300 + r * 160
+            for i in range(-1, 8):
+                x = i * 160 + (r % 2) * 80; h.ellipse((x - 62, y - 70, x + 62, y + 50), fill=(12 + r * 4, 10, 16)); h.rect((x - 72, y, x + 72, y + 120), r=20, fill=(60 + r * 10, 14, 24))
+        c.alpha_composite(h.done())
     else:
         c = vgrad(W, H, N)
     return c
@@ -312,6 +335,31 @@ def objeto(tipo, var=""):
     if tipo == "mascara":
         h = Hi(360, 460); h.ellipse((20, 20, 340, 440), fill=(222, 196, 176)); h.ellipse((80, 150, 150, 210), fill=(20, 16, 18)); h.ellipse((210, 150, 280, 210), fill=(20, 16, 18))
         h.poly([(180, 220), (160, 300), (200, 300)], fill=(200, 170, 150)); h.line([(130, 350), (230, 350)], fill=(120, 70, 70), width=10); return h.done()
+    if tipo == "cruz":
+        h = Hi(240, 420); h.rect((95, 10, 145, 410), r=8, fill=(214, 180, 90)); h.rect((20, 100, 220, 150), r=8, fill=(214, 180, 90)); return h.done()
+    if tipo == "ouija":
+        h = Hi(620, 420); h.rect((10, 10, 610, 410), r=40, fill=(150, 104, 60)); h.rect((30, 30, 590, 390), r=30, outline=(70, 44, 24), width=6)
+        h.arc((70, 70, 550, 380), 200, 340, fill=(60, 36, 20), width=8); h.arc((110, 140, 510, 420), 205, 335, fill=(60, 36, 20), width=8)
+        h.ellipse((70, 60, 150, 140), fill=(240, 220, 120)); h.ellipse((470, 60, 550, 140), fill=(230, 230, 240)); return h.done()
+    if tipo == "amuleto":
+        h = Hi(260, 360); h.line([(130, 0), (130, 80)], fill=(150, 120, 80), width=6); h.ellipse((40, 70, 220, 330), fill=(96, 88, 70))
+        h.ellipse((80, 150, 120, 185), fill=(30, 26, 22)); h.ellipse((140, 150, 180, 185), fill=(30, 26, 22)); h.rect((95, 230, 165, 250), r=6, fill=(30, 26, 22)); return h.done()
+    if tipo == "estatua_alada":
+        h = Hi(520, 760); col = (64, 58, 50)
+        h.poly([(260, 220), (20, 60), (60, 330), (200, 360)], fill=col); h.poly([(260, 220), (500, 60), (460, 330), (320, 360)], fill=col)
+        h.ellipse((200, 120, 320, 250), fill=col); h.rect((200, 240, 320, 560), r=40, fill=col); h.rect((160, 560, 360, 620), fill=(50, 46, 40)); h.rect((120, 620, 400, 700), fill=(44, 40, 36))
+        h.ellipse((225, 165, 245, 185), fill=(255, 120, 60)); h.ellipse((275, 165, 295, 185), fill=(255, 120, 60)); return h.done()
+    if tipo == "camara_cine":
+        h = Hi(560, 460); h.ellipse((60, 10, 220, 170), outline=(200, 200, 210), width=14); h.ellipse((240, 10, 400, 170), outline=(200, 200, 210), width=14)
+        h.rect((40, 170, 420, 380), r=24, fill=(60, 60, 70)); h.poly([(420, 220), (540, 170), (540, 380), (420, 330)], fill=(40, 40, 48)); h.rect((210, 380, 250, 460), fill=(50, 50, 56)); return h.done()
+    if tipo == "claqueta":
+        h = Hi(520, 460); h.rect((20, 140, 500, 440), r=12, fill=(24, 24, 28)); h.rect((20, 60, 500, 140), fill=(240, 240, 240))
+        for i in range(5): h.poly([(20 + i * 100, 60), (70 + i * 100, 60), (20 + i * 100 + 50 - 30, 140), (20 + i * 100 - 30, 140)], fill=(24, 24, 28))
+        for y in (220, 300, 380): h.line([(60, y), (460, y)], fill=(200, 200, 200), width=4)
+        return h.done()
+    if tipo == "estrella":
+        h = Hi(300, 300); pts = [(150 + (140 if k % 2 == 0 else 60) * math.sin(math.pi * k / 5), 160 - (140 if k % 2 == 0 else 60) * math.cos(math.pi * k / 5)) for k in range(10)]
+        h.poly(pts, fill=(255, 210, 60)); return h.done()
     if tipo == "retrato":
         h = Hi(400, 520); h.rect((10, 10, 390, 510), r=10, fill=(120, 86, 40)); h.rect((40, 40, 360, 480), fill=(200, 190, 170))
         h.ellipse((150, 120, 250, 230), fill=(90, 80, 70)); h.poly([(130, 230), (270, 230), (330, 480), (70, 480)], fill=(236, 232, 226)); h.rect((140, 110, 260, 300), r=40, fill=(60, 50, 44)); h.ellipse((160, 135, 240, 225), fill=(214, 196, 176))
