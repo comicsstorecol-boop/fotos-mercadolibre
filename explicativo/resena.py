@@ -130,7 +130,7 @@ class Anfitrion:
         dx, dy, rot = math.sin(t * .9) * 5, math.sin(t * .7 + 1) * 4 + nivel * 2, math.sin(t * .5) * .8
         head = self.src.rotate(rot, center=(cx, cy + ry * .6), resample=Image.BICUBIC, translate=(dx, dy))
         im.paste(head, (0, 0), self.mcab)
-        if nivel > .05:  # boca: se abre con la voz
+        if nivel > .05 and self.boca is not None:  # boca: se abre con la voz
             bx, by = self.boca[0] + dx, self.boca[1] + dy; op = 1 + 7 * nivel
             jaw = im.crop((int(bx - 55), int(by - 2), int(bx + 55), int(by + 42)))
             mk = Image.new("L", jaw.size, 0); ImageDraw.Draw(mk).ellipse((10, 6, jaw.width - 10, jaw.height * 2), fill=255); mk = mk.filter(ImageFilter.GaussianBlur(8))
@@ -160,6 +160,16 @@ class Anfitrion:
 # ================================================================ PLANTILLA COMPLETA DE RESEÑA (aprobada con El exorcista)
 _ANF = None
 _PRESETS = [(1.3, 1.1, .36), (1.1, 1.35, .38), (1.4, 1.15, .4), (1.0, 1.25, .45), (1.15, 1.4, .36), (1.4, 1.1, .45), (1.0, 1.3, .4)]
+_CERCA = None
+def anfitrion_cerca():
+    """Primer plano del presentador (sin movimiento de labios: respira, mueve la cabeza; luces y lluvia vivas)."""
+    global _CERCA
+    if _CERCA is None:
+        d = os.path.join(os.path.dirname(HERE), "marcas", "comics-store", "intros")
+        if HORIZONTAL: _CERCA = Anfitrion(os.path.join(d, "terror_cerca_h.png"), cabeza=(880, 330, 330, 300), boca=None, vela=(503, 140), lampara=(503, 140), ventana=(1210, 0, 1672, 800))
+        else: _CERCA = Anfitrion(os.path.join(d, "terror_cerca_v.png"), cabeza=(497, 560, 280, 300), boca=None, vela=(330, 140), lampara=(330, 140), ventana=(640, 0, 941, 780))
+    return _CERCA
+
 def anfitrion():
     global _ANF
     if _ANF is None:
@@ -174,7 +184,9 @@ def resena_completa(titulo, linea2, sub, obj_portada, gancho, presentacion, hist
     """Arma la reseña con el orden aprobado y ganchos de retención. En las listas, usar "H" como escena para que hable el presentador."""
     A = anfitrion(); n = [0]
     def host():
-        z0, z1, cy = _PRESETS[n[0] % len(_PRESETS)]; n[0] += 1; return A.escena(z0, z1, cy, f"h{n[0]:02d}")
+        z0, z1, cy = _PRESETS[n[0] % len(_PRESETS)]; n[0] += 1
+        if n[0] % 3 == 0: return anfitrion_cerca().escena(1.0, 1.12, .42, f"h{n[0]:02d}")
+        return A.escena(z0, z1, cy, f"h{n[0]:02d}")
     def conv(lst): return [((host() if it[0] == "H" else it[0]),) + tuple(it[1:]) for it in lst]
     I = [(A.escena(1.0, 1.22, .42, "intro"), gancho, {"enterradas", "despertar", "miedo", "terror"}),
          (portada(titulo, linea2, sub, obj_portada), presentacion, {"reseña"}),
