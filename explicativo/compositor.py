@@ -670,6 +670,78 @@ def _img_el_base(tipo, var=""):
     if tipo == "seto": return figura("perro", (90, 160, 90), (34, 86, 44))
     return objeto(tipo, var)
 
+# ---------------------------------------------------------------- siluetas sobre fotos: proporción real, luz de la escena y sombra de contacto
+_PERSONAS = {"hombre", "mujer", "policia", "anciano", "nino", "nina", "sombra", "dama", "llorona", "fantasma", "encapuchado", "alto", "sacerdote", "sombrero", "corriendo", "sentado", "caminando", "caminando_m"}
+RIM_FOTO = [(150, 185, 235)]
+def _ruta_sil(tipo, var=""):
+    import glob
+    cands = ([var] if var and var not in ("frio", "color", "calido") else []) + _SIL_ALIAS.get(tipo, []) + _SIL_ALIAS_EXTRA.get(tipo, []) + [tipo]
+    for c in cands:
+        hit = glob.glob(os.path.join(os.path.dirname(BIB), "siluetas", f"{c}.png"))
+        if hit: return hit[0]
+    return None
+@lru_cache(maxsize=96)
+def silueta_foto(tipo, var, alto, rim):
+    """Silueta en alta resolución, a la altura exacta en píxeles, con luz de contorno del color de la escena."""
+    p = _ruta_sil(tipo, var)
+    if p is None: return None
+    src = Image.open(p).convert("RGBA"); bb = src.getchannel("A").getbbox(); src = src.crop(bb)
+    w = max(1, int(src.width * alto / src.height)); im = src.resize((w, alto), Image.LANCZOS)
+    a = im.getchannel("A"); pad = max(20, alto // 18); W2, H2 = w + pad * 2, alto + pad * 2
+    A = Image.new("L", (W2, H2), 0); A.paste(a, (pad, pad)); out = Image.new("RGBA", (W2, H2), (0, 0, 0, 0))
+    k = alto / 900
+    if tipo in ("dama", "llorona", "fantasma"):
+        g2 = A.filter(ImageFilter.GaussianBlur(26 * k)).point(lambda v: int(v * .7)); G2 = Image.new("RGBA", (W2, H2), (150, 200, 255, 0)); G2.putalpha(g2); out.alpha_composite(G2)
+        body = Image.new("RGBA", (W2, H2), (215, 228, 245, 0)); body.putalpha(A.filter(ImageFilter.GaussianBlur(2 * k)).point(lambda v: int(v * .72))); out.alpha_composite(body); return out, pad
+    A = A.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.MinFilter(9))       # cierra huecos internos de la silueta
+    soft = A.filter(ImageFilter.GaussianBlur(max(1.2, 1.6 * k)))                    # borde suave, como desenfoque de lente
+    halo = A.filter(ImageFilter.GaussianBlur(22 * k)).point(lambda v: int(v * .18))  # luz que envuelve la figura
+    L = Image.new("RGBA", (W2, H2), rim + (0,)); L.putalpha(halo); out.alpha_composite(L)
+    # cuerpo: casi negro, con degradado del color ambiente y textura de grano (no plano)
+    import numpy as np
+    yy = np.linspace(0, 1, H2)[:, None]; base = np.array([5, 5, 7], float); amb = np.array(rim, float)
+    col = base + amb * (.05 * (1 - yy) ** 2 + .008) ; rng = np.random.default_rng(alto)
+    col = col[None] if col.ndim == 1 else col; col = np.broadcast_to(col[:, None, :] if col.ndim == 2 else col, (H2, W2, 3)).copy()
+    col += rng.normal(0, 3.5, (H2, W2, 1)); body = Image.fromarray(np.clip(col, 0, 255).astype("uint8"), "RGB").convert("RGBA")
+    body.putalpha(soft.point(lambda v: int(v * .97))); out.alpha_composite(body)
+    # luz de contorno solo arriba-izquierda, tenue y difusa
+    sh = max(3, int(5 * k)); edge = ImageChops.subtract(A, A.transform(A.size, Image.AFFINE, (1, 0, sh, 0, 1, sh)))
+    E = Image.new("RGBA", (W2, H2), rim + (0,)); E.putalpha(edge.filter(ImageFilter.GaussianBlur(2.2 * k)).point(lambda v: int(v * .55))); out.alpha_composite(E)
+    return out, pad
+def _rim_de(img):
+    """Color de la luz principal de la foto (promedio de sus zonas más brillantes), saturado un poco."""
+    sm = img.convert("RGB").resize((64, 36)); px = sorted(sm.getdata(), key=lambda p: sum(p))[-180:]
+    r, g, b = (sum(p[i] for p in px) / len(px) for i in range(3)); m = max(r, g, b, 1)
+    return tuple(int(min(255, 90 + 165 * v / m)) // 8 * 8 for v in (r, g, b))
+def sombra_pie(c, x, y, w, alpha=150):
+    L = Image.new("RGBA", (int(w * 1.6), int(w * .5)), (0, 0, 0, 0)); ImageDraw.Draw(L).ellipse((w * .3, w * .14, w * 1.3, w * .34), fill=(0, 0, 0, alpha))
+    L = L.filter(ImageFilter.GaussianBlur(w * .07)); c.alpha_composite(L, (int(x - L.width / 2), int(y - L.height / 2)))
+def poner_silueta(c, tipo, var, x, pie, alto, alpha=1., flip=False, rot=0):
+    r = silueta_foto(tipo, var, max(40, int(alto) // 6 * 6), RIM_FOTO[0])
+    if r is None: return
+    im, pad = r
+    if flip: im = im.transpose(Image.FLIP_LEFT_RIGHT)
+    if tipo not in ("dama", "llorona", "fantasma"): sombra_pie(c, x, pie, im.width - 2 * pad, int(150 * alpha))
+    if rot: im = im.rotate(rot, resample=Image.BICUBIC, expand=True)
+    if alpha < 1: im = im.copy(); im.putalpha(im.getchannel("A").point(lambda v: int(v * alpha)))
+    c.alpha_composite(im, (int(x - im.width / 2), int(pie + pad - im.height)))
+def _foto_el(spec):
+    """Sobre fotos: solo siluetas reales de personas/animales, con tamaño proporcional a la escena. Objetos dibujados fuera."""
+    if spec.get("el_foto"): return spec
+    import re
+    if re.search(r"_p\d+$", str(spec.get("fondo", ""))): return dict(spec, el=[])   # escena clave: ya trae sus personajes
+    out = []
+    for e in spec.get("el", []):
+        tipo, x, y, s = e[:4]; o = dict(e[4]) if len(e) > 4 else {}
+        if _ruta_sil(tipo, o.get("var", "")) is None or tipo in ("auto",): continue
+        s0 = s / KS if HORIZONTAL else s
+        if tipo in _PERSONAS: frac = min(.9, max(.42, .8 * s0 / .9))
+        elif tipo in ("perro", "gato"): frac = min(.4, max(.16, .3 * s0 / .9))
+        else: continue
+        o["_alto"] = frac * H; o["_pie"] = H * (.985 - (.8 - min(frac, .8)) * .45)
+        out.append((tipo, x, y, s, o))
+    return dict(spec, el=out)
+
 def _a_horizontal(spec):
     """Adapta una escena escrita en coordenadas verticales al lienzo horizontal."""
     if not HORIZONTAL or spec.get("h"): return spec
@@ -688,20 +760,24 @@ def escena(spec):
     spec = _a_horizontal(spec)
     base_cache = {}
     foto = fondo_img_existe(spec.get("fondo", "estudio"))
-    if foto and not spec.get("el_foto"): spec = dict(spec, el=[])  # sobre fotos reales no se dibujan objetos ni siluetas de código
+    if foto: spec = _foto_el(spec)
+    rim_cache = {}
     def build_base():
         FOTO_ACTIVA[0] = foto
         c = fondo(spec.get("fondo", "estudio")).copy()
+        if foto: rim_cache["r"] = _rim_de(c)
+        RIM_FOTO[0] = rim_cache.get("r", RIM_FOTO[0])
         for g in spec.get("glows", []): glow(c, *g)
         for el in spec.get("el", []):
             tipo, x, y, s = el[:4]; o = el[4] if len(el) > 4 else {}
             if o.get("anim"): continue
+            if "_alto" in o: poner_silueta(c, tipo, o.get("var", ""), x, o["_pie"], o["_alto"], o.get("alpha", 1), rot=o.get("rot", 0)); continue
             im = _img_el(tipo, o.get("var", ""))
             if im is not None: place(c, im, x, y, scale=s, rot=o.get("rot", 0), alpha=o.get("alpha", 1))
         return c
     def f(t, d):
         if "b" not in base_cache: base_cache["b"] = build_base()
-        FOTO_ACTIVA[0] = foto
+        FOTO_ACTIVA[0] = foto; RIM_FOTO[0] = rim_cache.get("r", RIM_FOTO[0])
         c = base_cache["b"].copy()
         for el in spec.get("el", []):
             tipo, x, y, s = el[:4]; o = el[4] if len(el) > 4 else {}
@@ -726,6 +802,9 @@ def escena(spec):
             elif a == "girar": rot = rot + t * 30
             elif a == "latir": sc = s * (1 + .12 * max(0, math.sin(t * 7)))
             elif a == "desvanecer": al = 1 - eo(pr(t, st, 1.2))
+            if "_alto" in o and im is not None:   # silueta real sobre foto, proporcionada
+                k = 1 + (sc / s - 1) * .35 if s else 1.; pie = o["_pie"] + (yy - y) * (1 if a in ("caminar_der", "caminar_izq", "flotar", "temblar", "caer") else 0) + (k - 1) * H * .06
+                poner_silueta(c, tt, o.get("var", ""), xx, pie, o["_alto"] * k, al, flip=(a == "caminar_izq" and tt != tipo), rot=rot); continue
             if im is not None: place(c, im, xx, yy, scale=sc, rot=rot, alpha=al)
         fx = spec.get("fx", [])
         if "niebla" in fx: fx_niebla(c, t, spec.get("niebla_y", 1300))
