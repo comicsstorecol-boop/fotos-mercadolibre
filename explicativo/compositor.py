@@ -506,6 +506,28 @@ def textura_efecto(nombre, ancho, alto, col=(200, 210, 235), fuerza=1.):
     g = Image.fromarray(__import__("numpy").concatenate([__import__("numpy").asarray(g), __import__("numpy").asarray(g)[:, ::-1]], axis=1))
     L = Image.new("RGBA", g.size, tuple(col) + (0,)); L.putalpha(g.point(lambda v: int(min(255, v * fuerza)))); return L
 
+@lru_cache(maxsize=16)
+def textura_vertical(nombre, ancho, alto, color=False, fuerza=1.):
+    """Textura apilada en vertical (original + espejo) para desplazarse arriba/abajo sin cortes; conserva color si se pide."""
+    import numpy as np
+    p = os.path.join(EFX, f"{nombre}.png")
+    if not os.path.exists(p): return None
+    im = Image.open(p).convert("RGB").resize((ancho, alto), Image.LANCZOS); a = np.asarray(im)
+    a = np.concatenate([a, a[::-1]], axis=0); L = Image.fromarray(a).convert("RGBA")
+    al = Image.fromarray(a.max(axis=2)).point(lambda v: int(min(255, v * fuerza)))
+    if not color: L = Image.new("RGBA", L.size, (220, 230, 255, 0))
+    L.putalpha(al); return L
+
+def fx_lluvia_real(c, t, a=1.):
+    T = textura_vertical("lluvia", W, H, False, .9 * a)
+    if T is None: return False
+    off = int((t * 900) % H); c.alpha_composite(T.crop((0, H - off, W, 2 * H - off))); return True
+
+def fx_chispas_real(c, t, a=1.):
+    T = textura_vertical("chispas", W, H, True, 1.2 * a)
+    if T is None: return False
+    off = int((t * 70) % H); c.alpha_composite(T.crop((0, off, W, off + H))); return True
+
 def fx_niebla(c, t, y=1250, col=(160, 170, 210), a=80):
     hh = int(H * .55); T = textura_efecto("niebla", W, hh, tuple(col), a / 150)
     if T is not None:
@@ -679,14 +701,14 @@ def escena(spec):
         fx = spec.get("fx", [])
         if "niebla" in fx: fx_niebla(c, t, spec.get("niebla_y", 1300))
         if "niebla_verde" in fx: fx_niebla(c, t, spec.get("niebla_y", 1300), (90, 200, 160), 70)
-        if "lluvia" in fx: fx_lluvia(c, t)
+        if "lluvia" in fx and not fx_lluvia_real(c, t): fx_lluvia(c, t)
         if "humo" in fx: fx_humo(c, t)
         if "luz" in fx: fx_luz(c, t)
         if "luz_izq" in fx: fx_luz(c, t, True)
         if "nieve" in fx: fx_nieve(c, t)
         if "rayo" in fx: fx_rayo(c, t)
         if "particulas" in fx: fx_particulas(c, t)
-        if "chispas" in fx: fx_particulas(c, t, (255, 200, 120), 30)
+        if "chispas" in fx and not fx_chispas_real(c, t): fx_particulas(c, t, (255, 200, 120), 30)
         for (x, y, r, col) in spec.get("velas", []): fx_parpadeo(c, t, x, y, r, col)
         if spec.get("pulso"): pulso(c, t, spec.get("bpm", 80), fuerza=spec["pulso"])
         elif spec.get("vineta", .65): vineta(c, spec.get("vineta", .65))
