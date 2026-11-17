@@ -518,6 +518,14 @@ def fx_humo(c, t, a=90):
     off = int((t * 12) % W); y = int(H - hh + 40 - (t * 18) % 60)
     c.alpha_composite(T.crop((off, 0, off + W, hh)), (0, y))
 
+def fx_luz(c, t, espejo=False, a=110):
+    """Haz de luz con polvo flotando (respira y deriva lento)."""
+    T = textura_efecto("luz_polvo", W + 80, H + 60, (255, 240, 215), (a / 120) * (.85 + .15 * math.sin(t * 1.3)))
+    if T is None: return
+    L = T.crop((0, 0, W + 80, H + 60))
+    if espejo: L = L.transpose(Image.FLIP_LEFT_RIGHT)
+    c.alpha_composite(L.crop((int(40 + 30 * math.sin(t * .3)), int(30 - t * 4 % 30), int(40 + 30 * math.sin(t * .3)) + W, int(30 - t * 4 % 30) + H)))
+
 def fx_lluvia(c, t, n=160, a=120):
     L = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(L); rnd = random.Random(int(t * 30))
     for _ in range(n):
@@ -673,6 +681,8 @@ def escena(spec):
         if "niebla_verde" in fx: fx_niebla(c, t, spec.get("niebla_y", 1300), (90, 200, 160), 70)
         if "lluvia" in fx: fx_lluvia(c, t)
         if "humo" in fx: fx_humo(c, t)
+        if "luz" in fx: fx_luz(c, t)
+        if "luz_izq" in fx: fx_luz(c, t, True)
         if "nieve" in fx: fx_nieve(c, t)
         if "rayo" in fx: fx_rayo(c, t)
         if "particulas" in fx: fx_particulas(c, t)
