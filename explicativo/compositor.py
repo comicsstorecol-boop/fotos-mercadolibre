@@ -527,7 +527,7 @@ def fx_particulas(c, t, col=(160, 255, 220), n=40):
     c.alpha_composite(L)
 
 # ================================================================ COMPOSICIÓN
-SILUETAS = {"hombre", "mujer", "policia", "anciano", "nino", "sombra", "perro", "auto", "pajaro", "mecedora", "seto", "gato", "venado", "estatua_alada", "tienda"}
+SILUETAS = {"hombre", "mujer", "policia", "anciano", "nino", "sombra", "perro", "auto", "pajaro", "mecedora", "seto", "gato", "venado", "estatua_alada", "tienda", "dama", "llorona", "nina", "encapuchado", "fantasma"}
 def silueta(tipo, var="", rim=(255, 170, 110)):
     return _silueta(tipo, var, rim, FOTO_ACTIVA[0])
 @lru_cache(maxsize=128)
@@ -545,6 +545,11 @@ def _silueta(tipo, var, rim, _foto):
     # borde de luz fino desplazado hacia arriba-izquierda
     edge = ImageChops.subtract(A, A.transform(A.size, Image.AFFINE, (1, 0, 3, 0, 1, 3)))
     E = Image.new("RGBA", (W2, H2), rim + (0,)); E.putalpha(edge.filter(ImageFilter.GaussianBlur(1.2)).point(lambda v: min(255, v * 2))); 
+    if tipo in ("dama", "llorona", "fantasma"):   # aparición: cuerpo pálido, translúcido y con brillo frío
+        rim = (170, 210, 255)
+        g2 = A.filter(ImageFilter.GaussianBlur(26)).point(lambda v: int(v * .7)); G2 = Image.new("RGBA", (W2, H2), (150, 200, 255, 0)); G2.putalpha(g2); out.alpha_composite(G2)
+        body = Image.new("RGBA", (W2, H2), (215, 228, 245, 0)); body.putalpha(A.filter(ImageFilter.GaussianBlur(2)).point(lambda v: int(v * .72)))
+        out.alpha_composite(body); return out
     body = Image.new("RGBA", (W2, H2), (8, 8, 12, 0)); body.putalpha(A.filter(ImageFilter.GaussianBlur(1.1)))
     out.alpha_composite(body); out.alpha_composite(E)
     return out
