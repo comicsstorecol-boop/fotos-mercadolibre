@@ -527,7 +527,7 @@ def fx_particulas(c, t, col=(160, 255, 220), n=40):
     c.alpha_composite(L)
 
 # ================================================================ COMPOSICIÓN
-SILUETAS = {"hombre", "mujer", "policia", "anciano", "nino", "sombra", "perro", "auto", "pajaro", "mecedora", "seto", "gato", "venado", "estatua_alada", "tienda", "dama", "llorona", "nina", "encapuchado", "fantasma"}
+SILUETAS = {"hombre", "mujer", "policia", "anciano", "nino", "sombra", "perro", "auto", "pajaro", "mecedora", "seto", "gato", "venado", "estatua_alada", "tienda", "dama", "llorona", "nina", "encapuchado", "fantasma", "alto", "sacerdote", "sombrero", "corriendo", "sentado"}
 def silueta(tipo, var="", rim=(255, 170, 110)):
     return _silueta(tipo, var, rim, FOTO_ACTIVA[0])
 @lru_cache(maxsize=128)
@@ -562,7 +562,7 @@ FOTO_ACTIVA = [False]
 
 # altura (px, de un lienzo de 900) y ancho máximo de cada tipo, para que las siluetas reales encajen con las escalas ya usadas
 _ALTO = {"hombre": 861, "mujer": 861, "anciano": 861, "policia": 891, "sombra": 843, "nino": 672, "nina": 672, "perro": 474, "dama": 861, "llorona": 861,
-         "gato": 330, "auto": 215, "criatura": 900, "sacerdote": 861, "encapuchado": 861, "corriendo": 840, "sentado": 640, "caminando": 861, "caminando_m": 861}
+         "gato": 330, "auto": 215, "criatura": 900, "alto": 900, "sacerdote": 861, "encapuchado": 861, "corriendo": 840, "sentado": 640, "caminando": 861, "caminando_m": 861}
 _SIL_ALIAS_EXTRA = {"caminando_m": ["caminando_m", "mujer"]}
 _SIL_ALIAS = {"anciano_cura": ["sacerdote"], "dama": ["dama", "fantasma"], "llorona": ["fantasma", "dama"], "sombra": ["encapuchado", "sombrero", "hombre"], "nino": ["nino", "nina"]}
 @lru_cache(maxsize=64)
