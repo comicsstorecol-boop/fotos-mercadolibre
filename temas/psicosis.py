@@ -11,7 +11,7 @@ def largo():
 def corto(red):
     saved = sys.argv[:]; sys.argv = ["c02", red]
     try:
-        import importlib, c02_psicosis as C; importlib.reload(C)
+        sys.modules.pop('c02_psicosis', None); import c02_psicosis as C
     finally: sys.argv = saved
     globals()["PRON"] = C.L.PRON; return C.esc, C.g
 import r02_psicosis as _L; PRON = _L.PRON
