@@ -18,14 +18,14 @@ V["resplandor"] = lambda: dict(
      (H(6), "Pasan las semanas. Jack no logra escribir, y Danny recorre en triciclo los pasillos infinitos, donde empieza a ver cosas que no deberían estar ahí.", {"triciclo"}),
      (H(9), "Jack conoce en un salón de fiesta al fantasma del antiguo cuidador, que le dice que su familia necesita ser corregida.", {"corregida"}),
      (H(10), "Wendy revisa la novela de Jack: cientos de páginas con una sola frase repetida miles de veces.", {"frase"}),
-     ("H", "Jack, poseído por el hotel, persigue a su familia con un hacha. Danny escapa al laberinto de arbustos del jardín, borra sus huellas… y Jack muere congelado.", {"laberinto"}),
+     (H(15), "Jack, poseído por el hotel, persigue a su familia con un hacha. Danny escapa al laberinto de arbustos del jardín, borra sus huellas… y Jack muere congelado.", {"laberinto"}),
      (H(17), "Y la imagen final: una foto de una fiesta en el hotel en mil novecientos veintiuno. En el centro, sonriendo… está Jack.", {"foto"}),
      (D(0), "Dato: Stephen King, el autor del libro, nunca quedó contento con esta versión de su historia.", {"king"})],
  tt_g="El autor de esta historia odió la película… y aun así es una de las más aterradoras de la historia. Es El resplandor, de Kubrick.",
  tt=[(H(0), "Jack y su familia cuidan un hotel vacío en las montañas durante todo el invierno.", {"hotel"}),
      (H(9), "Pero el hotel tiene fantasmas, y uno le dice a Jack que su familia debe ser corregida.", {"fantasmas"}),
      (H(10), "Su esposa descubre que en meses Jack solo escribió una frase, repetida miles de veces.", {"frase"}),
-     ("H", "Jack los persigue con un hacha. Su hijo escapa por un laberinto nevado, y Jack muere congelado. Al final, aparece en una foto del hotel… de mil novecientos veintiuno.", {"foto"})])
+     (H(15), "Jack los persigue con un hacha. Su hijo escapa por un laberinto nevado, y Jack muere congelado. Al final, aparece en una foto del hotel… de mil novecientos veintiuno.", {"foto"})])
 V["alien"] = lambda: dict(
  fb_g="Siete tripulantes, una nave en medio del espacio… y algo que no debería estar a bordo. Esta es Alien, el octavo pasajero.",
  fb=[(H(0), "La nave de carga Nostromo regresa a la Tierra con siete tripulantes dormidos. Pero la computadora los despierta: detectó una señal desconocida.", {"nostromo", "señal"}),
