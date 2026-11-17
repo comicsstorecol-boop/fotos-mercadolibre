@@ -67,6 +67,7 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
         pr_ = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{lib.W}x{lib.H}", "-r", "30", "-i", "-",
                                 "-c:v", "libx264", "-preset", "veryfast", "-crf", "19", "-pix_fmt", "yuv420p", f"{td}/v.mp4"], stdin=subprocess.PIPE)
         prev = None
+        t_ini = 0.
         for p in plan:
             nf = int(round(p["dur"] * 30))
             for f in range(nf):
@@ -74,9 +75,9 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
                 fr = p["fn"](t, p["dur"])
                 if prev is not None and t < .25: fr = Image.blend(prev, fr, eio(t / .25))
                 if pelicula:
-                    import compositor as _C; fr = fr.convert("RGBA"); _C.fx_pelicula(fr, (sum(q["dur"] for q in plan[:plan.index(p)]) + t))
+                    import compositor as _C; fr = fr.convert("RGBA"); _C.fx_pelicula(fr, (t_ini + t))
                 karaoke(fr, p["words"], t, y_sub, p["clave"]); pr_.stdin.write(fr.convert("RGB").tobytes())
-            prev = p["fn"](p["dur"], p["dur"]); print("ok", p["fn"].__name__, flush=True)
+            t_ini += p["dur"]; prev = p["fn"](p["dur"], p["dur"]); print("ok", p["fn"].__name__, flush=True)
         pr_.stdin.close(); pr_.wait()
         tmp = OUT + ".tmp.mp4"
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", f"{td}/v.mp4", "-i", f"{td}/a.wav", "-map", "0:v", "-map", "1:a", "-c:v", "copy",
