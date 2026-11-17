@@ -528,6 +528,16 @@ def fx_chispas_real(c, t, a=1.):
     if T is None: return False
     off = int((t * 70) % H); c.alpha_composite(T.crop((0, off, W, off + H))); return True
 
+def fx_salpicadura(c, t, dur=.9):
+    """Golpe visual abstracto (tinta roja) para momentos de impacto: entra rápido y se desvanece."""
+    if t > dur: return
+    T = textura_vertical("salpicadura", W, H, True, 1.4)
+    if T is None: return
+    k = t / dur; z = 1.15 - .15 * min(1, k * 3)
+    L = T.crop((0, 0, W, H)).resize((int(W * z), int(H * z)), Image.BILINEAR)
+    L = L.crop(((L.width - W) // 2, (L.height - H) // 2, (L.width - W) // 2 + W, (L.height - H) // 2 + H))
+    L.putalpha(L.getchannel("A").point(lambda v: int(v * (1 - k) * .85))); c.alpha_composite(L)
+
 def fx_niebla(c, t, y=1250, col=(160, 170, 210), a=80):
     hh = int(H * .55); T = textura_efecto("niebla", W, hh, tuple(col), a / 150)
     if T is not None:
@@ -710,6 +720,7 @@ def escena(spec):
         if "niebla_verde" in fx: fx_niebla(c, t, spec.get("niebla_y", 1300), (90, 200, 160), 70)
         if "lluvia" in fx and not fx_lluvia_real(c, t): fx_lluvia(c, t)
         if "humo" in fx: fx_humo(c, t)
+        if "impacto" in fx: fx_salpicadura(c, t)
         if "luz" in fx: fx_luz(c, t)
         if "luz_izq" in fx: fx_luz(c, t, True)
         if "nieve" in fx: fx_nieve(c, t)
