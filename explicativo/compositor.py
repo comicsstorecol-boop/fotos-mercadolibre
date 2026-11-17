@@ -556,7 +556,7 @@ def _img_el(tipo, var=""):
 FOTO_ACTIVA = [False]
 
 # altura (px, de un lienzo de 900) y ancho máximo de cada tipo, para que las siluetas reales encajen con las escalas ya usadas
-_ALTO = {"hombre": 861, "mujer": 861, "anciano": 861, "policia": 891, "sombra": 843, "nino": 672, "perro": 474, "dama": 861, "llorona": 861,
+_ALTO = {"hombre": 861, "mujer": 861, "anciano": 861, "policia": 891, "sombra": 843, "nino": 672, "nina": 672, "perro": 474, "dama": 861, "llorona": 861,
          "gato": 330, "auto": 300, "criatura": 900, "sacerdote": 861, "encapuchado": 861, "corriendo": 840, "sentado": 640, "caminando": 861, "caminando_m": 861}
 _SIL_ALIAS_EXTRA = {"caminando_m": ["caminando_m", "mujer"]}
 _SIL_ALIAS = {"dama": ["dama", "fantasma"], "llorona": ["fantasma", "dama"], "sombra": ["encapuchado", "sombrero", "hombre"], "nino": ["nino", "nina"]}
