@@ -5,7 +5,7 @@ Una escena es un dict:
 Lo estático se compone una vez; lo animado se dibuja por cuadro."""
 import math, random, os
 from functools import lru_cache
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter, ImageChops
 from lib import *
 import visuales as V
 
@@ -45,12 +45,19 @@ def _bosque_siluetas(c, base, col, n=9, seed=2, s=1.):
     c.alpha_composite(h.done())
 
 BIB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "biblioteca", "fondos")
+def fondo_img_existe(nombre):
+    import glob
+    return bool(glob.glob(os.path.join(BIB, "h" if HORIZONTAL else "v", f"{nombre}.*")))
+
 def fondo_img(nombre):
     """Fondo de la biblioteca (imágenes generadas por Fernando) según la orientación, o None."""
     import glob
     hits = sorted(glob.glob(os.path.join(BIB, "h" if HORIZONTAL else "v", f"{nombre}.*")))
     if not hits: return None
-    im = Image.open(hits[0]).convert("RGBA"); s = max(W / im.width, H / im.height)
+    from PIL import ImageEnhance
+    im = Image.open(hits[0]).convert("RGB")
+    im = ImageEnhance.Brightness(ImageEnhance.Color(im).enhance(.85)).enhance(.78).convert("RGBA")   # un poco más oscuro para que resalten siluetas y textos
+    s = max(W / im.width, H / im.height)
     im = im.resize((int(im.width * s + .5), int(im.height * s + .5)), Image.LANCZOS)
     return im.crop(((im.width - W) // 2, (im.height - H) // 2, (im.width - W) // 2 + W, (im.height - H) // 2 + H))
 
@@ -520,7 +527,33 @@ def fx_particulas(c, t, col=(160, 255, 220), n=40):
     c.alpha_composite(L)
 
 # ================================================================ COMPOSICIÓN
+SILUETAS = {"hombre", "mujer", "policia", "anciano", "nino", "sombra", "perro", "auto", "pajaro", "mecedora", "seto", "gato", "venado", "estatua_alada", "tienda"}
+@lru_cache(maxsize=128)
+def silueta(tipo, var="", rim=(255, 170, 110)):
+    """Versión cinematográfica para fondos fotográficos: figura negra con borde de luz, bordes suaves y sombra."""
+    im = _img_el_base(tipo, var)
+    if im is None: return None
+    a = im.getchannel("A"); pad = 40
+    W2, H2 = im.width + pad * 2, im.height + pad * 2
+    A = Image.new("L", (W2, H2), 0); A.paste(a, (pad, pad))
+    out = Image.new("RGBA", (W2, H2), (0, 0, 0, 0))
+    # halo suave de luz alrededor (luz de contorno)
+    halo = A.filter(ImageFilter.GaussianBlur(10)).point(lambda v: int(v * .55))
+    L = Image.new("RGBA", (W2, H2), rim + (0,)); L.putalpha(halo); out.alpha_composite(L)
+    # borde de luz fino desplazado hacia arriba-izquierda
+    edge = ImageChops.subtract(A, A.transform(A.size, Image.AFFINE, (1, 0, 3, 0, 1, 3)))
+    E = Image.new("RGBA", (W2, H2), rim + (0,)); E.putalpha(edge.filter(ImageFilter.GaussianBlur(1.2)).point(lambda v: min(255, v * 2))); 
+    body = Image.new("RGBA", (W2, H2), (8, 8, 12, 0)); body.putalpha(A.filter(ImageFilter.GaussianBlur(1.1)))
+    out.alpha_composite(body); out.alpha_composite(E)
+    return out
+
 def _img_el(tipo, var=""):
+    if FOTO_ACTIVA[0] and tipo in SILUETAS and var != "color":
+        return silueta(tipo, var, (130, 180, 255) if var == "frio" else (255, 170, 110))
+    return _img_el_base(tipo, var)
+FOTO_ACTIVA = [False]
+
+def _img_el_base(tipo, var=""):
     if tipo == "dama": return dama_blanca()
     if tipo == "llorona": return llorona_fig()
     if tipo in ("hombre", "mujer", "policia", "anciano", "nino", "sombra", "perro"):
@@ -546,7 +579,9 @@ def escena(spec):
     """Devuelve f(t, d) a partir de la especificación."""
     spec = _a_horizontal(spec)
     base_cache = {}
+    foto = fondo_img_existe(spec.get("fondo", "estudio"))
     def build_base():
+        FOTO_ACTIVA[0] = foto
         c = fondo(spec.get("fondo", "estudio")).copy()
         for g in spec.get("glows", []): glow(c, *g)
         for el in spec.get("el", []):
@@ -557,6 +592,7 @@ def escena(spec):
         return c
     def f(t, d):
         if "b" not in base_cache: base_cache["b"] = build_base()
+        FOTO_ACTIVA[0] = foto
         c = base_cache["b"].copy()
         for el in spec.get("el", []):
             tipo, x, y, s = el[:4]; o = el[4] if len(el) > 4 else {}
