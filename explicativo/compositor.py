@@ -688,6 +688,7 @@ def escena(spec):
     spec = _a_horizontal(spec)
     base_cache = {}
     foto = fondo_img_existe(spec.get("fondo", "estudio"))
+    if foto and not spec.get("el_foto"): spec = dict(spec, el=[])  # sobre fotos reales no se dibujan objetos ni siluetas de código
     def build_base():
         FOTO_ACTIVA[0] = foto
         c = fondo(spec.get("fondo", "estudio")).copy()

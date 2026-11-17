@@ -23,3 +23,8 @@ Objetivo: Fernando da un TEMA → salen 3 videos listos para publicar:
 - Nunca dibujar personajes con derechos; nada de imágenes de películas.
 - Nombres en inglés → `PRON` con fonemas en inglés.
 - Renders largos: lanzar con nohup y vigilar con sleep (solo avanzan mientras hay herramientas corriendo).
+
+## Reglas de calidad (aprobadas 17-nov-2026)
+- Sobre fondos de foto NO se dibujan objetos ni siluetas de código (se ignoran solos). Las personas salen en las escenas clave que genera Fernando (Pnn por película).
+- Datos y cifras van como etiqueta (`tag`), no como dibujo.
+- El primer plano del presentador también mueve la boca con la voz (`boca=(x, labio, ancho/2, mentón, apertura)`).

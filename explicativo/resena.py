@@ -2,7 +2,7 @@
 opinión con el narrador hablando y calificación con estrellas."""
 import os, sys, math, random
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE); sys.path.insert(0, os.path.dirname(HERE))
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import ImageChops, Image, ImageDraw, ImageFilter
 from lib import *
 from compositor import escena, objeto
 import generador as G
@@ -130,7 +130,18 @@ class Anfitrion:
         dx, dy, rot = math.sin(t * .9) * 5, math.sin(t * .7 + 1) * 4 + nivel * 2, math.sin(t * .5) * .8
         head = self.src.rotate(rot, center=(cx, cy + ry * .6), resample=Image.BICUBIC, translate=(dx, dy))
         im.paste(head, (0, 0), self.mcab)
-        if nivel > .05 and self.boca is not None:  # boca: se abre con la voz
+        if nivel > .05 and self.boca is not None and len(self.boca) == 5:  # primer plano: labio inferior y mentón bajan, sin tocar las manos
+            bx, ly, hw, cy2, mx = self.boca; bx += dx; ly += dy; op = int(round(mx * nivel))
+            if op >= 1:
+                x0, x1, y0, y1 = int(bx - hw), int(bx + hw), int(ly), int(cy2 + dy)
+                reg = im.crop((x0, y0, x1, y1)).resize((x1 - x0, y1 - y0 - op), Image.BICUBIC)
+                mk = Image.new("L", reg.size, 0); ImageDraw.Draw(mk).ellipse((hw * .12, -reg.height, reg.width - hw * .12, reg.height * 1.6), fill=255)
+                mk = mk.filter(ImageFilter.GaussianBlur(hw * .12))
+                rp = Image.linear_gradient("L").resize(reg.size); rp = rp.point(lambda v: min(255, v * reg.height // 2)); mk = ImageChops.multiply(mk, rp)
+                hole = Image.new("RGBA", im.size, (0, 0, 0, 0)); ImageDraw.Draw(hole).ellipse((bx - hw * .42, ly - 3, bx + hw * .42, ly + op * 1.5), fill=(18, 6, 6, 250))
+                im.alpha_composite(hole.filter(ImageFilter.GaussianBlur(max(1.5, op * .35))))
+                im.paste(reg, (x0, y0 + op), mk)
+        elif nivel > .05 and self.boca is not None:  # boca: se abre con la voz
             bx, by = self.boca[0] + dx, self.boca[1] + dy; op = 1 + 7 * nivel
             jaw = im.crop((int(bx - 55), int(by - 2), int(bx + 55), int(by + 42)))
             mk = Image.new("L", jaw.size, 0); ImageDraw.Draw(mk).ellipse((10, 6, jaw.width - 10, jaw.height * 2), fill=255); mk = mk.filter(ImageFilter.GaussianBlur(8))
@@ -162,12 +173,12 @@ _ANF = None
 _PRESETS = [(1.3, 1.1, .36), (1.1, 1.35, .38), (1.4, 1.15, .4), (1.0, 1.25, .45), (1.15, 1.4, .36), (1.4, 1.1, .45), (1.0, 1.3, .4)]
 _CERCA = None
 def anfitrion_cerca():
-    """Primer plano del presentador (sin movimiento de labios: respira, mueve la cabeza; luces y lluvia vivas)."""
+    """Primer plano del presentador: habla (labio y mentón siguen la voz), mueve la cabeza; luces y lluvia vivas."""
     global _CERCA
     if _CERCA is None:
         d = os.path.join(os.path.dirname(HERE), "marcas", "comics-store", "intros")
-        if HORIZONTAL: _CERCA = Anfitrion(os.path.join(d, "terror_cerca_h.png"), cabeza=(880, 330, 330, 300), boca=None, vela=(503, 140), lampara=(503, 140), ventana=(1210, 0, 1672, 800))
-        else: _CERCA = Anfitrion(os.path.join(d, "terror_cerca_v.png"), cabeza=(497, 560, 280, 300), boca=None, vela=(330, 140), lampara=(330, 140), ventana=(640, 0, 941, 780))
+        if HORIZONTAL: _CERCA = Anfitrion(os.path.join(d, "terror_cerca_h.png"), cabeza=(880, 330, 330, 300), boca=(885, 449, 100, 505, 16), vela=(503, 140), lampara=(503, 140), ventana=(1210, 0, 1672, 800))
+        else: _CERCA = Anfitrion(os.path.join(d, "terror_cerca_v.png"), cabeza=(497, 560, 280, 300), boca=(498, 713, 95, 786, 16), vela=(330, 140), lampara=(330, 140), ventana=(640, 0, 941, 780))
     return _CERCA
 
 def anfitrion():
