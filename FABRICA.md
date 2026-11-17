@@ -28,3 +28,9 @@ Objetivo: Fernando da un TEMA → salen 3 videos listos para publicar:
 - Sobre fondos de foto NO se dibujan objetos ni siluetas de código (se ignoran solos). Las personas salen en las escenas clave que genera Fernando (Pnn por película).
 - Datos y cifras van como etiqueta (`tag`), no como dibujo.
 - El primer plano del presentador también mueve la boca con la voz (`boca=(x, labio, ancho/2, mentón, apertura)`).
+
+## Línea gamer (videojuegos, cartoons, superhéroes, productos gamer) — nov 2026
+- Narrador: el mismo encapuchado, en set neón: marcas/comics-store/intros/gamer_narrador_h.png y _v.png (ya mejorados x2).
+- Las figuras del fondo son mercancía real de Fernando, solo decoración: no animarlas, no nombrarlas, no ponerlas al frente en miniaturas.
+- Falta: coordenadas de cabeza/boca para animarlo (como Anfitrion de terror) y sus escenarios.
+- GTA VI y demás juegos: sin capturas, logos ni personajes; escenas originales con la ambientación.
