@@ -528,8 +528,10 @@ def fx_particulas(c, t, col=(160, 255, 220), n=40):
 
 # ================================================================ COMPOSICIÓN
 SILUETAS = {"hombre", "mujer", "policia", "anciano", "nino", "sombra", "perro", "auto", "pajaro", "mecedora", "seto", "gato", "venado", "estatua_alada", "tienda"}
-@lru_cache(maxsize=128)
 def silueta(tipo, var="", rim=(255, 170, 110)):
+    return _silueta(tipo, var, rim, FOTO_ACTIVA[0])
+@lru_cache(maxsize=128)
+def _silueta(tipo, var, rim, _foto):
     """Versión cinematográfica para fondos fotográficos: figura negra con borde de luz, bordes suaves y sombra."""
     im = _img_el_base(tipo, var)
     if im is None: return None
@@ -548,12 +550,36 @@ def silueta(tipo, var="", rim=(255, 170, 110)):
     return out
 
 def _img_el(tipo, var=""):
-    if FOTO_ACTIVA[0] and tipo in SILUETAS and var != "color":
+    if tipo in SILUETAS and var != "color" and (FOTO_ACTIVA[0] or silueta_real(tipo, var) is not None):
         return silueta(tipo, var, (130, 180, 255) if var == "frio" else (255, 170, 110))
     return _img_el_base(tipo, var)
 FOTO_ACTIVA = [False]
 
+# altura (px, de un lienzo de 900) y ancho máximo de cada tipo, para que las siluetas reales encajen con las escalas ya usadas
+_ALTO = {"hombre": 861, "mujer": 861, "anciano": 861, "policia": 891, "sombra": 843, "nino": 672, "perro": 474, "dama": 861, "llorona": 861,
+         "gato": 330, "auto": 300, "criatura": 900, "sacerdote": 861, "encapuchado": 861, "corriendo": 840, "sentado": 640, "caminando": 861, "caminando_m": 861}
+_SIL_ALIAS_EXTRA = {"caminando_m": ["caminando_m", "mujer"]}
+_SIL_ALIAS = {"dama": ["dama", "fantasma"], "llorona": ["fantasma", "dama"], "sombra": ["encapuchado", "sombrero", "hombre"], "nino": ["nino", "nina"]}
+@lru_cache(maxsize=64)
+def silueta_real(tipo, var=""):
+    """Silueta de la biblioteca (biblioteca/siluetas/<nombre>.png) normalizada al lienzo de la figura de código."""
+    import glob
+    cands = [var] if var and var not in ("frio", "color") else []
+    cands += _SIL_ALIAS.get(tipo, []) + _SIL_ALIAS_EXTRA.get(tipo, []) + [tipo]
+    for c in cands:
+        hit = glob.glob(os.path.join(os.path.dirname(BIB), "siluetas", f"{c}.png"))
+        if hit: break
+    else: return None
+    im = Image.open(hit[0]).convert("RGBA"); h = _ALTO.get(tipo, 861); w = int(im.width * h / im.height)
+    im = im.resize((w, h), Image.LANCZOS)
+    base = 900 if tipo not in ("auto",) else 300
+    cw = max(w, 440 if base == 900 else 620); out = Image.new("RGBA", (cw, base), (0, 0, 0, 0))
+    out.alpha_composite(im, ((cw - w) // 2, base - h - (2 if base == 900 else 0))); return out
+
 def _img_el_base(tipo, var=""):
+    if True:
+        r = silueta_real(tipo, var)
+        if r is not None: return r
     if tipo == "dama": return dama_blanca()
     if tipo == "llorona": return llorona_fig()
     if tipo in ("hombre", "mujer", "policia", "anciano", "nino", "sombra", "perro"):
@@ -600,13 +626,17 @@ def escena(spec):
             if not a: continue
             if tipo == "ojo":
                 ojo_grande(c, x, y, 700 * s, eo(pr(t, o.get("t0", .2), .5)) if a == "abrir" else 1., (math.sin(t) * 25, 0), True); continue
-            im = _img_el(tipo, o.get("var", "")); st = o.get("t0", .1); xx, yy, sc, rot, al = x, y, s, o.get("rot", 0), 1.
+            tt = tipo
+            if a in ("caminar_der", "caminar_izq") and tipo in ("hombre", "mujer", "nino", "policia", "anciano"):
+                tt = {"hombre": "caminando", "mujer": "caminando_m"}.get(tipo, tipo)
+            im = _img_el(tt, o.get("var", "")); st = o.get("t0", .1); xx, yy, sc, rot, al = x, y, s, o.get("rot", 0), 1.
+            if im is not None and a == "caminar_izq" and tt != tipo: im = im.transpose(Image.FLIP_LEFT_RIGHT)
             if a == "entrar": sc = s * eb(pr(t, st, .5))
             elif a == "flotar": yy = y + math.sin(t * 1.6) * 18; al = .55 + .45 * eo(pr(t, st, .8))
             elif a == "aparecer": al = eo(pr(t, st, 1.0))
             elif a == "balancear": rot = rot + math.sin(t * 2.2) * 6
-            elif a == "caminar_der": xx = x + (t / d) * o.get("dist", 300); yy = y + abs(math.sin(t * 6)) * -10
-            elif a == "caminar_izq": xx = x - (t / d) * o.get("dist", 300); yy = y + abs(math.sin(t * 6)) * -10
+            elif a == "caminar_der": xx = x + (t / d) * o.get("dist", 300); yy = y + abs(math.sin(t * 6)) * (-4 if FOTO_ACTIVA[0] else -10)
+            elif a == "caminar_izq": xx = x - (t / d) * o.get("dist", 300); yy = y + abs(math.sin(t * 6)) * (-4 if FOTO_ACTIVA[0] else -10)
             elif a == "acercar": sc = s * (1 + .5 * eio(t / d)); yy = y + 80 * eio(t / d)
             elif a == "temblar": xx = x + math.sin(t * 40) * 6; yy = y + math.cos(t * 33) * 4
             elif a == "caer": yy = y - 600 * (1 - eo(pr(t, st, .7)))
