@@ -519,7 +519,7 @@ def textura_vertical(nombre, ancho, alto, color=False, fuerza=1.):
     L.putalpha(al); return L
 
 def fx_lluvia_real(c, t, a=1.):
-    T = textura_vertical("lluvia", W, H, False, .9 * a)
+    T = textura_vertical("lluvia", W, H, False, .42 * a)
     if T is None: return False
     off = int((t * 900) % H); c.alpha_composite(T.crop((0, H - off, W, 2 * H - off))); return True
 
@@ -537,6 +537,17 @@ def fx_salpicadura(c, t, dur=.9):
     L = T.crop((0, 0, W, H)).resize((int(W * z), int(H * z)), Image.BILINEAR)
     L = L.crop(((L.width - W) // 2, (L.height - H) // 2, (L.width - W) // 2 + W, (L.height - H) // 2 + H))
     L.putalpha(L.getchannel("A").point(lambda v: int(v * (1 - k) * .85))); c.alpha_composite(L)
+
+def fx_pelicula(c, t, a=.35):
+    """Rayones y polvo de película antigua: cambia en cada cuadro (salta de posición y se voltea)."""
+    T = textura_vertical("pelicula", W + 120, H + 120, False, 1.)
+    if T is None: return
+    n = int(t * 30); rnd = random.Random(n // 2)
+    L = T.crop((0, 0, W + 120, H + 120))
+    if rnd.random() < .5: L = L.transpose(Image.FLIP_LEFT_RIGHT)
+    if rnd.random() < .5: L = L.transpose(Image.FLIP_TOP_BOTTOM)
+    ox, oy = rnd.randint(0, 120), rnd.randint(0, 120); L = L.crop((ox, oy, ox + W, oy + H))
+    k = a * (.7 + .3 * rnd.random()); L.putalpha(L.getchannel("A").point(lambda v: int(v * k))); c.alpha_composite(L)
 
 def fx_niebla(c, t, y=1250, col=(160, 170, 210), a=80):
     hh = int(H * .55); T = textura_efecto("niebla", W, hh, tuple(col), a / 150)

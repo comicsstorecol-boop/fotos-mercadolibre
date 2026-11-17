@@ -22,7 +22,7 @@ PRON_BASE = {"store": ("en", "Store"), "steve": ("en", "Steve"), "rogers": ("en"
              "doomsday": ("es", "dúmsdei"), "thor": ("es", "tor"), "tva": ("es", "te ve a")}
 NIVEL = 0.0  # apertura de boca del narrador en el cuadro actual (0..1)
 
-def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250, pron=None, estilo=None, formato="vertical", colores=None):
+def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250, pron=None, estilo=None, formato="vertical", colores=None, pelicula=False):
     global NIVEL
     import lib; lib.ESTILO_SUB = estilo or "clasico"
     if colores: lib.NEON, lib.NEON2 = colores
@@ -73,6 +73,8 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
                 t = f / 30; k = int((t - lead) * 30); NIVEL = float(p["lv"][k]) if 0 <= k < len(p["lv"]) else 0.
                 fr = p["fn"](t, p["dur"])
                 if prev is not None and t < .25: fr = Image.blend(prev, fr, eio(t / .25))
+                if pelicula:
+                    import compositor as _C; fr = fr.convert("RGBA"); _C.fx_pelicula(fr, (sum(q["dur"] for q in plan[:plan.index(p)]) + t))
                 karaoke(fr, p["words"], t, y_sub, p["clave"]); pr_.stdin.write(fr.convert("RGB").tobytes())
             prev = p["fn"](p["dur"], p["dur"]); print("ok", p["fn"].__name__, flush=True)
         pr_.stdin.close(); pr_.wait()

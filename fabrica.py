@@ -26,7 +26,7 @@ def render_una(path, red, out):
     from motor import render
     esc, g = m.largo() if red == "yt" else m.corto(red)
     render(esc, out, musica=getattr(m, "MUSICA", "terror"), pron=m.PRON, estilo="neon", y_sub=330, regancho_idx=g, colores=getattr(m, "COLORES", None),
-           formato=VERSIONES[red][1])
+           formato=VERSIONES[red][1], pelicula=getattr(m, "PELICULA", False))
 
 def main():
     if len(sys.argv) > 2 and sys.argv[1] == "--una": return render_una(sys.argv[2], sys.argv[3], sys.argv[4])

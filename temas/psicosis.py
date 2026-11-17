@@ -1,6 +1,7 @@
 """Tema: Psicosis (1960) — reseña. Reutiliza los guiones aprobados."""
 import sys
 SLUG, TITULO = "psicosis", "Psicosis (1960)"
+PELICULA = True    # película clásica: rayones y polvo de cine antiguo
 COLORES = ((255, 60, 60), (255, 255, 255))        # rojo sangre + blanco (tema Hitchcock / ducha)
 def _largo_mod():
     import r02_psicosis as L; return L
