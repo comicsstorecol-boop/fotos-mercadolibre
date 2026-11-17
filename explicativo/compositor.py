@@ -564,7 +564,7 @@ FOTO_ACTIVA = [False]
 _ALTO = {"hombre": 861, "mujer": 861, "anciano": 861, "policia": 891, "sombra": 843, "nino": 672, "nina": 672, "perro": 474, "dama": 861, "llorona": 861,
          "gato": 330, "auto": 300, "criatura": 900, "sacerdote": 861, "encapuchado": 861, "corriendo": 840, "sentado": 640, "caminando": 861, "caminando_m": 861}
 _SIL_ALIAS_EXTRA = {"caminando_m": ["caminando_m", "mujer"]}
-_SIL_ALIAS = {"dama": ["dama", "fantasma"], "llorona": ["fantasma", "dama"], "sombra": ["encapuchado", "sombrero", "hombre"], "nino": ["nino", "nina"]}
+_SIL_ALIAS = {"anciano_cura": ["sacerdote"], "dama": ["dama", "fantasma"], "llorona": ["fantasma", "dama"], "sombra": ["encapuchado", "sombrero", "hombre"], "nino": ["nino", "nina"]}
 @lru_cache(maxsize=64)
 def silueta_real(tipo, var=""):
     """Silueta de la biblioteca (biblioteca/siluetas/<nombre>.png) normalizada al lienzo de la figura de código."""
