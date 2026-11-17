@@ -563,7 +563,14 @@ def fx_nieve(c, t, n=140):
 
 def fx_rayo(c, t, periodo=3.2, fase=.8):
     k = (t + fase) % periodo
-    if k < .08 or .16 < k < .22: c.alpha_composite(Image.new("RGBA", (W, H), (220, 230, 255, 150)))
+    flash = 1. if k < .08 else (.6 if .16 < k < .22 else (max(0, 1 - (k - .22) / .35) * .35 if .22 <= k < .57 else 0))
+    if flash <= 0: return
+    T = textura_vertical("rayo", W, H, True, 1.3)
+    if T is not None:
+        L = T.crop((0, 0, W, H)); n = int((t + fase) // periodo)
+        if n % 2: L = L.transpose(Image.FLIP_LEFT_RIGHT)
+        L = L.copy(); L.putalpha(L.getchannel("A").point(lambda v: int(v * flash))); c.alpha_composite(L)
+    if k < .08 or .16 < k < .22: c.alpha_composite(Image.new("RGBA", (W, H), (200, 215, 255, 70)))
 
 def fx_parpadeo(c, t, x, y, r, col=(255, 200, 120)):
     k = .75 + .25 * math.sin(t * 13) * math.sin(t * 7.3); glow(c, x, y, r, col, int(170 * k), r * .5)
