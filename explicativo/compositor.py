@@ -496,8 +496,27 @@ def _capa_niebla(col=(160, 170, 210), a=80):
         x = rnd.uniform(0, W * 2); y = rnd.uniform(150, 550); r = rnd.uniform(160, 320); d.ellipse((x - r, y - r * .35, x + r, y + r * .35), fill=col + (a,))
     return L.filter(ImageFilter.GaussianBlur(45))
 
+EFX = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "biblioteca", "efectos")
+@lru_cache(maxsize=16)
+def textura_efecto(nombre, ancho, alto, col=(200, 210, 235), fuerza=1.):
+    """Textura real (fondo negro) -> capa RGBA con transparencia por luminancia, duplicada en espejo para desplazarse sin cortes."""
+    p = os.path.join(EFX, f"{nombre}.png")
+    if not os.path.exists(p): return None
+    g = Image.open(p).convert("L").resize((ancho, alto), Image.LANCZOS)
+    g = Image.fromarray(__import__("numpy").concatenate([__import__("numpy").asarray(g), __import__("numpy").asarray(g)[:, ::-1]], axis=1))
+    L = Image.new("RGBA", g.size, tuple(col) + (0,)); L.putalpha(g.point(lambda v: int(min(255, v * fuerza)))); return L
+
 def fx_niebla(c, t, y=1250, col=(160, 170, 210), a=80):
+    hh = int(H * .55); T = textura_efecto("niebla", W, hh, tuple(col), a / 150)
+    if T is not None:
+        off = int((t * 30) % W); c.alpha_composite(T.crop((off, 0, off + W, hh)), (0, int(min(H - hh, y - hh * .55)))); return
     L = _capa_niebla(col, a); off = int((t * 40) % W); c.alpha_composite(L.crop((off, 0, off + W, 700)), (0, int(y - 350)))
+
+def fx_humo(c, t, a=90):
+    hh = int(H * .7); T = textura_efecto("humo", W, hh, (210, 210, 220), a / 140)
+    if T is None: return
+    off = int((t * 12) % W); y = int(H - hh + 40 - (t * 18) % 60)
+    c.alpha_composite(T.crop((off, 0, off + W, hh)), (0, y))
 
 def fx_lluvia(c, t, n=160, a=120):
     L = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(L); rnd = random.Random(int(t * 30))
@@ -556,7 +575,7 @@ def _silueta(tipo, var, rim, _foto):
 
 def _img_el(tipo, var=""):
     if tipo in SILUETAS and var != "color" and (FOTO_ACTIVA[0] or silueta_real(tipo, var) is not None):
-        return silueta(tipo, var, (130, 180, 255) if var == "frio" else (255, 170, 110))
+        return silueta(tipo, var, (255, 170, 110) if var == "calido" else (150, 185, 235))
     return _img_el_base(tipo, var)
 FOTO_ACTIVA = [False]
 
@@ -653,6 +672,7 @@ def escena(spec):
         if "niebla" in fx: fx_niebla(c, t, spec.get("niebla_y", 1300))
         if "niebla_verde" in fx: fx_niebla(c, t, spec.get("niebla_y", 1300), (90, 200, 160), 70)
         if "lluvia" in fx: fx_lluvia(c, t)
+        if "humo" in fx: fx_humo(c, t)
         if "nieve" in fx: fx_nieve(c, t)
         if "rayo" in fx: fx_rayo(c, t)
         if "particulas" in fx: fx_particulas(c, t)
