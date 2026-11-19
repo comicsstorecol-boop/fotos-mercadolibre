@@ -37,5 +37,5 @@ Objetivo: Fernando da un TEMA → salen 3 videos listos para publicar:
 
 ## Guía de regalos (Navidad) — nov 2026
 - `explicativo/regalos.py` + `explicativo/regalos/rgNN_<tema>.py` → `python3 ... fb|tt salida.mp4`. Fernando escoge los 5 productos y manda las fotos (las de la web, con marco neón y REC); van en `productos/<tema>/p1..p5.jpg` (no se suben al repo).
-- Narrador = CLIP REAL de Higgsfield (Kling, 10 s, sin voz) en bucle de ida y vuelta: `marcas/comics-store/intros/clips/`. Ya no se anima la boca de la foto (se veía mal).
+- Narrador = CLIPS REALES de Higgsfield (Kling, 10 s, sin voz) en `marcas/comics-store/intros/clips/` (navidad_hablando_v1/v2 = 9:16, h/h2 = 16:9 para YouTube); se alternan tomas en bucle de ida y vuelta. Ya no se anima la boca de la foto (se veía mal).
 - Pedestal: `biblioteca/fondos/v/navidad_pedestal.png`. No renderizar dos videos a la vez (se queda sin memoria).

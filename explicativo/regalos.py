@@ -151,22 +151,27 @@ def armar(guion, version):
 
 # ---------------------------------------------------------------- presentador en VIDEO (clip de Higgsfield, sin voz, en bucle)
 class PresentadorVideo:
-    """Usa un clip real del encapuchado hablando. Bucle de ida y vuelta (sin saltos) y cada escena arranca en otro punto."""
-    def __init__(self, clip=os.path.join(INTROS, "clips", "navidad_hablando_h.mp4"), cache="/home/claude/frames_navidad_v"):
+    """Clips reales del encapuchado hablando (Higgsfield, sin voz). Alterna tomas, bucle de ida y vuelta y cada escena arranca en otro punto."""
+    def __init__(self, clips=None):
         import glob, subprocess
-        if not glob.glob(f"{cache}/f*.jpg"):
-            os.makedirs(cache, exist_ok=True)
-            vf = "fps=30,crop=608:1080:656:0,scale=1080:1920:flags=lanczos" if not HORIZONTAL else "fps=30,scale=1920:1080"
-            subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", clip, "-vf", vf, "-q:v", "2", f"{cache}/f%04d.jpg"], check=True)
-        self.files = sorted(glob.glob(f"{cache}/f*.jpg")); self.n = len(self.files); self.k = 0
-    def _cuadro(self, i):
-        p = 2 * (self.n - 1); i %= p; i = i if i < self.n else p - i   # ida y vuelta
-        return Image.open(self.files[i]).convert("RGBA")
+        if clips is None:
+            clips = sorted(glob.glob(os.path.join(INTROS, "clips", "navidad_hablando_h*.mp4" if HORIZONTAL else "navidad_hablando_v*.mp4")))
+        self.tomas = []
+        for clip in clips:
+            cache = f"/home/claude/frames/{os.path.splitext(os.path.basename(clip))[0]}"
+            if not glob.glob(f"{cache}/f*.jpg"):
+                os.makedirs(cache, exist_ok=True)
+                subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", clip, "-vf", f"fps=30,scale={W}:{H}:flags=lanczos", "-q:v", "2", f"{cache}/f%04d.jpg"], check=True)
+            self.tomas.append(sorted(glob.glob(f"{cache}/f*.jpg")))
+        self.k = 0
     def escena(self, z0=1.0, z1=1.06, cy=.5, nombre="host", mini=None):
-        off = (self.k * 97) % (2 * self.n); self.k += 1
+        files = self.tomas[self.k % len(self.tomas)]; n = len(files); off = (self.k * 113) % (2 * n); self.k += 1
+        def cuadro(i):
+            p = 2 * (n - 1); i %= p; i = i if i < n else p - i
+            return Image.open(files[i]).convert("RGBA")
         def f(t, d):
-            fr = self._cuadro(off + int(t * 30)); c = camera(fr, t, d, z0, z1)
-            fx_nieve_suave(c, t, 35)
+            c = camera(cuadro(off + int(t * 30)), t, d, z0, z1)
+            fx_nieve_suave(c, t, 30)
             if mini: mini(c, t)
             if t < .35 and nombre == "intro": c.alpha_composite(Image.new("RGBA", (W, H), (0, 0, 0, int(255 * (1 - t / .35)))))
             vineta(c, .4); return c
