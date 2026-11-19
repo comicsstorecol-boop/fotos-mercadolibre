@@ -39,3 +39,6 @@ Objetivo: Fernando da un TEMA → salen 3 videos listos para publicar:
 - `explicativo/regalos.py` + `explicativo/regalos/rgNN_<tema>.py` → `python3 ... fb|tt salida.mp4`. Fernando escoge los 5 productos y manda las fotos (las de la web, con marco neón y REC); van en `productos/<tema>/p1..p5.jpg` (no se suben al repo).
 - Narrador = CLIPS REALES de Higgsfield (Kling, 10 s, sin voz) en `marcas/comics-store/intros/clips/` (navidad_hablando_v1/v2 = 9:16, h/h2 = 16:9 para YouTube); se alternan tomas en bucle de ida y vuelta. Ya no se anima la boca de la foto (se veía mal).
 - Pedestal: `biblioteca/fondos/v/navidad_pedestal.png`. No renderizar dos videos a la vez (se queda sin memoria).
+- Productos SIN fondo (rembg isnet) con borde neón VERDE del logo, apoyados en el centro del pedestal; los anchos crecen hasta 1,45x. Recortes en `productos/<tema>/cN.png`.
+- Pedestal: `navidad_pedestal_limpio.png` + letrero de Fernando `biblioteca/efectos/letrero_paraiso.png` (tubos verde/rosado parpadeando por separado). "REGALO #n" va en el borde del pedestal, encima del nombre.
+- Overlays en video de Fernando (`biblioteca/efectos/video/`): neon_parpadeo, neon_escenario, bokeh_navidad, destello (al aparecer cada producto), light_leak (transiciones). Mezcla "screen".

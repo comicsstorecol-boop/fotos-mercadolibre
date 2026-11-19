@@ -8,20 +8,20 @@ from motor import render
 IMG = os.path.join(os.path.dirname(EXP), "productos", "dragon-ball")
 NARANJA, AZUL = (255, 150, 20), (60, 150, 255)
 PRON = {"dragon": ("en", "Dragon"), "ball": ("en", "Ball"), "capsule": ("en", "Capsule"), "corp": ("en", "Corp"), "trucker": ("en", "trucker"),
-        "hoodie": ("es", "júdi"), "shenlong": ("es", "shen long"), "saiyajin": ("es", "saiyayín"), "comics-store": ("es", "cómics estor")}
+        "hoodie": ("es", "júdi"), "roshi": ("es", "róshi"), "kanji": ("es", "kanyi"), "shenlong": ("es", "shen long"), "saiyajin": ("es", "saiyayín"), "comics-store": ("es", "cómics estor")}
 
 G = {"productos": [
-    dict(img=f"{IMG}/p1.jpg", nombre="TULA SHENLONG", precio="$19.999", nota="CONCEDE DESEOS"),
-    dict(img=f"{IMG}/p2.jpg", nombre="GORRA CAPSULE CORP", precio="$29.999", nota="LA EMPRESA DE BULMA"),
-    dict(img=f"{IMG}/p3.jpg", nombre="HOODIE GOKU", precio="$84.999", nota="DESDE 1984"),
-    dict(img=f"{IMG}/p4.jpg", nombre="MUG 3D ESFERA DEL DRAGÓN", precio="$99.999", nota="LA ESFERA DE 4 ESTRELLAS"),
-    dict(img=f"{IMG}/p5.jpg", nombre="DIORAMA GOKU VS VEGETA", precio="$249.999", nota="¡ÚLTIMA UNIDAD!")]}
+    dict(img=f"{IMG}/c1.png", nombre="TULA SPORT NARANJA", precio="$26.999", nota="EL SÍMBOLO DE LA TORTUGA"),
+    dict(img=f"{IMG}/c2.png", nombre="GORRA CAPSULE CORP", precio="$29.999", nota="LA EMPRESA DE BULMA"),
+    dict(img=f"{IMG}/c3.png", nombre="HOODIE GOKU", precio="$84.999", nota="DESDE 1984"),
+    dict(img=f"{IMG}/c4.png", nombre="MUG 3D ESFERA DEL DRAGÓN", precio="$99.999", nota="LA ESFERA DE 4 ESTRELLAS"),
+    dict(img=f"{IMG}/c5.png", nombre="DIORAMA GOKU VS VEGETA", precio="$249.999", nota="¡ÚLTIMA UNIDAD!")]}
 
 G["fb"] = [
     ("host", "¿Tienes un fan de Dragon Ball en tu vida y no sabes qué regalarle esta Navidad? Aquí van cinco ideas de Comics Store… para todos los bolsillos.", {"navidad", "bolsillos"}),
     ("host", "Y quédate hasta el final, porque el número cinco es el regalo soñado de cualquier fan.", {"cinco"}),
-    ("p", 1, 0, "Número uno: la tula de Shenlong. Por menos de veinte mil pesos. Perfecta para el gimnasio, el colegio… o el amigo secreto.", {"shenlong", "veinte"}),
-    ("host", "Shenlong es el dragón sagrado: cuando alguien reúne las siete esferas del dragón, aparece y concede un deseo. ¿El tuyo? Que te regalen esta tula.", {"deseo"}, 1),
+    ("p", 1, 0, "Número uno: la tula sport naranja de Dragon Ball, por menos de veintisiete mil pesos. Perfecta para el gimnasio, el colegio… o el amigo secreto.", {"naranja", "veintisiete"}),
+    ("host", "¿Sabes qué significa ese símbolo? Es el kanji de la tortuga: el emblema de la escuela del Maestro Roshi, el que Goku llevaba en su uniforme de entrenamiento.", {"tortuga", "roshi"}, 1),
     ("p", 2, 0, "Número dos: la gorra trucker de Capsule Corp, por menos de treinta mil pesos.", {"capsule", "treinta"}),
     ("p", 2, 1, "Capsule Corp es la empresa del doctor Brief, el papá de Bulma: el genio que inventó las cápsulas que guardan casas, motos y aviones en el bolsillo. Un guiño que solo los verdaderos fans reconocen.", {"bulma", "cápsulas"}),
     ("host", "Hasta aquí, detalles económicos. Pero espera… porque ahora subimos de nivel.", {"nivel"}),
@@ -36,8 +36,8 @@ G["fb"] = [
 
 G["tt"] = [
     ("host", "¿Qué le regalas a un fan de Dragon Ball esta Navidad? Cinco ideas, de menor a mayor precio. Y el último… es el regalo soñado.", {"navidad", "soñado"}),
-    ("p", 1, 0, "Uno: la tula de Shenlong, por menos de veinte mil pesos.", {"shenlong", "veinte"}),
-    ("host", "Shenlong aparece cuando reúnes las siete esferas… y te concede un deseo. Este ya está cumplido.", {"deseo"}, 1),
+    ("p", 1, 0, "Uno: la tula sport naranja, por menos de veintisiete mil pesos.", {"naranja", "veintisiete"}),
+    ("host", "Ese símbolo es el kanji de la tortuga, el emblema de la escuela del Maestro Roshi que Goku llevaba en su uniforme.", {"tortuga"}, 1),
     ("p", 2, 0, "Dos: la gorra de Capsule Corp, la empresa del papá de Bulma. Menos de treinta mil.", {"capsule", "bulma"}),
     ("p", 3, 0, "Tres: el hoodie de Goku, ochenta y cinco mil, para el frío de diciembre.", {"goku", "diciembre"}),
     ("host", "Goku nació en mil novecientos ochenta y cuatro, inspirado en el Rey Mono de la novela china Viaje al Oeste.", {"mono"}, 3),

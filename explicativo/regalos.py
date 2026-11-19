@@ -90,40 +90,109 @@ def _brillo(card, pad, k):
     L = L.filter(ImageFilter.GaussianBlur(18)); L = ImageChops.multiply(L, card.getchannel("A"))
     S = Image.new("RGBA", (w, h), (255, 255, 255, 0)); S.putalpha(L); out = card.copy(); out.alpha_composite(S); return out
 
+
+# ---------------------------------------------------------------- overlays en video (Fernando, fondo negro) y recortes con borde neón
+EFXV = os.path.join(ROOT, "biblioteca", "efectos", "video")
+class Overlay:
+    def __init__(self, nombre):
+        import glob, subprocess
+        self.cache = f"/home/claude/frames/ov_{nombre}_{W}x{H}"
+        if not glob.glob(f"{self.cache}/f*.jpg"):
+            os.makedirs(self.cache, exist_ok=True)
+            subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", os.path.join(EFXV, nombre + ".mp4"), "-vf",
+                            f"fps=30,scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H}", "-q:v", "3", f"{self.cache}/f%04d.jpg"], check=True)
+        self.files = sorted(glob.glob(f"{self.cache}/f*.jpg")); self.n = len(self.files)
+    def frame(self, t, loop=True):
+        i = int(t * 30); i = i % self.n if loop else min(i, self.n - 1)
+        return Image.open(self.files[i]).convert("RGB")
+_OV = {}
+def ov(nombre):
+    if nombre not in _OV: _OV[nombre] = Overlay(nombre)
+    return _OV[nombre]
+_NEGRO = {}
+def pantalla(c, nombre, t, a=1., loop=True):
+    """Mezcla 'screen' del overlay sobre el cuadro (solo suma luz)."""
+    if a <= .01: return c
+    o = ov(nombre).frame(t, loop)
+    if a < 1:
+        if "n" not in _NEGRO: _NEGRO["n"] = Image.new("RGB", (W, H), (0, 0, 0))
+        o = Image.blend(_NEGRO["n"], o, a)
+    out = ImageChops.screen(c.convert("RGB"), o).convert("RGBA"); return out
+
+_REC = {}
+def recorte(path, lado=620, col=None):
+    """Producto sin fondo con borde neón que sigue su silueta (sin marco). Los anchos (dioramas) crecen hasta 1,45x."""
+    col = col or (57, 235, 30); key = (path, lado, col)   # verde del logo Comics Store
+    if key in _REC: return _REC[key]
+    import numpy as np
+    from scipy import ndimage
+    im = Image.open(path).convert("RGBA"); k = min(lado / im.height, lado * 1.45 / im.width); im = im.resize((int(im.width * k), int(im.height * k)), Image.LANCZOS)
+    pad = int(lado * .12); A = Image.new("L", (im.width + 2 * pad, im.height + 2 * pad), 0); A.paste(im.getchannel("A"), (pad, pad))
+    lleno = Image.fromarray((ndimage.binary_fill_holes(np.array(A) > 110) * 255).astype("uint8"))
+    borde = ImageChops.subtract(lleno.filter(ImageFilter.MaxFilter(15)), lleno.filter(ImageFilter.MinFilter(3)))
+    C = Image.new("RGBA", A.size, (0, 0, 0, 0))
+    for r, m in ((pad * .5, 4.), (pad * .5, 4.), (pad * .2, 3.5), (pad * .08, 3.)):
+        L = Image.new("RGBA", A.size, col + (0,)); L.putalpha(borde.filter(ImageFilter.GaussianBlur(r)).point(lambda v: min(255, int(v * m)))); C.alpha_composite(L)
+    L = Image.new("RGBA", A.size, mix(col, (255, 255, 255), .55) + (0,)); L.putalpha(borde.filter(ImageFilter.MinFilter(5)).filter(ImageFilter.GaussianBlur(1.5))); C.alpha_composite(L)
+    C.alpha_composite(im, (pad, pad)); _REC[key] = (C, pad); return C, pad
+
 _BG = {}
-def _pedestal():
-    if "p" not in _BG: _BG["p"] = _cover(os.path.join(FONDOS, "navidad_pedestal.png"))
-    return _BG["p"]
+def _letrero():
+    """Letrero neón 'El Paraíso del Coleccionista' (Fernando) separado en tubos verdes y rosados para que parpadeen por separado."""
+    if "l" not in _BG:
+        import numpy as np
+        L = Image.open(os.path.join(ROOT, "biblioteca", "efectos", "letrero_paraiso.png")).convert("RGB")
+        ancho = 800; L = L.resize((ancho, int(L.height * ancho / L.width)), Image.LANCZOS)
+        a = np.asarray(L).astype(np.int16); verde = (a[..., 1] > a[..., 0]) & (a[..., 1] > a[..., 2])
+        _BG["l"] = [Image.fromarray(np.where(mk[..., None], a, 0).astype("uint8")) for mk in (verde, ~verde)]
+    return _BG["l"]
+def _tubo(t, semilla):
+    """Brillo de un tubo neón: pulso suave + apagones cortos al azar (reproducibles)."""
+    k = int(t * 8); r = random.Random(k * 7919 + semilla).random()
+    if r < .06: return .12
+    if r < .10: return .55
+    return .88 + .12 * math.sin(t * 5.3 + semilla)
+def _pedestal(t=0.):
+    if "p" not in _BG: _BG["p"] = _cover(os.path.join(FONDOS, "navidad_pedestal_limpio.png")).convert("RGB")
+    c = _BG["p"]; neg = Image.new("RGB", (W, H), (0, 0, 0))
+    for i, capa in enumerate(_letrero()):
+        b = _tubo(t, i * 31 + 3); L = neg.copy(); L.paste(capa, ((W - capa.width) // 2, 455 - capa.height // 2))
+        c = ImageChops.screen(c, Image.blend(neg, L, b))
+    return c.convert("RGBA")
 
 def producto(img, n, nombre, precio, fase=0, nota=None):
     """Escena del producto. fase 0 = presentación (entra la tarjeta, nombre y precio); fase 1 = acercamiento con dato (nota)."""
     def f(t, d):
-        bg = _pedestal(); c = camera(bg, t, d, 1.04 + .03 * fase, 1.1 + .03 * fase, dx=-20 if fase else 20)
+        bg = _pedestal(t + n * 2.7); c = camera(bg, t, d, 1.04 + .03 * fase, 1.1 + .03 * fase, dx=-20 if fase else 20)
         glow(c, W / 2, 1240, 470, _lib.NEON, int(55 + 25 * math.sin(t * 2.4) ** 2))   # luz del pedestal
         glow(c, W * .85, 760, 160, (255, 200, 110), int(40 + 30 * math.sin(t * 3.3) ** 2))  # árbol
-        card, pad = tarjeta(img, 600 if fase == 0 else 640)
+        card, pad = recorte(img, 560 if fase == 0 else 600)
         ent = eb(pr(t, .05, .65)) if fase == 0 else 1.
         bob = math.sin(t * 1.8) * 12; rot = math.sin(t * 1.1) * 1.6 + (1 - ent) * -10
-        cy = 905 + bob + (1 - ent) * 260
+        esc = (.55 + .45 * ent) * (1 + .03 * fase)
+        cy = 1185 - (card.height / 2 - pad) * esc + bob * .4 + (1 - ent) * 260   # la base del producto se apoya en el centro del pedestal
         glow(c, W / 2, 1230, 300 * ent, _lib.NEON, int(120 * ent))   # reflejo sobre el pedestal
-        place(c, _brillo(card, pad, (t - .7) / .8 if fase == 0 else (t - .3) / .9), W / 2, cy, scale=(.55 + .45 * ent) * (1 + .03 * fase), rot=rot, alpha=min(1, ent * 1.5))
-        neon(c, f"REGALO #{n}", W / 2, 540, 74, _lib.NEON2, eo(pr(t, .15, .4)))
+        place(c, _brillo(card, pad, (t - .7) / .8 if fase == 0 else (t - .3) / .9), W / 2, cy, scale=esc, rot=rot * .5, alpha=min(1, ent * 1.5))
+        neon(c, f"REGALO #{n}", W / 2, 1312, 66, _lib.NEON2, eo(pr(t, .15, .4)))
         if fase == 0:
-            etiqueta(c, nombre, W / 2, 1405, (255, 255, 255), size=50, alpha=eo(pr(t, .55, .4)), borde=_lib.NEON2)
-            a = eo(pr(t, .85, .4)); neon(c, precio, W / 2, 1565 + (1 - a) * 40, 112, _lib.NEON, a)
+            etiqueta(c, nombre, W / 2, 1425, (255, 255, 255), size=50, alpha=eo(pr(t, .55, .4)), borde=_lib.NEON2)
+            a = eo(pr(t, .85, .4)); neon(c, precio, W / 2, 1580 + (1 - a) * 40, 112, _lib.NEON, a)
         else:
-            etiqueta(c, precio, W / 2, 1405, (20, 18, 34), bg=(255, 255, 255), size=54, alpha=eo(pr(t, .1, .3)))
-            if nota: etiqueta(c, nota, W / 2, 1540, (255, 255, 255), size=44, alpha=eo(pr(t, .4, .4)), borde=_lib.NEON)
+            etiqueta(c, precio, W / 2, 1425, (20, 18, 34), bg=(255, 255, 255), size=54, alpha=eo(pr(t, .1, .3)))
+            if nota: etiqueta(c, nota, W / 2, 1560, (255, 255, 255), size=44, alpha=eo(pr(t, .4, .4)), borde=_lib.NEON)
         etiqueta(c, M["cta"].lower(), W / 2, 1790, (255, 255, 255), size=34, alpha=.85)
+        c = pantalla(c, "neon_parpadeo" if fase == 0 else "neon_escenario", t + n, .9)
+        c = pantalla(c, "bokeh_navidad", t + n * 1.3, .28)
+        if fase == 0: c = pantalla(c, "destello", t * .9, max(0, 1 - t / 1.6), loop=False)
+        if fase == 0 and t < .7: c = pantalla(c, "light_leak", t + n, 1 - t / .7)
         fx_nieve_suave(c, t, 45); vineta(c, .45)
-        if t < .2: c.alpha_composite(Image.new("RGBA", (W, H), (255, 255, 255, int(120 * (1 - t / .2)))))   # flash de entrada
         return c
     f.__name__ = f"p{n}{'ab'[fase]}"; return f
 
 def mini_card(img, precio):
     """Producto pequeño abajo a la izquierda mientras habla el presentador."""
     def m(c, t):
-        card, pad = tarjeta(img, 300); a = eb(pr(t, .15, .5)); x, y = 245, 1560 + math.sin(t * 1.8) * 8
+        card, pad = recorte(img, 300); a = eb(pr(t, .15, .5)); x, y = 245, 1560 + math.sin(t * 1.8) * 8
         place(c, card, x, y + (1 - a) * 200, scale=a, rot=math.sin(t * 1.2) * 2)
         etiqueta(c, precio, x, y + 245, (20, 18, 34), bg=(255, 255, 255), size=40, alpha=eo(pr(t, .5, .3)))
     return m
@@ -165,12 +234,14 @@ class PresentadorVideo:
             self.tomas.append(sorted(glob.glob(f"{cache}/f*.jpg")))
         self.k = 0
     def escena(self, z0=1.0, z1=1.06, cy=.5, nombre="host", mini=None):
-        files = self.tomas[self.k % len(self.tomas)]; n = len(files); off = (self.k * 113) % (2 * n); self.k += 1
+        files = self.tomas[self.k % len(self.tomas)]; n = len(files); off = 0 if nombre == "intro" else (self.k * 113) % (2 * n); self.k += 1
         def cuadro(i):
             p = 2 * (n - 1); i %= p; i = i if i < n else p - i
             return Image.open(files[i]).convert("RGBA")
         def f(t, d):
             c = camera(cuadro(off + int(t * 30)), t, d, z0, z1)
+            c = pantalla(c, "bokeh_navidad", t + off / 30, .22)
+            if mini is None and t < .7: c = pantalla(c, "light_leak", t + off / 30, .8 * (1 - t / .7))
             fx_nieve_suave(c, t, 30)
             if mini: mini(c, t)
             if t < .35 and nombre == "intro": c.alpha_composite(Image.new("RGBA", (W, H), (0, 0, 0, int(255 * (1 - t / .35)))))
