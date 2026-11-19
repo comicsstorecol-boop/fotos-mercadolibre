@@ -34,3 +34,8 @@ Objetivo: Fernando da un TEMA → salen 3 videos listos para publicar:
 - Las figuras del fondo son mercancía real de Fernando, solo decoración: no animarlas, no nombrarlas, no ponerlas al frente en miniaturas.
 - Falta: coordenadas de cabeza/boca para animarlo (como Anfitrion de terror) y sus escenarios.
 - GTA VI y demás juegos: sin capturas, logos ni personajes; escenas originales con la ambientación.
+
+## Guía de regalos (Navidad) — nov 2026
+- `explicativo/regalos.py` + `explicativo/regalos/rgNN_<tema>.py` → `python3 ... fb|tt salida.mp4`. Fernando escoge los 5 productos y manda las fotos (las de la web, con marco neón y REC); van en `productos/<tema>/p1..p5.jpg` (no se suben al repo).
+- Narrador = CLIP REAL de Higgsfield (Kling, 10 s, sin voz) en bucle de ida y vuelta: `marcas/comics-store/intros/clips/`. Ya no se anima la boca de la foto (se veía mal).
+- Pedestal: `biblioteca/fondos/v/navidad_pedestal.png`. No renderizar dos videos a la vez (se queda sin memoria).
