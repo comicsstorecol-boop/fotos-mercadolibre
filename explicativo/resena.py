@@ -127,33 +127,43 @@ class Anfitrion:
         self.mcab = m.filter(ImageFilter.GaussianBlur(40)); self.humo = _humo_tex()
     def _frame(self, t, nivel):
         im = self.src.copy(); cx, cy, rx, ry = self.cab
-        dx, dy, rot = math.sin(t * .9) * 5, math.sin(t * .7 + 1) * 4 + nivel * 2, math.sin(t * .5) * .8
+        # estado para gestos ligados a la voz (cabeceos en los acentos, inclinación al hablar)
+        st = self.__dict__.setdefault("_st", {"t": -1, "lv": 0., "nod": 0., "sg": 1, "hab": 0.})
+        if t < st["t"] or t - st["t"] > .5: st.update(lv=nivel, nod=0., hab=0.)
+        dt = max(1 / 30, t - st["t"]) if st["t"] >= 0 else 1 / 30
+        if nivel - st["lv"] > .22 and st["nod"] < .35: st["nod"] = 1.; st["sg"] = -st["sg"]
+        st["nod"] *= math.exp(-dt * 5.5); st["hab"] += ((1. if nivel > .15 else 0.) - st["hab"]) * min(1, dt * 2.5)
+        st["t"], st["lv"] = t, nivel; nod, hab = st["nod"], st["hab"]
+        dx = (math.sin(t * .9) + .5 * math.sin(t * 2.3 + 1.3)) * 3.2 + st["sg"] * nod * 2
+        dy = (math.sin(t * .7 + 1) + .4 * math.sin(t * 1.9)) * 2.6 + nod * 7 + hab * 2.5 + nivel * 1.5
+        rot = (math.sin(t * .5) * .6 + math.sin(t * 1.3 + 2) * .25) + st["sg"] * nod * .9
         head = self.src.rotate(rot, center=(cx, cy + ry * .6), resample=Image.BICUBIC, translate=(dx, dy))
         im.paste(head, (0, 0), self.mcab)
         if nivel > .05 and self.boca is not None and len(self.boca) == 5:  # primer plano: labio inferior y mentón bajan, sin tocar las manos
-            bx, ly, hw, cy2, mx = self.boca; bx += dx; ly += dy; op = int(round(mx * nivel))
+            bx, ly, hw, cy2, mx = self.boca; bx += dx; ly += dy; op = int(round(mx * nivel)); fw = (.42, .34, .47, .38)[int(t * 7.3) % 4]
             if op >= 1:
                 x0, x1, y0, y1 = int(bx - hw), int(bx + hw), int(ly), int(cy2 + dy)
                 reg = im.crop((x0, y0, x1, y1)).resize((x1 - x0, y1 - y0 - op), Image.BICUBIC)
                 mk = Image.new("L", reg.size, 0); ImageDraw.Draw(mk).ellipse((hw * .12, -reg.height, reg.width - hw * .12, reg.height * 1.6), fill=255)
                 mk = mk.filter(ImageFilter.GaussianBlur(hw * .12))
                 rp = Image.linear_gradient("L").resize(reg.size); rp = rp.point(lambda v: min(255, v * reg.height // 2)); mk = ImageChops.multiply(mk, rp)
-                hole = Image.new("RGBA", im.size, (0, 0, 0, 0)); ImageDraw.Draw(hole).ellipse((bx - hw * .42, ly - 3, bx + hw * .42, ly + op * 1.5), fill=(18, 6, 6, 250))
+                hole = Image.new("RGBA", im.size, (0, 0, 0, 0)); ImageDraw.Draw(hole).ellipse((bx - hw * fw, ly - 3, bx + hw * fw, ly + op * 1.5), fill=(18, 6, 6, 250))
                 im.alpha_composite(hole.filter(ImageFilter.GaussianBlur(max(1.5, op * .35))))
                 im.paste(reg, (x0, y0 + op), mk)
         elif nivel > .05 and self.boca is not None:  # boca: se abre con la voz
-            bx, by = self.boca[0] + dx, self.boca[1] + dy; op = 1 + 7 * nivel
+            bx, by = self.boca[0] + dx, self.boca[1] + dy; op = 1 + 8 * nivel; fw = (18, 14, 20, 16)[int(t * 7.3) % 4]
             jaw = im.crop((int(bx - 55), int(by - 2), int(bx + 55), int(by + 42)))
             mk = Image.new("L", jaw.size, 0); ImageDraw.Draw(mk).ellipse((10, 6, jaw.width - 10, jaw.height * 2), fill=255); mk = mk.filter(ImageFilter.GaussianBlur(8))
-            hole = Image.new("RGBA", im.size, (0, 0, 0, 0)); ImageDraw.Draw(hole).ellipse((bx - 18, by - 3, bx + 18, by + op + 3), fill=(20, 8, 8, 230))
+            hole = Image.new("RGBA", im.size, (0, 0, 0, 0)); ImageDraw.Draw(hole).ellipse((bx - fw, by - 3, bx + fw, by + op + 3), fill=(20, 8, 8, 230))
             im.alpha_composite(hole.filter(ImageFilter.GaussianBlur(3)))
             im.paste(jaw, (int(bx - 55), int(by - 2 + op)), mk)
         return im
     def escena(self, z0=1.0, z1=1.15, cy=.42, nombre="anf"):
         def f(t, d):
             im = self._frame(t, motor.NIVEL); SW, SH = self.SW, self.SH
-            z = z0 + (z1 - z0) * eio(min(1, t / d)); h = min(SH, SW * H / W) / z; w = h * W / H
-            x0 = (SW - w) / 2; y0 = min(max(cy * SH - h / 2, 0), SH - h); k = W / w
+            z = (z0 + (z1 - z0) * eio(min(1, t / d))) * (1 + .006 * math.sin(t * 1.65)); h = min(SH, SW * H / W) / z; w = h * W / H   # respiración
+            jx = (math.sin(t * 1.1) + .6 * math.sin(t * 2.7 + 1)) * SW * .0018; jy = (math.sin(t * .8 + 2) + .5 * math.sin(t * 2.1)) * SH * .0015   # cámara en mano
+            x0 = min(max((SW - w) / 2 + jx, 0), SW - w); y0 = min(max(cy * SH - h / 2 + jy, 0), SH - h); k = W / w
             c = im.resize((W, H), Image.BICUBIC, box=(x0, y0, x0 + w, y0 + h))
             P = lambda x, y: ((x - x0) * k, (y - y0) * k)
             fl = .55 + .45 * math.sin(t * 13) * math.sin(t * 5.1 + 2)

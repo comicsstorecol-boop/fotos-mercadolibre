@@ -40,7 +40,11 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
     for fn, txt, clave in ESCENAS:
         a = speak(txt, pron) if pron else speak(txt); dur = round((lead + len(a) / SR + .35) * 30) / 30
         env = np.abs(a); hop = SR // 30; lv = np.array([env[i:i + hop].mean() if i < len(env) else 0 for i in range(0, len(env), hop)])
-        lv = np.clip(lv / (np.percentile(lv, 90) + 1e-6), 0, 1); lv = np.convolve(lv, [.25, .5, .25], "same")
+        lv = np.clip(lv / (np.percentile(lv, 90) + 1e-6), 0, 1)
+        sm = np.zeros_like(lv); v = 0.   # boca natural: abre rápido, cierra suave; silencios cerrados
+        for i, x in enumerate(lv):
+            x = 0. if x < .1 else x ** .85; v += (x - v) * (.6 if x > v else .3); sm[i] = v
+        lv = sm
         plan.append(dict(lv=lv, fn=fn, txt=txt, clave={c.lower() for c in clave}, audio=a, dur=dur, words=tiempos_palabras(txt, a, SR, lead)))
         print(f"{fn.__name__}: {dur:.1f}s", flush=True)
     total = sum(p["dur"] for p in plan); N = int(total * SR) + SR
