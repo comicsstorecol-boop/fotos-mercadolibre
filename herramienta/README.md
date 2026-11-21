@@ -19,3 +19,5 @@ Mismo consecutivo Bz (contador-buzos.txt). Acumulado propio: `acumulado-buzo-nin
 `pendiente-buzo-nino-cuello-redondo.json` = nombres identificados esperando URLs del Gestor.
 - Si llegan fotos/diseños repetidos (mismo estampado idéntico), se quitan siempre sin preguntar (Bz0276 eliminado por repetido).
 - Segundo archivo de 200 buzos niño cuello redondo: desde Bz0377, precio 89999 (`acumulado-buzo-nino-cuello-redondo-desde-Bz0377.json`).
+- Cuarto archivo de 200 buzos niño cuello redondo: desde Bz0769 (`acumulado-buzo-nino-cuello-redondo-desde-Bz0769.json`). El tercero (desde Bz0572) cerró con 196.
+- Lote Bz0769-Bz0787: Santa "Rollin Holidays" (marihuana) dejado por fuera, pendiente de decisión de Fernando. Las URLs pueden llegar en otro orden que las fotos: se emparejan mirando la foto de cada URL.
