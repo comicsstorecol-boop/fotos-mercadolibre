@@ -48,3 +48,7 @@ Objetivo: Fernando da un TEMA → salen 3 videos listos para publicar:
 - Figuras = FOTOS DE FERNANDO (sus productos de ML/web), recortadas con rembg isnet + limpieza de restos blancos; contorno neón por personaje (Doom verde, Strange naranja, Thanos morado; `COLOR_FIG`). Recortes en FIG_DIR (no se suben).
 - Narrador = clips reales de Higgsfield del set gamer: `intros/clips/gamer_hablando_v1..v6` (9:16) y `gamer_hablando_h1..h2` (16:9). `gamer_otroset_h1` es de otro set: no mezclar. Cada escena de narrador usa otra toma: solo los tramos donde está hablando (detección de movimiento en la cara), arranca ya hablando y el clip avanza al ritmo de la voz (casi quieto en los silencios). Imagen del set 16:9: `intros/gamer_narrador_h2.png`.
 - Animaciones en código: hilos del tiempo, mandalas, contador, ajedrez, dominós, planeta de parches, cómic inventado, línea de tiempo, estrellas, caja de comentario + barra de suscribirse. Subtítulos neón verde/naranja.
+## Narrador en video real (24-nov-2026)
+- Clips del narrador que genera Fernando (Higgsfield) en biblioteca/narrador/terror/{h,v}/*.mp4; boca medida con herramientas/medir_boca.py (insightface, modelos buffalo_s de GitHub) → boca.json.
+- explicativo/narrador_video.py arma para cada escena una edición de los clips que sigue la voz (trozos de 0,3 s, velocidad 0,8–1,2x, fundidos cortos). Correlación boca–voz medida ≈0,5 sin desfase.
+- Activo por defecto en YouTube horizontal (NARRADOR_VIDEO=0 para volver al narrador animado). Para agregar clips: copiar mp4 y volver a correr medir_boca.py.

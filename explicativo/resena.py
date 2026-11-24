@@ -182,9 +182,15 @@ class Anfitrion:
 _ANF = None
 _PRESETS = [(1.3, 1.1, .36), (1.1, 1.35, .38), (1.4, 1.15, .4), (1.0, 1.25, .45), (1.15, 1.4, .36), (1.4, 1.1, .45), (1.0, 1.3, .4)]
 _CERCA = None
+def _video_ok():
+    if os.environ.get("NARRADOR_VIDEO", "1") == "0" or not HORIZONTAL: return False
+    import narrador_video as NV; return NV.disponible()
+
 def anfitrion_cerca():
     """Primer plano del presentador: habla (labio y mentón siguen la voz), mueve la cabeza; luces y lluvia vivas."""
     global _CERCA
+    if _CERCA is None and _video_ok():
+        import narrador_video as NV; _CERCA = NV.NarradorVideo(zoom=1.55, foco_y=.12)
     if _CERCA is None:
         d = os.path.join(os.path.dirname(HERE), "marcas", "comics-store", "intros")
         if HORIZONTAL: _CERCA = Anfitrion(os.path.join(d, "terror_cerca_h.png"), cabeza=(880, 330, 330, 300), boca=(885, 449, 100, 505, 16), vela=(503, 140), lampara=(503, 140), ventana=(1210, 0, 1672, 800))
@@ -193,6 +199,8 @@ def anfitrion_cerca():
 
 def anfitrion():
     global _ANF
+    if _ANF is None and _video_ok():
+        import narrador_video as NV; _ANF = NV.NarradorVideo()
     if _ANF is None:
         d = os.path.join(os.path.dirname(HERE), "marcas", "comics-store", "intros")
         if HORIZONTAL:

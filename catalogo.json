@@ -15,8 +15,16 @@
  },
  "resplandor": {
   "yt": {
-   "estado": "ERROR",
-   "fecha": "2026-11-17"
+   "estado": "LISTO",
+   "fecha": "2026-11-19"
+  },
+  "tt": {
+   "estado": "LISTO",
+   "fecha": "2026-11-19"
+  },
+  "fb": {
+   "estado": "LISTO",
+   "fecha": "2026-11-19"
   }
  }
 }
