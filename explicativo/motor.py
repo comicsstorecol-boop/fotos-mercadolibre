@@ -20,11 +20,10 @@ def musica_terror(total, N, SR):
 # Palabras que siempre se dicen en inglés (o con su pronunciación usual) en todos los videos
 PRON_BASE = {"store": ("en", "Store"), "steve": ("en", "Steve"), "rogers": ("en", "Rogers"), "avengers": ("es", "avényers"),
              "doomsday": ("es", "dúmsdei"), "thor": ("es", "tor"), "tva": ("es", "te ve a")}
-ESCENA = None  # datos de la escena actual (voz) para el narrador en video
 NIVEL = 0.0  # apertura de boca del narrador en el cuadro actual (0..1)
 
 def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250, pron=None, estilo=None, formato="vertical", colores=None, pelicula=False):
-    global NIVEL, ESCENA
+    global NIVEL
     import lib; lib.ESTILO_SUB = estilo or "clasico"
     if colores: lib.NEON, lib.NEON2 = colores
     if lib.HORIZONTAL: y_sub = 960
@@ -46,13 +45,14 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
         for i, x in enumerate(lv):
             x = 0. if x < .1 else x ** .85; v += (x - v) * (.6 if x > v else .3); sm[i] = v
         lv = sm
+        fn.voz, fn.lead = lv, lead   # actividad de la voz por cuadro: la usan los narradores en video para sincronizar la boca
         plan.append(dict(lv=lv, fn=fn, txt=txt, clave={c.lower() for c in clave}, audio=a, dur=dur, words=tiempos_palabras(txt, a, SR, lead)))
         print(f"{fn.__name__}: {dur:.1f}s", flush=True)
     total = sum(p["dur"] for p in plan); N = int(total * SR) + SR
     if os.environ.get("PREVIEW"):
         tiles = []
         for p in plan:
-            ESCENA = dict(id=id(p), lv=p["lv"], lead=lead, nf=int(round(p["dur"] * 30))); t = p["dur"] * .7; fr = p["fn"](t, p["dur"]); karaoke(fr, p["words"], t, y_sub, p["clave"]); tiles.append(fr.convert("RGB").resize((480, 270) if HORIZ else (270, 480)))
+            t = p["dur"] * .7; fr = p["fn"](t, p["dur"]); karaoke(fr, p["words"], t, y_sub, p["clave"]); tiles.append(fr.convert("RGB").resize((480, 270) if HORIZ else (270, 480)))
         tw, th = tiles[0].size; cols = 8 if not HORIZ else 5; rows = (len(tiles) + cols - 1) // cols; sh = Image.new("RGB", (tw * cols, th * rows))
         for i, im in enumerate(tiles): sh.paste(im, ((i % cols) * tw, (i // cols) * th))
         sh.save(OUT.replace(".mp4", "_preview.jpg")); print("preview", round(total, 1), "s"); return
@@ -74,7 +74,7 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
         prev = None
         t_ini = 0.
         for p in plan:
-            nf = int(round(p["dur"] * 30)); ESCENA = dict(id=id(p), lv=p["lv"], lead=lead, nf=nf)
+            nf = int(round(p["dur"] * 30))
             for f in range(nf):
                 t = f / 30; k = int((t - lead) * 30); NIVEL = float(p["lv"][k]) if 0 <= k < len(p["lv"]) else 0.
                 fr = p["fn"](t, p["dur"])

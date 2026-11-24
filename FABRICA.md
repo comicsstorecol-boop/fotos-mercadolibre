@@ -52,3 +52,5 @@ Objetivo: Fernando da un TEMA → salen 3 videos listos para publicar:
 - Clips del narrador que genera Fernando (Higgsfield) en biblioteca/narrador/terror/{h,v}/*.mp4; boca medida con herramientas/medir_boca.py (insightface, modelos buffalo_s de GitHub) → boca.json.
 - explicativo/narrador_video.py arma para cada escena una edición de los clips que sigue la voz (trozos de 0,3 s, velocidad 0,8–1,2x, fundidos cortos). Correlación boca–voz medida ≈0,5 sin desfase.
 - Activo por defecto en YouTube horizontal (NARRADOR_VIDEO=0 para volver al narrador animado). Para agregar clips: copiar mp4 y volver a correr medir_boca.py.
+- Narrador SINCRONIZADO (nov-24): los clips traen audio; se mide cuándo habla el narrador y cada aparición arranca justo donde él empieza a hablar (menos el lead), así entra hablando a la vez que la voz; luego velocidad normal, sin congelar. `motor.render` deja la actividad de la voz en `fn.voz`/`fn.lead`.
+- Subtítulos de la guía de regalos en y_sub=195 (encima del letrero neón, que debe verse).

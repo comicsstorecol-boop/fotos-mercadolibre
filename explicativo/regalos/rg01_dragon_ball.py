@@ -51,4 +51,4 @@ if __name__ == "__main__":
     ver = sys.argv[1]; out = sys.argv[2] if len(sys.argv) > 2 else f"/home/claude/salidas/regalos_dragon_ball/{ver}.mp4"
     os.makedirs(os.path.dirname(out), exist_ok=True)
     esc, ganchos = armar(G, ver)
-    render(esc, out, musica="alegre", pron=PRON, estilo="neon", y_sub=330, regancho_idx=ganchos, colores=(NARANJA, AZUL))
+    render(esc, out, musica="alegre", pron=PRON, estilo="neon", y_sub=195, regancho_idx=ganchos, colores=(NARANJA, AZUL))

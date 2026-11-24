@@ -220,30 +220,49 @@ def armar(guion, version):
 
 # ---------------------------------------------------------------- presentador en VIDEO (clip de Higgsfield, sin voz, en bucle)
 class PresentadorVideo:
-    """Clips reales del encapuchado hablando (Higgsfield, sin voz). Alterna tomas, bucle de ida y vuelta y cada escena arranca en otro punto."""
+    """Clips reales del encapuchado (Higgsfield, con su audio). Sincroniza la boca con la voz de Fernando:
+    se mide cuándo habla el narrador en el clip y cuándo habla la voz, y se re-cronometra el video (DTW) para que
+    cada aparición arranca justo donde él empieza a hablar, para que entre hablando a la vez que la voz; luego sigue a velocidad normal."""
     def __init__(self, clips=None):
         import glob, subprocess
+        import numpy as np
         if clips is None:
-            clips = sorted(glob.glob(os.path.join(INTROS, "clips", "navidad_hablando_h*.mp4" if HORIZONTAL else "navidad_hablando_v*.mp4")))
-        self.tomas = []
+            pat = "navidad_*_h*.mp4" if HORIZONTAL else "navidad_*_v*.mp4"
+            clips = sorted(glob.glob(os.path.join(INTROS, "clips", pat)))
+        self.files, act = [], []
         for clip in clips:
-            cache = f"/home/claude/frames/{os.path.splitext(os.path.basename(clip))[0]}"
+            nom = os.path.splitext(os.path.basename(clip))[0]; cache = f"/home/claude/frames/{nom}_{W}x{H}"
             if not glob.glob(f"{cache}/f*.jpg"):
                 os.makedirs(cache, exist_ok=True)
-                subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", clip, "-vf", f"fps=30,scale={W}:{H}:flags=lanczos", "-q:v", "2", f"{cache}/f%04d.jpg"], check=True)
-            self.tomas.append(sorted(glob.glob(f"{cache}/f*.jpg")))
-        self.k = 0
+                subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", clip, "-vf", f"fps=30,scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H}",
+                                "-q:v", "2", f"{cache}/f%04d.jpg"], check=True)
+            fr = sorted(glob.glob(f"{cache}/f*.jpg"))
+            raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", clip, "-ac", "1", "-ar", "16000", "-f", "s16le", "-"], capture_output=True).stdout
+            a = np.frombuffer(raw, np.int16).astype(np.float32) if raw else np.zeros(16000)
+            hop = 16000 // 30; e = np.array([np.sqrt((a[i * hop:(i + 1) * hop] ** 2).mean()) if i * hop < len(a) else 0 for i in range(len(fr))])
+            e = np.clip(e / (np.percentile(e, 90) + 1e-6), 0, 1); e = np.convolve(e, np.ones(3) / 3, "same")
+            # ida y vuelta para tener material largo sin saltos
+            idx = list(range(len(fr))) + list(range(len(fr) - 2, 0, -1))
+            self.files += [fr[i] for i in idx]; act += [float(e[i]) for i in idx]
+        self.act = np.array(act); self.k = 0
+    def _inicio(self, lead, kk):
+        """Cuadro donde el narrador EMPIEZA a hablar, menos el 'lead', para que hable justo cuando entra la voz."""
+        import numpy as np
+        c = self.act; hab = c > .2
+        on = [i for i in range(1, len(c) - 30) if hab[i] and not hab[i - 1] and hab[i:i + 12].mean() > .8]
+        if not on: on = [int(np.argmax(c))]
+        j = on[(kk * 3) % len(on)]
+        return max(0, j - int(round(lead * 30)))
     def escena(self, z0=1.0, z1=1.06, cy=.5, nombre="host", mini=None):
-        files = self.tomas[self.k % len(self.tomas)]; n = len(files); off = 0 if nombre == "intro" else (self.k * 113) % (2 * n); self.k += 1
-        def cuadro(i):
-            p = 2 * (n - 1); i %= p; i = i if i < n else p - i
-            return Image.open(files[i]).convert("RGBA")
+        st = {}; kk = self.k
         def f(t, d):
-            c = camera(cuadro(off + int(t * 30)), t, d, z0, z1)
-            c = pantalla(c, "bokeh_navidad", t + off / 30, .22)
-            if mini is None and t < .7: c = pantalla(c, "light_leak", t + off / 30, .8 * (1 - t / .7))
+            if "i0" not in st: st["i0"] = self._inicio(getattr(f, "lead", .15), kk)
+            i = (st["i0"] + int(round(t * 30))) % len(self.files)
+            c = camera(Image.open(self.files[i]).convert("RGBA"), t, d, z0, z1)
+            c = pantalla(c, "bokeh_navidad", t + self.k, .22)
+            if mini is None and t < .7: c = pantalla(c, "light_leak", t + self.k, .8 * (1 - t / .7))
             fx_nieve_suave(c, t, 30)
             if mini: mini(c, t)
             if t < .35 and nombre == "intro": c.alpha_composite(Image.new("RGBA", (W, H), (0, 0, 0, int(255 * (1 - t / .35)))))
             vineta(c, .4); return c
-        f.__name__ = nombre; return f
+        self.k += 1; f.__name__ = nombre; return f
