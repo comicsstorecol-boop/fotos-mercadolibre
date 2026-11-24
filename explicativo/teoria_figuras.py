@@ -456,26 +456,79 @@ def _partir_cortes(files, minimo=45):
         a = c
     return trozos or [files]
 
+_NV = {}
+def _narrador_gamer():
+    """Narrador en video sincronizado por BOCA: apertura medida cuadro a cuadro (insightface, biblioteca/narrador/gamer/boca.json),
+    normalizada con TODAS las tomas juntas (una toma quieta no se infla), y cada escena se edita con trozos de 0,3 s cuya boca sigue la voz."""
+    if "nv" not in _NV:
+        import json, numpy as np
+        from narrador_video import NarradorVideo
+        nv = NarradorVideo("gamer")
+        import types
+        nv.planificar = types.MethodType(_planificar_suave, nv)
+        data = json.load(open(os.path.join(KIT, "biblioteca", "narrador", "gamer", "boca.json")))
+        noms = sorted(os.path.basename(p_)[:-4] for p_ in __import__("glob").glob(os.path.join(KIT, "biblioteca", "narrador", "gamer", nv.ori, "*.mp4")))
+        crudos = []
+        for nom, cl in zip(noms, nv.clips):
+            v = np.array([np.nan if x is None else x for x in data[f"{nv.ori}/{nom}"]["boca"]], float)
+            k = np.arange(len(v)); ok = ~np.isnan(v); v = np.interp(k, k[ok], v[ok]); v = np.convolve(v, [.25, .5, .25], "same"); crudos.append(v[:len(cl["frames"])])
+        todo = np.concatenate(crudos); lo, hi = np.percentile(todo, 10), np.percentile(todo, 97)
+        for cl, v in zip(nv.clips, crudos): cl["m"] = np.clip((v - lo) / max(1e-6, hi - lo), 0, 1)
+        _NV["nv"] = nv
+    return _NV["nv"]
+
+def _planificar_suave(self, lv, lead, nf, K=12, salto=.75):
+    """Como NarradorVideo.planificar pero con trozos de 0,4 s y saltos mucho más caros (menos fundidos/imagen doble)."""
+    import numpy as np
+    RATES = (.64, .72, .8, .88, .96)
+    T_ = np.zeros(nf); off = int(round(lead * 30)) - 1
+    for f in range(nf):
+        k = f - off
+        if 0 <= k < len(lv): T_[f] = lv[k]
+    T_ = np.clip(T_ / max(.35, np.percentile(T_[T_ > 0], 85) if (T_ > 0).any() else 1), 0, 1)
+    plan = []; cur = None
+    for f0 in range(0, nf, K):
+        n = min(K, nf - f0); tgt = T_[f0:f0 + n]; idx = np.arange(n); best = None
+        if cur is not None:
+            c, st = cur
+            for r in RATES:
+                pos = st + r * (idx + 1)
+                if pos[-1] >= len(self.clips[c]["m"]) - 1: continue
+                cost = np.abs(self._M(c, pos) - tgt).mean() + .5 * abs(r - .8) ** 2
+                if best is None or cost < best[0]: best = (cost, c, pos, False)
+        for c, cl in enumerate(self.clips):
+            m = cl["m"]; L = len(m); starts = np.arange(0, L - int(n * .8) - 2, 2)
+            if not len(starts): continue
+            Pm = starts[:, None] + .8 * idx[None, :]; Mv = self._M(c, Pm)
+            cost = np.abs(Mv - tgt[None, :]).mean(1) + .05 * self.uso[c][starts] + (salto if cur is not None else 0)
+            j = int(np.argmin(cost))
+            if best is None or cost[j] < best[0]: best = (float(cost[j]), c, Pm[j], cur is not None)
+        _, c, pos, sal = best
+        for i, p_ in enumerate(pos):
+            fade = None
+            if sal and i < 3 and cur is not None and cur[0] == c:   # entre tomas distintas: corte limpio (cambio de cámara)
+                pc, ps = cur; fade = (pc, min(ps + .8 * (i + 1), len(self.clips[pc]["frames"]) - 1), (i + 1) / 4)
+            plan.append((c, float(p_), fade))
+        cur = (c, float(pos[-1]))
+        u = self.uso[c]; a, b = int(pos[0]), int(pos[-1]) + 1; u *= .97; u[max(0, a - 12):b + 12] += 1
+    return plan
+
 def narrador_escena(titulo=None, col=VERDE, sub=None, z0=1.0, z1=1.05):
-    """Escena del narrador con un clip real que ARRANCA HABLANDO y avanza al ritmo de la voz
-    (velocidad normal mientras suena la voz, casi quieto en los silencios). Cada escena usa otra toma."""
-    tomas = _tomas(); k = _TOMAS["k"]; _TOMAS["k"] += 1
-    files = tomas[k % len(tomas)]
-    ak = ("act", k % len(tomas))
-    if ak not in _TOMAS: _TOMAS[ak] = _actividad(files)
-    act = _TOMAS[ak]; n = len(act); off = (k * 37) % max(1, n - 60)
-    st = {"t": -1., "p": 0.}
+    """Escena del narrador: clip real cuya boca se abre y se cierra con la voz de Fernando (desde el primer cuadro)."""
+    import numpy as np
+    nv = _narrador_gamer(); st = {}
     def f(t, d):
-        if t < st["t"] or st["t"] < 0: st["p"] = 0.; st["t"] = t - 1 / 30
-        dt = max(0., t - st["t"]) * 30; st["t"] = t
-        vel = 1.0 if motor.NIVEL > .06 else .2
-        st["p"] += dt * vel
-        p = 2 * (n - 1); i = int(off + st["p"]) % max(1, p); i = i if i < n else p - i
-        c = Image.open(files[act[i]]).convert("RGBA"); c = zoom(c, t, d, z0, z1)
+        nf = int(round(d * 30))
+        if st.get("nf") != nf:
+            voz = getattr(f, "voz", None); lead = getattr(f, "lead", .15)
+            st["plan"] = nv.planificar(voz if voz is not None else np.zeros(nf), lead, nf); st["nf"] = nf
+        plan = st["plan"]; c_, p_, fade = plan[min(len(plan) - 1, max(0, int(round(t * 30))))]
+        im = nv._img(c_, p_)
+        if fade: im = Image.blend(nv._img(fade[0], fade[1]), im, fade[2])
+        c = im.resize((W, H), Image.LANCZOS).convert("RGBA"); c = zoom(c, t, d, z0, z1)
         if titulo:
             u = eb(pr(t, .2, .5)); texto(c, titulo, W / 2, P(1560, 860), P(84, 96), col, alpha=clamp(u * 1.5), glow_col=col)
             if sub: texto(c, sub, W / 2, P(1660, 950), P(44, 46), (255, 255, 255), alpha=eo(pr(t, .6, .4)), stroke=5)
-        if k == 0 and t < .35 and titulo is None and False: pass
         vineta(c, 120); return c
     return f
 
