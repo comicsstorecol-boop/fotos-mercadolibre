@@ -25,3 +25,4 @@ Mismo consecutivo Bz (contador-buzos.txt). Acumulado propio: `acumulado-buzo-nin
 ## Buzo hombre cuello redondo (tipo `buzo-adulto-cuello-redondo`)
 Consecutivo Bz (contador-buzos.txt), precio 89999, 6 por talla S-XL. Archivos de 100 buzos acumulando lotes (`acumulado-buzo-adulto-cuello-redondo-desde-BzXXXX.json`).
 `pendiente-buzo-adulto-cuello-redondo.json` = nombres identificados esperando URLs. Primer lote (desde Bz0825): Santa "Merry Christmas F*ckers" publicado como Bz0844 "Santa Merry Christmas" (sin la grosería, al final del lote).
+- Primer archivo de buzos hombre cuello redondo (desde Bz0825) cerró con 89 buzos (Bz0825-Bz0913) por decisión de Fernando. El siguiente archivo arranca en Bz0914 con acumulado nuevo `acumulado-buzo-adulto-cuello-redondo-desde-Bz0914.json`.
