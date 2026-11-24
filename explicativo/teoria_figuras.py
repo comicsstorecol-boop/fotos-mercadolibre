@@ -419,17 +419,50 @@ def _tomas():
         _TOMAS["t"] = out; _TOMAS["k"] = 0
     return _TOMAS["t"]
 
+def _actividad(files):
+    """Movimiento de boca/cabeza por cuadro (diferencia en la zona de la cara). Devuelve índices de cuadros 'hablando'."""
+    import numpy as np
+    x0, x1, y0, y1 = (.40, .60, .22, .50) if HZ else (.36, .64, .22, .42)
+    g = []
+    for fp in files:
+        im = Image.open(fp).convert("L"); w, h = im.size
+        g.append(np.asarray(im.crop((int(w * x0), int(h * y0), int(w * x1), int(h * y1))).resize((96, 96)), dtype=np.float32))
+    n = len(g); a = np.zeros(n)
+    for k in range(3, n): a[k] = np.abs(g[k] - g[k - 3]).mean()
+    a[:3] = a[3] if n > 3 else 0
+    a = np.convolve(a, np.ones(9) / 9, "same")
+    thr = np.percentile(a, 40); act = a > thr
+    # tramos hablando de al menos 0,8 s
+    idx = []; k = 0
+    while k < n:
+        if act[k]:
+            e = k
+            while e < n and act[e]: e += 1
+            if e - k >= 24: idx.extend(range(k, e))
+            k = e
+        else: k += 1
+    return idx or list(range(n))
+
 def narrador_escena(titulo=None, col=VERDE, sub=None, z0=1.0, z1=1.05):
-    """Escena del narrador con un clip real; cada escena usa otra toma y otro punto de arranque (bucle ida y vuelta)."""
+    """Escena del narrador con un clip real que ARRANCA HABLANDO y avanza al ritmo de la voz
+    (velocidad normal mientras suena la voz, casi quieto en los silencios). Cada escena usa otra toma."""
     tomas = _tomas(); k = _TOMAS["k"]; _TOMAS["k"] += 1
-    files = tomas[k % len(tomas)]; n = len(files); off = 0 if k == 0 else (k * 97) % (2 * n)
+    files = tomas[k % len(tomas)]
+    ak = ("act", k % len(tomas))
+    if ak not in _TOMAS: _TOMAS[ak] = _actividad(files)
+    act = _TOMAS[ak]; n = len(act); off = (k * 37) % max(1, n - 60)
+    st = {"t": -1., "p": 0.}
     def f(t, d):
-        p = 2 * (n - 1); i = (off + int(t * 30)) % p; i = i if i < n else p - i
-        c = Image.open(files[i]).convert("RGBA"); c = zoom(c, t, d, z0, z1)
+        if t < st["t"] or st["t"] < 0: st["p"] = 0.; st["t"] = t - 1 / 30
+        dt = max(0., t - st["t"]) * 30; st["t"] = t
+        vel = 1.0 if motor.NIVEL > .06 else .2
+        st["p"] += dt * vel
+        p = 2 * (n - 1); i = int(off + st["p"]) % max(1, p); i = i if i < n else p - i
+        c = Image.open(files[act[i]]).convert("RGBA"); c = zoom(c, t, d, z0, z1)
         if titulo:
             u = eb(pr(t, .2, .5)); texto(c, titulo, W / 2, P(1560, 860), P(84, 96), col, alpha=clamp(u * 1.5), glow_col=col)
             if sub: texto(c, sub, W / 2, P(1660, 950), P(44, 46), (255, 255, 255), alpha=eo(pr(t, .6, .4)), stroke=5)
-        if k == 0 and t < .35: c.alpha_composite(Image.new("RGBA", (W, H), (0, 0, 0, int(255 * (1 - t / .35)))))
+        if k == 0 and t < .35 and titulo is None and False: pass
         vineta(c, 120); return c
     return f
 
