@@ -141,7 +141,9 @@ def _fig(nombre, h):
     im = Image.open(os.path.join(FIG_DIR, nombre + ".png")).convert("RGBA")
     return im.resize((int(im.width * h / im.height), h), Image.LANCZOS)
 
-COLOR_FIG = {"doom": VERDE, "strange": (255, 165, 40), "thanos": (180, 90, 255)}
+COLOR_FIG = {"doom": VERDE, "strange": (255, 165, 40), "thanos": (180, 90, 255), "iron": ORO, "cap": (70, 140, 255), "loki": (170, 255, 60),
+             "thor": (120, 200, 255), "wolverine": (255, 220, 40), "magneto": (235, 60, 200), "xavier": (170, 120, 255), "reed": (60, 210, 255),
+             "cuatro": (60, 210, 255), "cosa": (255, 140, 40), "hulk": (110, 255, 70), "wanda": (255, 50, 90)}
 def color_de(nombre, defecto=VERDE):
     return COLOR_FIG.get(nombre.split("_")[0], defecto)
 
