@@ -21,3 +21,7 @@ Mismo consecutivo Bz (contador-buzos.txt). Acumulado propio: `acumulado-buzo-nin
 - Segundo archivo de 200 buzos niño cuello redondo: desde Bz0377, precio 89999 (`acumulado-buzo-nino-cuello-redondo-desde-Bz0377.json`).
 - Cuarto archivo de 200 buzos niño cuello redondo: desde Bz0769 (`acumulado-buzo-nino-cuello-redondo-desde-Bz0769.json`). El tercero (desde Bz0572) cerró con 196.
 - Lote Bz0769-Bz0787: Santa "Rollin Holidays" (marihuana) dejado por fuera, pendiente de decisión de Fernando. Las URLs pueden llegar en otro orden que las fotos: se emparejan mirando la foto de cada URL.
+
+## Buzo hombre cuello redondo (tipo `buzo-adulto-cuello-redondo`)
+Consecutivo Bz (contador-buzos.txt), precio 89999, 6 por talla S-XL. Archivos de 100 buzos acumulando lotes (`acumulado-buzo-adulto-cuello-redondo-desde-BzXXXX.json`).
+`pendiente-buzo-adulto-cuello-redondo.json` = nombres identificados esperando URLs. Primer lote (desde Bz0825): "Merry Christmas F*ckers" (Santa dedo medio) dejado por fuera, pendiente de decisión de Fernando.
