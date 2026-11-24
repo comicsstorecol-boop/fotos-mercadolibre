@@ -42,3 +42,9 @@ Objetivo: Fernando da un TEMA → salen 3 videos listos para publicar:
 - Productos SIN fondo (rembg isnet) con borde neón VERDE del logo, apoyados en el centro del pedestal; los anchos crecen hasta 1,45x. Recortes en `productos/<tema>/cN.png`.
 - Pedestal: `navidad_pedestal_limpio.png` + letrero de Fernando `biblioteca/efectos/letrero_paraiso.png` (tubos verde/rosado parpadeando por separado). "REGALO #n" va en el borde del pedestal, encima del nombre.
 - Overlays en video de Fernando (`biblioteca/efectos/video/`): neon_parpadeo, neon_escenario, bokeh_navidad, destello (al aparecer cada producto), light_leak (transiciones). Mezcla "screen".
+
+## Teorías con figuras de la tienda (Strange/Doom) — nov 2026
+- `explicativo/teoria_figuras.py` + `explicativo/t01_strange_doom.py tt|fb|yt|final salida.mp4` (yt y final con FORMATO=horizontal; el segmento `final` es la pantalla final de YouTube: se le agregan 7 s congelados y se pega al final).
+- Figuras = FOTOS DE FERNANDO (sus productos de ML/web), recortadas con rembg isnet + limpieza de restos blancos; contorno neón por personaje (Doom verde, Strange naranja, Thanos morado; `COLOR_FIG`). Recortes en FIG_DIR (no se suben).
+- Narrador = clips reales de Higgsfield del set gamer: `intros/clips/gamer_hablando_v1..v6` (9:16) y `gamer_hablando_h1..h2` (16:9). `gamer_otroset_h1` es de otro set: no mezclar. Cada escena de narrador usa otra toma en bucle de ida y vuelta. Imagen del set 16:9: `intros/gamer_narrador_h2.png`.
+- Animaciones en código: hilos del tiempo, mandalas, contador, ajedrez, dominós, planeta de parches, cómic inventado, línea de tiempo, estrellas, caja de comentario + barra de suscribirse. Subtítulos neón verde/naranja.
