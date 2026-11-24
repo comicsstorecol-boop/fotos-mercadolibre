@@ -1,1 +1,162 @@
-[]
+[
+ {
+  "codigo": "Bz0914",
+  "nombre": "Nova Comics",
+  "titulo": "Buzo Cuello Redondo Nova Comics Premium Niños Bz0914",
+  "marca": "Marvel",
+  "modelo": "Marvel",
+  "foto_orden": 1
+ },
+ {
+  "codigo": "Bz0915",
+  "nombre": "Bart Simpson Skate",
+  "titulo": "Buzo Cuello Redondo Bart Simpson Skate Premium Niños Bz0915",
+  "marca": "Los Simpson",
+  "modelo": "Los Simpson",
+  "foto_orden": 2
+ },
+ {
+  "codigo": "Bz0916",
+  "nombre": "Tortugas Ninja Slime",
+  "titulo": "Buzo Cuello Redondo Tortugas Ninja Slime Premium Niños Bz0916",
+  "marca": "Tortugas Ninja",
+  "modelo": "Tortugas Ninja",
+  "foto_orden": 3
+ },
+ {
+  "codigo": "Bz0917",
+  "nombre": "My Dad Is My Hero",
+  "titulo": "Buzo Cuello Redondo My Dad Is My Hero Premium Niños Bz0917",
+  "marca": "Marvel",
+  "modelo": "Marvel",
+  "foto_orden": 4
+ },
+ {
+  "codigo": "Bz0918",
+  "nombre": "Tanjiro Kamado",
+  "titulo": "Buzo Cuello Redondo Tanjiro Kamado Premium Niños Bz0918",
+  "marca": "Demon Slayer",
+  "modelo": "Demon Slayer",
+  "foto_orden": 5
+ },
+ {
+  "codigo": "Bz0919",
+  "nombre": "Seiya Pegaso Rayo",
+  "titulo": "Buzo Cuello Redondo Seiya Pegaso Rayo Premium Niños Bz0919",
+  "marca": "Caballeros Del Zodiaco",
+  "modelo": "Caballeros Del Zodiaco",
+  "foto_orden": 6
+ },
+ {
+  "codigo": "Bz0920",
+  "nombre": "Bebop Y Rocksteady",
+  "titulo": "Buzo Cuello Redondo Bebop Y Rocksteady Premium Niños Bz0920",
+  "marca": "Tortugas Ninja",
+  "modelo": "Tortugas Ninja",
+  "foto_orden": 7
+ },
+ {
+  "codigo": "Bz0921",
+  "nombre": "Animal Kingdom",
+  "titulo": "Buzo Cuello Redondo Animal Kingdom Premium Niños Bz0921",
+  "marca": "Disney",
+  "modelo": "Disney",
+  "foto_orden": 8
+ },
+ {
+  "codigo": "Bz0922",
+  "nombre": "Butch Hartman",
+  "titulo": "Buzo Cuello Redondo Butch Hartman Premium Niños Bz0922",
+  "marca": "Nickelodeon",
+  "modelo": "Nickelodeon",
+  "foto_orden": 9
+ },
+ {
+  "codigo": "Bz0923",
+  "nombre": "Mickey Stormtrooper",
+  "titulo": "Buzo Cuello Redondo Mickey Stormtrooper Premium Niños Bz0923",
+  "marca": "Star Wars",
+  "modelo": "Star Wars",
+  "foto_orden": 10
+ },
+ {
+  "codigo": "Bz0924",
+  "nombre": "Seiya De Pegasus",
+  "titulo": "Buzo Cuello Redondo Seiya De Pegasus Premium Niños Bz0924",
+  "marca": "Caballeros Del Zodiaco",
+  "modelo": "Caballeros Del Zodiaco",
+  "foto_orden": 11
+ },
+ {
+  "codigo": "Bz0925",
+  "nombre": "Pokémon Navideño",
+  "titulo": "Buzo Cuello Redondo Pokémon Navideño Premium Niños Bz0925",
+  "marca": "Pokémon",
+  "modelo": "Pokémon",
+  "foto_orden": 12
+ },
+ {
+  "codigo": "Bz0926",
+  "nombre": "Avengers Caras",
+  "titulo": "Buzo Cuello Redondo Avengers Caras Premium Niños Bz0926",
+  "marca": "Marvel",
+  "modelo": "Marvel",
+  "foto_orden": 13
+ },
+ {
+  "codigo": "Bz0927",
+  "nombre": "Mickey Y Goofy",
+  "titulo": "Buzo Cuello Redondo Mickey Y Goofy Premium Niños Bz0927",
+  "marca": "Disney",
+  "modelo": "Disney",
+  "foto_orden": 14
+ },
+ {
+  "codigo": "Bz0928",
+  "nombre": "Gohan SSJ2",
+  "titulo": "Buzo Cuello Redondo Gohan SSJ2 Premium Niños Bz0928",
+  "marca": "Dragon Ball",
+  "modelo": "Dragon Ball",
+  "foto_orden": 15
+ },
+ {
+  "codigo": "Bz0929",
+  "nombre": "Mickey Safari",
+  "titulo": "Buzo Cuello Redondo Mickey Safari Premium Niños Bz0929",
+  "marca": "Disney",
+  "modelo": "Disney",
+  "foto_orden": 16
+ },
+ {
+  "codigo": "Bz0930",
+  "nombre": "Five Nights Freddy",
+  "titulo": "Buzo Cuello Redondo Five Nights Freddy Premium Niños Bz0930",
+  "marca": "Five Nights At Freddy's",
+  "modelo": "Five Nights At Freddy's",
+  "foto_orden": 17
+ },
+ {
+  "codigo": "Bz0931",
+  "nombre": "Gorillaz Noodle",
+  "titulo": "Buzo Cuello Redondo Gorillaz Noodle Premium Niños Bz0931",
+  "marca": "Gorillaz",
+  "modelo": "Gorillaz",
+  "foto_orden": 18
+ },
+ {
+  "codigo": "Bz0932",
+  "nombre": "Gorillaz Banda",
+  "titulo": "Buzo Cuello Redondo Gorillaz Banda Premium Niños Bz0932",
+  "marca": "Gorillaz",
+  "modelo": "Gorillaz",
+  "foto_orden": 19
+ },
+ {
+  "codigo": "Bz0933",
+  "nombre": "Gorillaz 2D",
+  "titulo": "Buzo Cuello Redondo Gorillaz 2D Premium Niños Bz0933",
+  "marca": "Gorillaz",
+  "modelo": "Gorillaz",
+  "foto_orden": 20
+ }
+]
