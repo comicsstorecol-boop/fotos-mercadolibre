@@ -415,7 +415,7 @@ def _tomas():
             if not glob.glob(f"{cache}/f*.jpg"):
                 os.makedirs(cache, exist_ok=True)
                 subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", clip, "-vf", f"fps=30,scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H}", "-q:v", "2", f"{cache}/f%04d.jpg"], check=True)
-            out.append(sorted(glob.glob(f"{cache}/f*.jpg")))
+            out.extend(_partir_cortes(sorted(glob.glob(f"{cache}/f*.jpg"))))
         _TOMAS["t"] = out; _TOMAS["k"] = 0
     return _TOMAS["t"]
 
@@ -442,6 +442,17 @@ def _actividad(files):
             k = e
         else: k += 1
     return idx or list(range(n))
+
+def _partir_cortes(files, minimo=45):
+    """Parte un clip donde hay un corte de cámara (cambio brusco de plano): cada plano queda como toma aparte."""
+    import numpy as np
+    g = [np.asarray(Image.open(p).convert("L").resize((64, 36)), dtype=np.float32) for p in files]
+    cortes = [k for k in range(1, len(g)) if np.abs(g[k] - g[k - 1]).mean() > 18]
+    trozos, a = [], 0
+    for c in cortes + [len(files)]:
+        if c - a >= minimo: trozos.append(files[a:c])
+        a = c
+    return trozos or [files]
 
 def narrador_escena(titulo=None, col=VERDE, sub=None, z0=1.0, z1=1.05):
     """Escena del narrador con un clip real que ARRANCA HABLANDO y avanza al ritmo de la voz
