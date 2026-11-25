@@ -12,7 +12,7 @@ PRON = {"spider-man": ("en", "Spider-Man"), "venom": ("en", "Venom"), "stan": ("
 
 G = {"productos": [
     dict(img=f"{IMG}/c1.png", nombre="MOUSE PAD HULK", precio="$19.999", nota="NACIÓ EN 1962"),
-    dict(img=f"{IMG}/c2.png", nombre="CAMISETA HULK RETRO", precio="$54.999", nota="¡ORIGINALMENTE GRIS!"),
+    dict(img=f"{IMG}/c2.png", nombre="CAMISETA HULK BLACK", precio="$54.999", nota="¡ORIGINALMENTE GRIS!"),
     dict(img=f"{IMG}/c3.png", nombre="MUG 3D HULK", precio="$84.999", nota="FRANKENSTEIN + JEKYLL"),
     dict(img=f"{IMG}/c4.png", nombre="HULK BRAND NEW DAY", precio="$254.999", nota="DE LA PELÍCULA 2026"),
     dict(img=f"{IMG}/c5.png", nombre="RED HULK MARVEL LEGENDS", precio="$289.999", nota="EL GENERAL ROSS")]}
@@ -22,7 +22,7 @@ G["fb"] = [
     ("host", "Y quédate hasta el final, porque el número cinco es un Hulk… que no es verde.", {"verde"}),
     ("p", 1, 0, "Número uno: el mouse pad de Hulk, por menos de veinte mil pesos. Perfecto para el gamer o el amigo secreto.", {"hulk", "veinte"}),
     ("host", "Hulk nació en mayo de mil novecientos sesenta y dos, creado por Stan Lee y Jack Kirby.", {"sesenta", "kirby"}, 1),
-    ("p", 2, 0, "Número dos: la camiseta retro de Hulk, por menos de cincuenta y cinco mil pesos.", {"retro", "cincuenta"}),
+    ("p", 2, 0, "Número dos: la camiseta negra con el puño de Hulk, por menos de cincuenta y cinco mil pesos.", {"puño", "cincuenta"}),
     ("p", 2, 1, "Y aquí va el dato que pocos saben: en su primer cómic Hulk era gris. La imprenta no lograba un gris parejo… y Stan Lee lo cambió a verde.", {"gris", "verde"}),
     ("host", "Hasta aquí, detalles económicos. Pero espera… porque ahora subimos de nivel.", {"nivel"}),
     ("p", 3, 0, "Número tres: el mug en tres de de Hulk, por menos de ochenta y cinco mil pesos. Café con fuerza de gigante esmeralda.", {"mug", "ochenta"}),
@@ -38,7 +38,7 @@ G["tt"] = [
     ("host", "¿Qué le regalas a un fan de Hulk esta Navidad? Cinco ideas, de menor a mayor precio. Y el último… no es verde.", {"navidad", "verde"}),
     ("p", 1, 0, "Uno: el mouse pad de Hulk, por menos de veinte mil pesos.", {"hulk", "veinte"}),
     ("host", "Hulk nació en mil novecientos sesenta y dos, creado por Stan Lee y Jack Kirby.", {"sesenta", "kirby"}, 1),
-    ("p", 2, 0, "Dos: la camiseta retro, menos de cincuenta y cinco mil. Dato: en su primer cómic, Hulk era gris.", {"retro", "gris"}),
+    ("p", 2, 0, "Dos: la camiseta negra con el puño de Hulk, menos de cincuenta y cinco mil. Dato: en su primer cómic, Hulk era gris.", {"puño", "gris"}),
     ("p", 3, 0, "Tres: el mug en tres de de Hulk, menos de ochenta y cinco mil.", {"mug", "ochenta"}),
     ("host", "Stan Lee lo creó inspirado en Frankenstein y en Jekyll y Hyde.", {"frankenstein"}, 3),
     ("p", 4, 0, "Cuatro: el Hulk salvaje de Spider-Man Brand New Day, menos de doscientos cincuenta y cinco mil.", {"salvaje", "doscientos"}),

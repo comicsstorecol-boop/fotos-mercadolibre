@@ -8,24 +8,24 @@ IMG = os.path.join(os.path.dirname(EXP), "productos", "capitan_america")
 AZUL2, ROJO2 = (50, 120, 255), (240, 40, 50)
 PRON = {"spider-man": ("en", "Spider-Man"), "venom": ("en", "Venom"), "stan": ("en", "Stan"), "lee": ("en", "Lee"), "steve": ("en", "Steve"),
         "ditko": ("en", "Ditko"), "peter": ("en", "Peter"), "parker": ("en", "Parker"), "mcfarlane": ("en", "McFarlane"), "todd": ("en", "Todd"),
-        "trucker": ("en", "trucker"), "hoodie": ("es", "júdi"), "marvel": ("en", "Marvel"), "legends": ("en", "Legends"), "comics-store": ("es", "cómics estor"), "joe": ("en", "Joe"), "simon": ("en", "Simon"), "kirby": ("en", "Kirby"), "hitler": ("es", "jitler"), "trucker": ("en", "trucker")}
+        "trucker": ("en", "trucker"), "bioworld": ("en", "Bioworld"), "hoodie": ("es", "júdi"), "marvel": ("en", "Marvel"), "legends": ("en", "Legends"), "comics-store": ("es", "cómics estor"), "joe": ("en", "Joe"), "simon": ("en", "Simon"), "kirby": ("en", "Kirby"), "hitler": ("es", "jitler"), "trucker": ("en", "trucker"), "bioworld": ("en", "Bioworld")}
 
 G = {"productos": [
-    dict(img=f"{IMG}/c1.png", nombre="MOUSE PAD CAPITÁN AMÉRICA", precio="$19.999", nota="DESDE 1941"),
-    dict(img=f"{IMG}/c2.png", nombre="GORRA TRUCKER CAPITÁN AMÉRICA", precio="$29.999", nota="CASI UN MILLÓN DE COPIAS"),
-    dict(img=f"{IMG}/c3.png", nombre="TERMO CON PITILLO CAPITÁN AMÉRICA", precio="$44.999", nota="EL ESCUDO ERA TRIANGULAR"),
+    dict(img=f"{IMG}/c1.png", nombre="GORRA TRUCKER CAPITÁN AMÉRICA", precio="$29.999", nota="DESDE 1941"),
+    dict(img=f"{IMG}/c2.png", nombre="TERMO CAPITÁN AMÉRICA", precio="$34.999", nota="CASI UN MILLÓN DE COPIAS"),
+    dict(img=f"{IMG}/c3.png", nombre="BILLETERA BIOWORLD CAPITÁN AMÉRICA", precio="$49.999", nota="EL ESCUDO ERA TRIANGULAR"),
     dict(img=f"{IMG}/c4.png", nombre="HOODIE CAPITÁN AMÉRICA", precio="$84.999", nota="REDONDO DESDE EL #2"),
     dict(img=f"{IMG}/c5.png", nombre="CAPITÁN AMÉRICA RETRO MARVEL LEGENDS", precio="$194.999", nota="EDICIÓN RETRO")]}
 
 G["fb"] = [
     ("host", "¿Tienes un fan del Capitán América en tu vida y no sabes qué regalarle esta Navidad? Aquí van cinco ideas de Comics Store… para todos los bolsillos.", {"navidad", "bolsillos"}),
     ("host", "Y quédate hasta el final, porque el número cinco es la figura retro que todo coleccionista quiere.", {"cinco"}),
-    ("p", 1, 0, "Número uno: el mouse pad del Capitán América, por menos de veinte mil pesos.", {"capitán", "veinte"}),
+    ("p", 1, 0, "Número uno: la gorra trucker del Capitán América, por menos de treinta mil pesos.", {"gorra", "treinta"}),
     ("host", "El Capitán América nació en marzo de mil novecientos cuarenta y uno, creado por Joe Simon y Jack Kirby.", {"cuarenta", "kirby"}, 1),
-    ("p", 2, 0, "Número dos: la gorra trucker del Capitán América, por menos de treinta mil pesos.", {"gorra", "treinta"}),
+    ("p", 2, 0, "Número dos: el termo del Capitán América, por menos de treinta y cinco mil pesos. Para el gimnasio o la oficina.", {"termo", "treinta"}),
     ("p", 2, 1, "En la portada de su primer cómic aparecía dándole un puño a Hitler… y ese número vendió casi un millón de copias.", {"hitler", "millón"}),
     ("host", "Hasta aquí, detalles económicos. Pero espera… porque ahora subimos de nivel.", {"nivel"}),
-    ("p", 3, 0, "Número tres: el termo con pitillo del Capitán América, por menos de cuarenta y cinco mil pesos.", {"termo", "cuarenta"}),
+    ("p", 3, 0, "Número tres: la billetera Bioworld del Capitán América, por menos de cincuenta mil pesos. Y queda una sola.", {"billetera", "cincuenta"}),
     ("host", "¿Sabías que su primer escudo no era redondo? Era triangular. Otra editorial se quejó de que se parecía a su héroe, y en el número dos lo cambiaron por el escudo circular.", {"triangular", "circular"}, 3),
     ("p", 4, 0, "Número cuatro: el hoodie del Capitán América, por menos de ochenta y cinco mil pesos. Perfecto para el frío de diciembre.", {"hoodie", "ochenta"}),
     ("p", 4, 1, "Y ese escudo redondo se volvió el símbolo del personaje: hoy lo reconoce cualquiera, fan o no fan.", {"escudo", "símbolo"}),
@@ -36,10 +36,10 @@ G["fb"] = [
 
 G["tt"] = [
     ("host", "¿Qué le regalas a un fan del Capitán América esta Navidad? Cinco ideas, de menor a mayor precio.", {"navidad", "cinco"}),
-    ("p", 1, 0, "Uno: el mouse pad del Capitán América, por menos de veinte mil pesos.", {"capitán", "veinte"}),
+    ("p", 1, 0, "Uno: la gorra trucker del Capitán América, por menos de treinta mil pesos.", {"gorra", "treinta"}),
     ("host", "El Capitán América nació en mil novecientos cuarenta y uno, creado por Joe Simon y Jack Kirby.", {"cuarenta", "kirby"}, 1),
-    ("p", 2, 0, "Dos: la gorra trucker, menos de treinta mil. Su primer cómic, de mil novecientos cuarenta y uno, vendió casi un millón de copias.", {"gorra", "millón"}),
-    ("p", 3, 0, "Tres: el termo con pitillo, menos de cuarenta y cinco mil.", {"termo", "cuarenta"}),
+    ("p", 2, 0, "Dos: el termo, menos de treinta y cinco mil. Su primer cómic vendió casi un millón de copias.", {"termo", "millón"}),
+    ("p", 3, 0, "Tres: la billetera Bioworld, menos de cincuenta mil.", {"billetera", "cincuenta"}),
     ("host", "Dato: su primer escudo era triangular. Lo cambiaron a redondo en el número dos.", {"triangular", "redondo"}, 3),
     ("p", 4, 0, "Cuatro: el hoodie del Capitán, menos de ochenta y cinco mil.", {"hoodie", "ochenta"}),
     ("host", "Y el número cinco… es para el coleccionista de verdad.", {"verdad"}),
