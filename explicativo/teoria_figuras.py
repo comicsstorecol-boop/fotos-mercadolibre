@@ -14,6 +14,9 @@ FIG_DIR = os.environ.get("FIG_DIR", "/home/claude/strange/fig2")
 KIT = os.path.dirname(HERE)
 VERDE = (60, 255, 120); NARANJA = (255, 150, 40); MORADO = (150, 90, 255); ROJO = (255, 60, 70); AZUL = (80, 150, 255); ORO = (255, 200, 70)
 
+# Entrada fija de la línea gamer (superhéroes, videojuegos, reseñas). La frase de "historias enterradas" es SOLO para terror.
+INTRO_GAMER = ("Bienvenido a Comics Store. Aquí hablamos de héroes, villanos y videojuegos como nadie te los ha contado. Empecemos.", {"comics", "store", "héroes", "videojuegos"})
+
 def P(v, h):  # elige coordenadas según formato
     return h if HZ else v
 

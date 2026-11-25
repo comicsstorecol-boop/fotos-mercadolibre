@@ -262,7 +262,7 @@ def guion_fb():
 
 def guion_yt():
     return [
-        (e_narrador(), "Hay historias que deberían permanecer enterradas… Esta noche, vamos a despertar una de ellas.", {"enterradas", "despertar"}),
+        (e_narrador(), INTRO_GAMER[0], INTRO_GAMER[1]),
         (e_doom(chip_txt="TE LO EXPLICO"), "Si dejaste Marvel después de Endgame, y hoy no entiendes nada… este video es para ti.", {"endgame", "ti"}),
         (e_portada(), "Te explico todo lo que pasó, y por qué Doctor Doom lo cambia todo.", {"doom"}),
         (e_spoilers(), "Aviso: hay spoilers de Endgame, de la serie de Loki y de Los Cuatro Fantásticos.", {"spoilers"}),
@@ -329,7 +329,7 @@ def guion_yt():
 
 if __name__ == "__main__":
     v = sys.argv[1]; out = sys.argv[2]
-    if v == "final": esc, re_ = [(e_pantalla_final(), "Te dejo aquí otro video que te va a encantar. Y si todavía no lo has hecho, suscríbete. ¡Nos vemos en el próximo despertar!", {"suscríbete"})], None
+    if v == "final": esc, re_ = [(e_pantalla_final(), "Te dejo aquí otro video que te va a encantar. Y si todavía no lo has hecho, suscríbete. ¡Nos vemos en el próximo video!", {"suscríbete"})], None
     else: esc, re_ = {"tt": guion_tt, "fb": guion_fb, "yt": guion_yt}[v]()
     if os.environ.get("HOJA"):
         tiles = []
