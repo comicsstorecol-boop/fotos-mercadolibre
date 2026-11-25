@@ -330,7 +330,7 @@ FB = [
 RE_FB = [1, 7, 16]
 
 YT = [
-    (e_narrador(), "Hay historias que deberían permanecer enterradas… Esta noche, vamos a despertar una de ellas.", {"enterradas", "despertar"}),
+    (e_narrador(), INTRO_GAMER[0], INTRO_GAMER[1]),
     (e_strange_hilos(chip_txt="14.000.605 FUTUROS"), "Doctor Strange vio catorce millones seiscientos cinco futuros. Y solo en uno, los Vengadores ganaban.", {"catorce", "uno"}),
     (e_doom(), "Pero, ¿y si en ese único futuro… el verdadero enemigo no era Thanos, sino Doctor Doom?", {"doom"}),
     (e_portada(), "Esta es la teoría de Strange y Doom.", {"teoría"}),
@@ -407,7 +407,7 @@ def e_pantalla_final():
             place(c, L, x, P(1100, 640), alpha=u)
         particulas(c, t, VERDE, n=30); return c
     return S("pantalla_final", f)
-FINAL = [(e_pantalla_final(), "Te dejo aquí otro video que te va a encantar. Y si todavía no lo has hecho, suscríbete. ¡Nos vemos en el próximo despertar!", {"suscríbete"})]
+FINAL = [(e_pantalla_final(), "Te dejo aquí otro video que te va a encantar. Y si todavía no lo has hecho, suscríbete. ¡Nos vemos en el próximo video!", {"suscríbete"})]
 
 if __name__ == "__main__":
     v = sys.argv[1]; out = sys.argv[2]
