@@ -54,36 +54,61 @@ class NarradorVideo:
         return m[i] * (1 - a) + m[j] * a
 
     def planificar(self, lv, lead, nf):
-        T = np.zeros(nf); off = int(round(lead * 30)) - 1     # la boca se adelanta 1 cuadro a la voz
+        """Velocidad real (24 fps del clip), sin acelerar. Solo se cambia de tramo en las pausas de la voz,
+        con fundido suave; cada frase se reproduce de corrido desde el tramo cuya boca mejor la sigue."""
+        T = np.zeros(nf); off = int(round(lead * 30)) - 1
         for f in range(nf):
             k = f - off
             if 0 <= k < len(lv): T[f] = lv[k]
         T = np.clip(T / max(.35, np.percentile(T[T > 0], 85) if (T > 0).any() else 1), 0, 1)
-        plan = []; cur = None
-        for f0 in range(0, nf, K):
-            n = min(K, nf - f0); tgt = T[f0:f0 + n]; idx = np.arange(n); best = None
-            if cur is not None:   # seguir donde va, cambiando un poco la velocidad
-                c, s = cur
-                for r in RATES:
-                    pos = s + r * (idx + 1)
-                    if pos[-1] >= len(self.clips[c]["m"]) - 1: continue
-                    cost = np.abs(self._M(c, pos) - tgt).mean() + .5 * abs(r - .8) ** 2
-                    if best is None or cost < best[0]: best = (cost, c, pos, False)
-            for c, cl in enumerate(self.clips):   # o saltar a otro tramo (con fundido)
-                m = cl["m"]; L = len(m); starts = np.arange(0, L - int(n * .8) - 2, 2)
-                if not len(starts): continue
-                P = starts[:, None] + .8 * idx[None, :]; Mv = self._M(c, P)
-                cost = np.abs(Mv - tgt[None, :]).mean(1) + .05 * self.uso[c][starts] + (.10 if cur is None or cur[0] == c else .38) * (cur is not None)
+        habla = T > .08; tramos = []; f = 0           # tramos: frases y pausas (pausas cortas < 0,3 s se unen a la frase)
+        while f < nf:
+            g = f
+            while g < nf and habla[g] == habla[f]: g += 1
+            tramos.append([f, g, bool(habla[f])]); f = g
+        uni = []
+        for t in tramos:
+            if uni and (not t[2] and t[1] - t[0] < 9 or uni[-1][2] == t[2] or (not uni[-1][2] and uni[-1][1] - uni[-1][0] < 9)):
+                uni[-1][1] = t[1]; uni[-1][2] = uni[-1][2] or t[2]
+            else: uni.append(t)
+        piezas = []   # frases largas: partir en huecos entre palabras (piezas de 0,8 s o más) para seguir mejor la boca
+        for a, b, h in uni:
+            if not h or b - a < 48: piezas.append((a, b, h)); continue
+            ini = a
+            while b - ini >= 48:
+                seg = T[ini + 24:min(b - 24, ini + 60)]
+                if not len(seg): break
+                cut = ini + 24 + int(np.argmin(seg)); piezas.append((ini, cut, h)); ini = cut
+            piezas.append((ini, b, h))
+        uni = piezas
+        R = .8; plan = []; cur = None
+        for a, b, _ in uni:
+            n = b - a; tgt = T[a:b]; idx = np.arange(n); best = None
+            for c, cl in enumerate(self.clips):
+                L = len(cl["m"]); maxs = L - 2 - R * n
+                if maxs < 0: continue
+                starts = np.arange(0, maxs + 1, 1.0); P = starts[:, None] + R * idx[None, :]
+                cost = np.abs(self._M(c, P) - tgt[None, :]).mean(1) + .04 * self.uso[c][starts.astype(int)]
+                if cur is not None: cost = cost + (.06 if cur[0] == c else .35)
+                if cur is not None and cur[0] == c:   # seguir de corrido sin corte si viene bien
+                    cont = cur[1] + R
+                    if cont <= maxs:
+                        cc = np.abs(self._M(c, cont + R * idx) - tgt).mean() + .04 * self.uso[c][int(cont)]
+                        if best is None or cc < best[0]: best = (cc, c, cont, False)
                 j = int(np.argmin(cost))
-                if best is None or cost[j] < best[0]: best = (float(cost[j]), c, P[j], cur is not None)
-            _, c, pos, salto = best
+                if best is None or cost[j] < best[0]: best = (float(cost[j]), c, float(starts[j]), cur is not None)
+            if best is None:   # frase más larga que cualquier clip: recorrer el más largo en bucle
+                c = int(np.argmax([len(cl["m"]) for cl in self.clips])); L = len(self.clips[c]["m"]) - 2
+                best = (0, c, 0., cur is not None); pos = (R * idx) % L
+            else: pos = best[2] + R * idx
+            _, c, _, salto = best
             for i, p in enumerate(pos):
                 fade = None
-                if salto and i < 5 and cur is not None:
-                    pc, ps = cur; fade = (pc, min(ps + .8 * (i + 1), len(self.clips[pc]["frames"]) - 1), (i + 1) / 6)
+                if salto and i < 8 and cur is not None:
+                    pc, ps = cur; fade = (pc, min(ps + R * (i + 1), len(self.clips[pc]["frames"]) - 1), (i + 1) / 9)
                 plan.append((c, float(p), fade))
             cur = (c, float(pos[-1]))
-            u = self.uso[c]; a, b = int(pos[0]), int(pos[-1]) + 1; u *= .97; u[max(0, a - 12):b + 12] += 1
+            u = self.uso[c]; u *= .9; u[max(0, int(pos[0]) - 24):int(pos[-1]) + 24] += 1
         return plan
 
     # ------------------------------------------------------------------ cuadros
