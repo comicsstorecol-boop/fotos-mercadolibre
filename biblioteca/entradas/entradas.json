@@ -1,0 +1,14 @@
+{
+  "entrada_gamer": {
+    "uso": "Línea gamer: superhéroes, videojuegos, reseñas, teorías, tops (Comics Store)",
+    "narrador": "encapuchado en el set gamer neón (clips biblioteca/narrador/gamer)",
+    "frase": "Bienvenido a Comics Store. Aquí hablamos de héroes, villanos y videojuegos como nadie te los ha contado. Empecemos.",
+    "cierre": "¡Nos vemos en el próximo video!"
+  },
+  "entrada_terror": {
+    "uso": "Historias de terror, misterios y reseñas de películas de terror",
+    "narrador": "presentador encapuchado de terror (vela, relámpagos, humo)",
+    "frase": "Hay historias que deberían permanecer enterradas… Esta noche, vamos a despertar una de ellas.",
+    "cierre": "¡Nos vemos en el próximo despertar!"
+  }
+}
