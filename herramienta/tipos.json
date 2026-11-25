@@ -84,5 +84,18 @@
     "modelo_es_marca": true,
     "prefijo": "Bz",
     "contador": "contador-buzos.txt"
+  },
+  "camibuso-hombre": {
+    "descripcion": "Camibuso (camiseta manga larga) hombre negro, tallas S, M, L, XL. Mismo consecutivo Cs que camisetas adulto.",
+    "plantilla": "plantillas/camiseta-adulto.xlsx",
+    "titulo": "Camibuso Hombre {nombre} {codigo}",
+    "fijos": {
+      "Stock": 6,
+      "Código de la guía": "3178659 - CAMISETAS HOMBRE",
+      "Tipo de manga": "Larga",
+      "Tipo de cuello": "Redondo",
+      "Descripción": "¡Descubre la Comodidad en Cada Hilo!\n¡Despierta tu estilo con nuestro camibuso manga larga de algodón premium! Con colores vibrantes y un tacto suave, esta prenda se convertirá en tu nueva favorita para los días frescos.\n\n- Camibuso manga larga cuello redondo.\n\n- Estampado de alta calidad y durabilidad.\n\n- Tela 100% algodón, suave y cómoda.\n\n- Estilo unisex de corte recto.\n\n- Este producto es exclusivo, no está disponible en tiendas."
+    },
+    "modelo_es_marca": true
   }
 }
