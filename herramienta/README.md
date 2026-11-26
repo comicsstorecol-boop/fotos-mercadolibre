@@ -33,3 +33,4 @@ Nuevo archivo de 160 camisetas en tandas de 20 (`acumulado-adulto-desde-Cs3099.j
 - OBLIGATORIO: antes de entregar cada Excel, abrir las URLs en Chrome (cuadrícula con código + nombre) y verificar que cada foto coincide con su nombre. Las URLs pueden venir corridas o repetidas.
 - Tanda 2: las URLs venían corridas (Dragon Ball 1984 y Bunbury repetidas; sin URL Los Auténticos Decadentes y Si Vis Pacem). Se rehizo como Cs3119-Cs3136 antes de publicar; esas 2 quedan en pendiente-camiseta-adulto.json.
 - Tanda 5: Pablo Escobar Confidential dejado por fuera (pendiente-camiseta-adulto.json, ya con URL), pendiente de decisión de Fernando.
+- Archivo camisetas hombre desde Cs3099 cerró con 159 (Cs3099-Cs3257) por decisión de Fernando; Pablo Escobar descartado. Siguiente consecutivo Cs3258.
