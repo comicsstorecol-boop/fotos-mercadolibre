@@ -146,7 +146,8 @@ def _fig(nombre, h):
 
 COLOR_FIG = {"doom": VERDE, "strange": (255, 165, 40), "thanos": (180, 90, 255), "iron": ORO, "cap": (70, 140, 255), "loki": (170, 255, 60),
              "thor": (120, 200, 255), "wolverine": (255, 220, 40), "magneto": (235, 60, 200), "xavier": (170, 120, 255), "reed": (60, 210, 255),
-             "cuatro": (60, 210, 255), "cosa": (255, 140, 40), "hulk": (110, 255, 70), "wanda": (255, 50, 90)}
+             "cuatro": (60, 210, 255), "cosa": (255, 140, 40), "hulk": (110, 255, 70), "wanda": (255, 50, 90), "antorcha": (255, 120, 30), "sue": (130, 210, 255), "namor": (40, 230, 190),
+             "surfer": (200, 225, 255), "panther": (170, 90, 255), "galactus": (255, 60, 170), "mefisto": (255, 40, 40)}
 def color_de(nombre, defecto=VERDE):
     return COLOR_FIG.get(nombre.split("_")[0], defecto)
 
@@ -318,7 +319,9 @@ def comic(c, x, y, t, titulo="SECRET WARS", sub="2015", num="#1", col=VERDE, anc
     for yy in range(int(alto * .3), alto - 20, 22):
         for xx in range(20, ancho - 20, 22): rr = 2 + 5 * (yy / alto); d.ellipse((xx - rr, yy - rr, xx + rr, yy + rr), fill=(90, 50, 150, 255))
     d.rectangle((14, 14, ancho - 15, int(alto * .26)), fill=(255, 220, 40, 255))
-    ft = F(int(ancho * .15)); d.text((ancho / 2, alto * .13), titulo, font=ft, fill=(210, 20, 40, 255), anchor="mm", stroke_width=3, stroke_fill=(60, 0, 10, 255))
+    fs = int(ancho * .15)
+    while fs > 12 and d.textlength(titulo, font=F(fs)) > ancho * .86: fs -= 2
+    ft = F(fs); d.text((ancho / 2, alto * .13), titulo, font=ft, fill=(210, 20, 40, 255), anchor="mm", stroke_width=3, stroke_fill=(60, 0, 10, 255))
     cx, cy, rr = ancho / 2, alto * .6, ancho * .3
     for i, cc in enumerate([(70, 90, 200), (190, 60, 110), (60, 170, 120), (220, 150, 60)]): d.pieslice((cx - rr, cy - rr, cx + rr, cy + rr), i * 90 + 20, i * 90 + 110, fill=cc + (255,))
     d.ellipse((cx - rr, cy - rr, cx + rr, cy + rr), outline=tuple(col) + (255,), width=6)
@@ -477,6 +480,11 @@ def _narrador_gamer():
             k = np.arange(len(v)); ok = ~np.isnan(v); v = np.interp(k, k[ok], v[ok]); v = np.convolve(v, [.25, .5, .25], "same"); crudos.append(v[:len(cl["frames"])])
         todo = np.concatenate(crudos); lo, hi = np.percentile(todo, 10), np.percentile(todo, 97)
         for cl, v in zip(nv.clips, crudos): cl["m"] = np.clip((v - lo) / max(1e-6, hi - lo), 0, 1)
+        # variedad entre videos: cada video arranca con otras tomas (SEMILLA distinta por tema)
+        semilla = os.environ.get("SEMILLA")
+        if semilla:
+            rng = np.random.default_rng(abs(hash(semilla)) % (2 ** 32))
+            for c_, cl in enumerate(nv.clips): nv.uso[c_] += rng.uniform(0, 4)
         _NV["nv"] = nv
     return _NV["nv"]
 
