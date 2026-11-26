@@ -147,7 +147,8 @@ def _fig(nombre, h):
 COLOR_FIG = {"doom": VERDE, "strange": (255, 165, 40), "thanos": (180, 90, 255), "iron": ORO, "cap": (70, 140, 255), "loki": (170, 255, 60),
              "thor": (120, 200, 255), "wolverine": (255, 220, 40), "magneto": (235, 60, 200), "xavier": (170, 120, 255), "reed": (60, 210, 255),
              "cuatro": (60, 210, 255), "cosa": (255, 140, 40), "hulk": (110, 255, 70), "wanda": (255, 50, 90), "antorcha": (255, 120, 30), "sue": (130, 210, 255), "namor": (40, 230, 190),
-             "surfer": (200, 225, 255), "panther": (170, 90, 255), "galactus": (255, 60, 170), "mefisto": (255, 40, 40), "yelena": (150, 230, 200), "gambit": (255, 70, 170), "ciclope": (255, 70, 60)}
+             "surfer": (200, 225, 255), "panther": (170, 90, 255), "galactus": (255, 60, 170), "mefisto": (255, 40, 40), "yelena": (150, 230, 200), "gambit": (255, 70, 170), "ciclope": (255, 70, 60),
+             "blackbolt": (190, 170, 255), "bestia": (90, 130, 255)}
 def color_de(nombre, defecto=VERDE):
     return COLOR_FIG.get(nombre.split("_")[0], defecto)
 
