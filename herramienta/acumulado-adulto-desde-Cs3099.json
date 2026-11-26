@@ -544,5 +544,19 @@
   "marca": "Dragon Ball",
   "modelo": "Dragon Ball Goku Ozaru Silueta",
   "fotos": "https://http2.mlstatic.com/D_NQ_NP_657003-MCO120721209904_112026-F.jpg"
+ },
+ {
+  "codigo": "Cs3177",
+  "titulo": "Camiseta Los Auténticos Decadentes Cs3177",
+  "marca": "Los Auténticos Decadentes",
+  "modelo": "Los Auténticos Decadentes",
+  "fotos": "https://http2.mlstatic.com/D_NQ_NP_806545-MCO122505381845_112026-F.jpg"
+ },
+ {
+  "codigo": "Cs3178",
+  "titulo": "Camiseta Si Vis Pacem Para Bellum Emperador Romano Cs3178",
+  "marca": "FandomVerse",
+  "modelo": "Si Vis Pacem Para Bellum Emperador Romano",
+  "fotos": "https://http2.mlstatic.com/D_NQ_NP_810231-MCO122505381859_112026-F.jpg"
  }
 ]
