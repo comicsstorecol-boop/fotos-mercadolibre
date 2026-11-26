@@ -75,7 +75,7 @@ def e_pizarra(error=False):
             k = eo(pr(t, .9, .5)); cx, cy = x0 + 60 + 170, y0 + 70 + bh * .27 + 30
             ImageDraw.Draw(c).ellipse((cx - 210 * k, cy - 70 * k, cx + 210 * k, cy + 70 * k), outline=(255, 50, 50, 255), width=9)
             texto(c, "ERROR", cx, cy + P(115, 105), P(64, 64), ROJO, alpha=eo(pr(t, 1.2, .3)), glow_col=ROJO)
-        figura(c, "reed_estira" if error else "doom_pie3", P(W * .5, W * .86), PISO, P(560, 520), t, "der", retraso=.3, alpha=P(.9, 1), reflejo=False)
+        figura(c, "reed_pie" if error else "doom_pie3", P(W * .5, W * .86), PISO, P(560, 520), t, "der", retraso=.3, alpha=P(.9, 1), reflejo=False)
         return zoom(c, t, d, 1.0, 1.08)
     return S("pizarra", f)
 
@@ -141,7 +141,7 @@ def bloques():
         L(e_doom("doom_magia", "EL VILLANO MÁS PELIGROSO"), "Hoy te traigo al villano más peligroso de Marvel. Más inteligente que Reed Richards, más orgulloso que Thanos… y dentro de poco, con la cara de Tony Stark.", "peligroso", "tony"),
         L(e_impacto("ASÍ NACIÓ\nDOOM", VERDE, "doom", fig="doom_pie3"), "Esta es la historia completa de Víctor von Doom. Así nació Doom.", "doom"),
         L(e_comic("1962", "#5", fig="doom_brazos", titulo="FANTASTIC 4"), "Apareció por primera vez en mil novecientos sesenta y dos, en Los Cuatro Fantásticos número cinco, creado por Stan Lee y Jack Kirby.", "sesenta", "kirby"),
-        L(e_dos("reed_estira", "doom_pie2", "EL RIVAL DE REED", "azul", chip_col=VERDE), "Nació para ser el gran rival de Reed Richards. Pero su historia empieza mucho antes… en la nieve.", "rival", "nieve"),
+        L(e_dos("reed_legends", "doom_pie2", "EL RIVAL DE REED", "azul", chip_col=VERDE), "Nació para ser el gran rival de Reed Richards. Pero su historia empieza mucho antes… en la nieve.", "rival", "nieve"),
         L(e_grupo(["doom_vuelo", "sue_pie", "surfer_tabla"], "FIGURAS DE COMICS STORE", "mistico", VERDE), "Y ojo: todas las figuras que vas a ver son de nuestra tienda, Comics Store.", "figuras", "comics", "store"),
     ]
     B["cap1"] = [
@@ -168,22 +168,22 @@ def bloques():
         L(e_capitulo(2, "EL GENIO Y SU RIVAL", (80, 200, 255), "azul"), "Capítulo dos. El genio y su rival.", "genio", "rival"),
         L(e_fig("doom_pie3", "CIENCIA + MAGIA", "doom", efecto="hilos"), "Víctor creció mezclando dos cosas que nadie había unido: la ciencia y la magia. Era un genio.", "ciencia", "magia"),
         L(e_foto(5, chip_txt="UNIVERSIDAD ESTATAL IMPERIO", mov=1), "Tanto, que una universidad de Estados Unidos le ofreció una beca: la Universidad Estatal Imperio.", "beca", "imperio"),
-        L(e_dos("reed_estira", "doom_pie3", "REED RICHARDS", "azul", chip_col=(80, 200, 255)), "Allí conoce a otro estudiante igual de brillante: Reed Richards.", "reed"),
+        L(e_dos("reed_pie2", "doom_pie3", "REED RICHARDS", "azul", chip_col=(80, 200, 255)), "Allí conoce a otro estudiante igual de brillante: Reed Richards.", "reed"),
         L(e_fig("cosa_pie", "BEN GRIMM", "azul"), "Y también a su compañero de cuarto, Ben Grimm. Sí: el que después sería la Cosa.", "ben", "cosa"),
-        L(e_dos("reed_estira", "doom_pie2", "¿AMIGOS O RIVALES?", "azul", vs=True), "Reed quería ser su amigo. Víctor solo veía a alguien que podía ser mejor que él.", "amigo", "mejor"),
+        L(e_dos("reed_herbie", "doom_pie2", "¿AMIGOS O RIVALES?", "azul", vs=True), "Reed quería ser su amigo. Víctor solo veía a alguien que podía ser mejor que él.", "amigo", "mejor"),
         L(e_fig("doom_pie3", "UN PRODIGIO PELIGROSO", "azul"), "Sus profesores lo veían como un prodigio… pero también como alguien peligroso. Víctor no buscaba amigos: buscaba resultados.", "prodigio", "peligroso"),
-        L(e_fig("reed_estira", "HUMILDE Y QUERIDO", "azul"), "Reed, en cambio, era humilde y le caía bien a todo el mundo. Eso a Víctor le molestaba todavía más.", "humilde"),
+        L(e_fig("reed_pie", "HUMILDE Y QUERIDO", "azul"), "Reed, en cambio, era humilde y le caía bien a todo el mundo. Eso a Víctor le molestaba todavía más.", "humilde"),
         L(e_foto(6, chip_txt="LA MÁQUINA", mov=1, particula=VERDE), "En secreto, Víctor construye una máquina para comunicarse con el otro lado.", "máquina"),
         L(e_foto(6, chip_txt="RESCATAR A SU MADRE", mov=4, particula=VERDE), "No era un experimento cualquiera: era su forma de llegar al infierno y rescatar a su madre.", "infierno", "madre"),
         L(e_pizarra(False), "Reed revisa los planos de su compañero…", "planos"),
         L(e_pizarra(True), "…y encuentra un error en los cálculos. Se lo advierte. Pero Víctor es demasiado orgulloso para escucharlo.", "error", "orgulloso"),
         L(e_foto(7, chip_txt="¡BOOM!", sacude=True, oscuro=.1), "Enciende la máquina… y explota.", "explota"),
         L(e_impacto("LA CICATRIZ", ROJO, "rojo", fig="doom_pie2"), "La explosión le deja una cicatriz en la cara. Y lo expulsan de la universidad.", "cicatriz", "expulsan"),
-        L(e_dos("doom_pie3", "reed_estira", "LA CULPA ES DE REED", "doom", chip_col=VERDE), "Desde ese día, culpa a Reed de todo. Aunque el error fue suyo.", "culpa", "suyo"),
-        L(e_grupo(["reed_estira", "sue_pie", "antorcha_pie", "cosa_pie"], "LOS RAYOS CÓSMICOS", "azul", (80, 200, 255)), "Años después, Reed, Ben, Sue y Johnny viajan al espacio, los alcanzan los rayos cósmicos y ganan sus poderes.", "espacio", "poderes"),
-        L(e_dos("reed_estira", "doom_pie2", "HÉROE Y VILLANO", "doom", vs=True), "Víctor ve cómo su rival se convierte en héroe… mientras él se convierte en el villano.", "héroe", "villano"),
+        L(e_dos("doom_pie3", "reed_legends", "LA CULPA ES DE REED", "doom", chip_col=VERDE), "Desde ese día, culpa a Reed de todo. Aunque el error fue suyo.", "culpa", "suyo"),
+        L(e_grupo(["reed_pie2", "sue_pie", "antorcha_pie", "cosa_pie"], "LOS RAYOS CÓSMICOS", "azul", (80, 200, 255)), "Años después, Reed, Ben, Sue y Johnny viajan al espacio, los alcanzan los rayos cósmicos y ganan sus poderes.", "espacio", "poderes"),
+        L(e_dos("reed_herbie", "doom_pie2", "HÉROE Y VILLANO", "doom", vs=True), "Víctor ve cómo su rival se convierte en héroe… mientras él se convierte en el villano.", "héroe", "villano"),
         L(e_dos("cosa_pie", "antorcha_pie", "60 AÑOS DE RIVALIDAD", "azul", chip_col=(255, 120, 30)), "Esa rivalidad se volvió el corazón de Los Cuatro Fantásticos por más de sesenta años.", "sesenta"),
-        L(e_dos("reed_estira", "doom_libro", "LAS DOS MENTES MÁS BRILLANTES", "azul", chip_col=ORO), "Y aunque se enfrentan una y otra vez, en el fondo se respetan: son las dos mentes más brillantes de Marvel.", "mentes", "brillantes"),
+        L(e_dos("reed_pie", "doom_libro", "LAS DOS MENTES MÁS BRILLANTES", "azul", chip_col=ORO), "Y aunque se enfrentan una y otra vez, en el fondo se respetan: son las dos mentes más brillantes de Marvel.", "mentes", "brillantes"),
         L(e_detalle(), "Y aquí hay un detalle que muchos no saben: en varias versiones, la cicatriz era pequeña.", "detalle", "pequeña"),
         L(e_narrador(), "Lo que de verdad le destruyó la cara vino después. Y fue decisión suya.", "después", "decisión"),
     ]
@@ -204,13 +204,13 @@ def bloques():
         L(e_fig("doom_vuelo", "CAMPOS DE FUERZA · RAYOS · VUELO", "doom", efecto="hilos"), "Su armadura tiene campos de fuerza, dispara rayos y le permite volar. Y además es uno de los hechiceros más poderosos de Marvel.", "armadura", "hechiceros"),
         L(e_fig("doom_libro", "SU HEREDERO: KRISTOFF", "doom"), "Incluso adoptó a un niño llamado Kristoff, y lo nombró su heredero.", "kristoff", "heredero"),
         L(e_fig("doom_pie3", "“DOOM NO SE EQUIVOCA”", "doom"), "Su orgullo es tan grande que habla de sí mismo en tercera persona. Para él, Doom nunca se equivoca.", "orgullo", "tercera"),
-        L(e_dos("doom_pie2", "reed_estira", "DEMOSTRAR QUE ES MEJOR", "doom", chip_col=VERDE), "Y detrás de todo, siempre la misma obsesión: demostrar que es más inteligente que Reed Richards.", "obsesión", "reed"),
+        L(e_dos("doom_pie2", "reed_legends", "DEMOSTRAR QUE ES MEJOR", "doom", chip_col=VERDE), "Y detrás de todo, siempre la misma obsesión: demostrar que es más inteligente que Reed Richards.", "obsesión", "reed"),
         L(e_fig("doom_magia", "EL PRECIO DEL PODER", "rojo", sacude=True), "Y para conseguir más magia, llegó a sacrificar a Valeria, su primer amor. Así de lejos puede llegar.", "valeria", "sacrificar"),
         L(e_narrador(), "Ahora sí: ¿qué tan poderoso llegó a ser? Te va a sorprender.", "poderoso"),
     ]
     B["cap4"] = [
         L(e_capitulo(4, "DOOM CONTRA TODOS", VERDE, "doom"), "Capítulo cuatro. Doom contra todos.", "todos"),
-        L(e_grupo(["reed_estira", "sue_poder", "antorcha_vuelo", "cosa_pie"], "SUS ENEMIGOS DE SIEMPRE", "azul", (80, 200, 255)), "Su primera obsesión: los Cuatro Fantásticos. Reed, Sue, Johnny y Ben.", "cuatro", "fantásticos"),
+        L(e_grupo(["reed_pie2", "sue_poder", "antorcha_vuelo", "cosa_pie"], "SUS ENEMIGOS DE SIEMPRE", "azul", (80, 200, 255)), "Su primera obsesión: los Cuatro Fantásticos. Reed, Sue, Johnny y Ben.", "cuatro", "fantásticos"),
         L(e_grupo(["cap_pelea", "wolverine_garras", "thor_hacha"], "CONTRA TODOS", "rojo", ROJO), "Pero con los años se enfrentó a casi todos: a los Vengadores, a los X-Men, a Spider-Man… y a veces, a todos al mismo tiempo.", "vengadores", "todos"),
         L(e_foto(6, "doom_brazos", "LA MÁQUINA DEL TIEMPO", mov=2, lado="d", particula=VERDE), "En su primera aparición, obliga a los Cuatro Fantásticos a viajar en el tiempo con su máquina para robar un tesoro.", "tiempo", "tesoro"),
         L(e_dos("namor_vortice", "doom_brazos", "ALIANZA CON NAMOR", "azul", chip_col=(40, 230, 190)), "Ya en Los Cuatro Fantásticos número seis, se alía con Namor, el rey de los mares, para destruirlos.", "namor"),
@@ -230,7 +230,7 @@ def bloques():
         L(e_comic("2015", "#1", fig="doom_metal", titulo="SECRET WARS"), "En las Guerras Secretas de dos mil quince, el multiverso se destruye.", "multiverso"),
         L(e_battleworld(chip_txt="BATTLEWORLD"), "Doom salva lo que queda, y crea un solo planeta: Battleworld. Él es su Dios Emperador.", "battleworld", "emperador"),
         L(e_dos("strange_magia", "doom_trono2", "SU MANO DERECHA", "doom", chip_col=NARANJA), "Doctor Strange es su mano derecha… hasta que Doom lo mata.", "strange", "mata"),
-        L(e_dos("doom_libro", "reed_estira", "“LO HABRÍAS HECHO MEJOR”", "azul", chip_col=ORO), "Al final, Reed lo derrota. Y Doom admite que Reed lo habría hecho mejor.", "reed", "mejor"),
+        L(e_dos("doom_libro", "reed_herbie", "“LO HABRÍAS HECHO MEJOR”", "azul", chip_col=ORO), "Al final, Reed lo derrota. Y Doom admite que Reed lo habría hecho mejor.", "reed", "mejor"),
         L(e_fig("doom_pie3", "SU CARA, CURADA", "mistico"), "Y al terminar esa historia, su cara por fin queda curada.", "curada"),
         L(e_dos("iron_mk42", "doom_pie3", "INFAMOUS IRON MAN", "rojo", chip_col=ORO), "Y lo más loco: en dos mil dieciséis, Doom se pone una armadura de Iron Man e intenta ser un héroe.", "iron", "héroe"),
         L(e_fig("iron_rodilla", "DOOM = IRON MAN", "rojo"), "Con Tony Stark fuera de combate, Víctor toma su lugar.", "tony"),
@@ -263,7 +263,7 @@ def bloques():
         L(e_fig("doom_pie3", "“VIDAS ROBADAS”", "doom"), "Por eso Doom les dice que han vivido vidas robadas, y que ahora deben devolverlas.", "robadas", "devolverlas"),
         L(e_fig("sue_poder", "“ANTES ERA DISTINTO”", "azul"), "Sue Storm cuenta que Doom antes era distinto… hasta que le quitaron todo lo que amaba.", "distinto", "amaba"),
         L(e_fig("cap_sincasco", "LAS CONSECUENCIAS", "azul"), "Y Steve Rogers tendrá que enfrentar lo que hizo con las gemas. En el tráiler deja a Peggy y a su hijo para irse con los Cuatro Fantásticos.", "steve", "peggy"),
-        L(e_grupo(["cap_martillo", "panther_pie", "reed_estira", "magneto_pie"], "LA MAYOR REUNIÓN", "azul", ORO), "Contra él se juntan los Vengadores, Wakanda, los Nuevos Avengers, los Cuatro Fantásticos y los X-Men originales.", "vengadores", "x-men"),
+        L(e_grupo(["cap_martillo", "panther_pie", "reed_pie", "magneto_pie"], "LA MAYOR REUNIÓN", "azul", ORO), "Contra él se juntan los Vengadores, Wakanda, los Nuevos Avengers, los Cuatro Fantásticos y los X-Men originales.", "vengadores", "x-men"),
         L(e_foto(14, "doom_libro", "EL JUEZ", mov=0), "Por primera vez, el villano no llega a destruir a los héroes… llega a juzgarlos.", "juzgarlos"),
         L(e_impacto("TEORÍA", ORO, "mistico"), "Y ojo, esto es teoría: algunos creen que Doom perdió a una hija por culpa de los Vengadores.", "teoría", "hija"),
         L(e_battleworld(chip_txt="¿DIOS EMPERADOR?"), "Otros creen que buscará convertirse en Dios Emperador, como en los cómics.", "emperador"),
@@ -319,7 +319,7 @@ def guion_short(n):
     esc, _ = guion_yt()
     if n == 1: return _short(L(e_impacto("UN PACTO CON\nEL DIABLO", ROJO, "rojo", fig="mefisto_trono"), "La madre de Doctor Doom hizo un pacto con el diablo… y así empezó todo.", "diablo"),
                              _tramo(esc, "Pero antes de todo eso", "Vengarse de los que"))
-    if n == 2: return _short(L(e_impacto("EL ERROR\nQUE REED VIO", (80, 200, 255), "azul", fig="reed_estira"), "Reed Richards vio el error que creó a Doctor Doom… y nadie lo escuchó.", "error"),
+    if n == 2: return _short(L(e_impacto("EL ERROR\nQUE REED VIO", (80, 200, 255), "azul", fig="reed_legends"), "Reed Richards vio el error que creó a Doctor Doom… y nadie lo escuchó.", "error"),
                              _tramo(esc, "Tanto, que una universidad", "La explosión le deja") + _tramo(esc, "Desde ese día, culpa", "Desde ese día, culpa"))
     if n == 3: return _short(L(e_impacto("SE LA PUSO\nAL ROJO VIVO", (255, 90, 30), "rojo", fig="doom_pie3"), "Doctor Doom se puso su máscara todavía al rojo vivo. Esta es la razón.", "rojo"),
                              _tramo(esc, "Y aquí hay un detalle", "Lo que de verdad") + _tramo(esc, "Víctor viajó por el mundo", "Derrocó al rey"))
