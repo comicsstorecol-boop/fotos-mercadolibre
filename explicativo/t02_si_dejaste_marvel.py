@@ -41,8 +41,9 @@ def e_dos(a, b, chip_txt=None, pal="mistico", vs=False, chip_col=None):
     def f(t, d):
         c = cosmos(t, pal)
         mw = P(W * .5, W * .4)
-        figura(c, a, P(W * .28, W * .3), PISO, h_fit(a, FH * .9, mw), t, "izq")
-        figura(c, b, P(W * .73, W * .7), PISO, h_fit(b, FH * .9, mw), t, "der", retraso=.15)
+        hc = min(h_fit(a, FH * .9, mw), h_fit(b, FH * .9, mw))   # misma escala para ambos
+        figura(c, a, P(W * .28, W * .3), PISO, hc, t, "izq")
+        figura(c, b, P(W * .73, W * .7), PISO, hc, t, "der", retraso=.15)
         if vs: texto(c, "VS", W / 2, P(760, 450), P(150, 150), (255, 255, 255), alpha=eo(pr(t, .3, .3)), glow_col=color_de(b)); rayos_velocidad(c, t, color_de(a))
         if chip_txt: chip(c, chip_txt, W / 2, P(1840, 1010), chip_col or color_de(a), P(44, 42), eo(pr(t, .6, .3)))
         return zoom(c, t, d, 1.0, 1.07)
@@ -52,9 +53,10 @@ def e_grupo(figs, chip_txt=None, pal="azul", chip_col=VERDE, alto=None):
     def f(t, d):
         c = cosmos(t, pal); n = len(figs); h = alto or P(700 if n <= 2 else 620, 620)
         m = P(.2, .2) if n > 2 else P(.27, .3); mw = W * (1 - 2 * m) / max(1, n - 1) * 1.15 if n > 1 else W * .8
+        hc = min(h_fit(fg, h, mw) for fg in figs)   # misma escala para todo el grupo
         for i, fg in enumerate(figs):
             x = W * (m + (1 - 2 * m) * i / max(1, n - 1)) if n > 1 else W / 2
-            hh = h_fit(fg, h * (1 if i % 2 == 0 else .92), mw)
+            hh = hc * (1 if i % 2 == 0 else .92)
             figura(c, fg, x, PISO - (0 if i % 2 == 0 else P(60, 40)), hh, t, "sube", retraso=i * .12)
         if chip_txt: chip(c, chip_txt, W / 2, P(560, 1010), chip_col, P(44, 42), eo(pr(t, .7, .3)))
         return zoom(c, t, d, 1.0, 1.06)

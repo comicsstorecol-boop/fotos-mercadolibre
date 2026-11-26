@@ -1,3 +1,4 @@
+import clima
 """Comics Store · "Así nació Doom" (Parte 1) — YouTube 12-14 min + 4 shorts sacados del mismo guion.
 Uso: FORMATO=horizontal python3 t03_asi_nacio_doom.py yt salida.mp4
      python3 t03_asi_nacio_doom.py s1|s2|s3|s4 salida.mp4      (shorts verticales)
@@ -299,10 +300,21 @@ def sonorizar(esc):
         if a: fn.amb = a
     return esc
 
+FOTO_CLIMA = {1: "nieve+fogata", 2: "nieve+viento+noche", 3: "velas", 4: "infierno", 5: "noche+lluvia", 6: "noche", 7: "explosion+fuego",
+              8: "viento", 9: "forja", 10: "tormenta", 11: "antorchas", 12: "noche", 13: "explosion", 14: None}
+CLAVE_CLIMA = [("nieve", "nieve"), ("tormenta", "tormenta"), ("centinelas", "trueno"), ("explota", "explosion"), ("mefisto", "infierno"), ("infierno", "infierno")]
+
+def climatizar(esc):
+    """Efecto visual (lluvia, nieve, viento, parpadeo de noche, brasas) según la imagen o el texto."""
+    for fn, txt, _ in esc:
+        if getattr(fn, "foto", None): fn.clima = FOTO_CLIMA.get(fn.foto)
+        elif fn.__name__ != "narrador": fn.clima = next((v for k, v in CLAVE_CLIMA if k in txt.lower()), None)
+    return clima.envolver(esc)
+
 def guion_yt():
     B = bloques(); esc = []
     for k in ("intro", "cap1", "cap2", "cap3", "cap4", "cap5", "cap6", "cierre"): esc += B[k]
-    sonorizar(esc)
+    sonorizar(esc); esc = climatizar(esc)
     re_ = [i for i, e in enumerate(esc) if e[0].__name__ == "narrador" and i > 0]
     return esc, re_
 
