@@ -32,9 +32,11 @@ G["tt"] = [
     ("p", 3, 0, "Tres: la figura de Naruto, menos de setenta mil.", {"figura", "setenta"}),
     ("host", "El niño que soñaba con ser Hokage… y lo logró.", {"hokage"}, 3),
     ("p", 4, 0, "Cuatro: el peluche de Kurama, el zorro de nueve colas, menos de ochenta y cinco mil.", {"kurama", "colas"}),
+    ("host", "El zorro que vivía sellado dentro de Naruto… y terminó siendo su mejor aliado.", {"aliado"}, 4),
     VERDAD_TT,
     ("p", 5, 0, "Cinco: el morral de espalda de Naruto, menos de ciento cuarenta mil.", {"morral", "ciento"}),
     ("host", "Para las misiones ninja de todos los días. ¿Cuál escoges?", {"misiones"}, 5),
+    TT_EXTRA,
     CIERRE_TT]
 if __name__ == "__main__":
     correr(S, G, ((255, 140, 0), (60, 140, 255)), {"naruto": ("es", "naruto"), "akatsuki": ("es", "akatsuki"), "shonen": ("es", "shónen"), "jump": ("en", "Jump"),

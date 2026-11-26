@@ -31,10 +31,12 @@ G["tt"] = [
     ("host", "El rayo de Barry Allen, que llegó en mil novecientos cincuenta y seis.", {"barry"}, 2),
     ("p", 3, 0, "Tres: el hoodie de Flash, menos de ochenta y cinco mil.", {"hoodie", "ochenta"}),
     ("p", 4, 0, "Cuatro: Flash Super Powers, estilo retro de los ochenta, menos de ciento setenta mil.", {"super", "retro"}),
+    ("host", "Un homenaje a los juguetes clásicos de los años ochenta, con todo y empaque.", {"homenaje"}, 4),
     VERDAD_TT,
     ("p", 5, 0, "Cinco: Flash de Justice League Task Force, menos de ciento noventa mil.", {"task", "ciento"}),
     ("host", "Es Wally West, del videojuego de mil novecientos noventa y cinco. Y trae una pieza de Darkseid.", {"wally", "darkseid"}, 5),
     ("host", "¿Cuál de los cinco escoges?", {"escoges"}, 5),
+    TT_EXTRA,
     CIERRE_TT]
 if __name__ == "__main__":
     correr(S, G, ((255, 40, 30), (255, 210, 0)), {"flash": ("en", "Flash"), "mouse": ("en", "mouse"), "pad": ("en", "pad"), "jay": ("en", "Jay"), "garrick": ("en", "Garrick"),

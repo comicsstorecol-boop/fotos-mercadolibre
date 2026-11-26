@@ -16,3 +16,4 @@ CIERRE_TT = ("cierre", "Todos están en comics-store punto com punto co. ¿Cuál
 NIVEL = ("host", "Hasta aquí, detalles económicos. Pero espera… porque ahora subimos de nivel.", {"nivel"})
 VERDAD = ("host", "Y ahora sí… el regalo para el coleccionista de verdad.", {"verdad"})
 VERDAD_TT = ("host", "Y el número cinco… es para el coleccionista de verdad.", {"verdad"})
+TT_EXTRA = ("host", "Guarda este video para tu lista de Navidad… y compártelo con quien te va a dar el regalo.", {"guarda", "compártelo"})

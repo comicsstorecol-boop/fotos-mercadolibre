@@ -31,9 +31,11 @@ G["tt"] = [
     ("host", "Su película del Tren Infinito sigue siendo la más taquillera de Japón.", {"tren"}, 2),
     ("p", 3, 0, "Tres: la figura de Zenitsu, que pelea mejor dormido, menos de cien mil.", {"dormido", "cien"}),
     ("p", 4, 0, "Cuatro: el juego de seis figuras, con todo el equipo, menos de ciento veinticinco mil.", {"seis", "equipo"}),
+    ("host", "Tanjiro, Nezuko, Zenitsu, Inosuke, Giyu y Shinobu, en una sola caja.", {"nezuko"}, 4),
     VERDAD_TT,
     ("p", 5, 0, "Cinco: Muzan Kibutsuji, el rey de los demonios, menos de ciento cuarenta y cinco mil.", {"muzan", "demonios"}),
     ("host", "El villano que todo fan ama odiar. ¿Cuál escoges?", {"odiar"}, 5),
+    TT_EXTRA,
     CIERRE_TT]
 if __name__ == "__main__":
     correr(S, G, ((40, 210, 160), (255, 100, 150)), {"demon": ("en", "Demon"), "slayer": ("en", "Slayer"), "kimetsu": ("es", "kimetsu"), "yaiba": ("es", "yaiba"),

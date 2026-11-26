@@ -28,11 +28,14 @@ G["tt"] = [
     ("p", 1, 0, "Uno: la camiseta de Groot buscado, menos de cincuenta y cinco mil.", {"groot", "cincuenta"}),
     ("host", "Dato: Groot empezó en mil novecientos sesenta como un monstruo del Planeta X.", {"monstruo"}, 1),
     ("p", 2, 0, "Dos: el Groot bailarín, menos de ciento cincuenta mil.", {"bailarín", "ciento"}),
+    ("host", "Baila al ritmo de la música, como en la película. El rey del escritorio.", {"baila"}, 2),
     ("p", 3, 0, "Tres: Star-Lord de Marvel Legends, menos de ciento sesenta y cinco mil.", {"star-lord", "ciento"}),
+    ("host", "Star-Lord debutó en mil novecientos setenta y seis, en la revista Marvel Preview.", {"setenta"}, 3),
     ("p", 4, 0, "Cuatro: Rocket. Su nombre viene de la canción Rocky Raccoon, de los Beatles.", {"rocket", "beatles"}),
     ("host", "Y el número cinco… la villana que se volvió heroína.", {"heroína"}),
     ("p", 5, 0, "Cinco: Nebula, la hija de Thanos, menos de ciento setenta y cinco mil.", {"nebula", "thanos"}),
     ("host", "¿Cuál es tu favorito de los Guardianes?", {"favorito"}, 5),
+    TT_EXTRA,
     CIERRE_TT]
 if __name__ == "__main__":
     correr(S, G, ((255, 120, 40), (190, 80, 255)), {"groot": ("es", "grut"), "star-lord": ("en", "Star-Lord"), "rocket": ("en", "Rocket"), "rocky": ("en", "Rocky"), "raccoon": ("en", "Raccoon"), "beatles": ("en", "Beatles"), "nebula": ("en", "Nebula"), "thanos": ("es", "tanos"), "preview": ("en", "Preview")})

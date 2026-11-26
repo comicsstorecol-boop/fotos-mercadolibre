@@ -31,9 +31,11 @@ G["tt"] = [
     ("host", "Hal Jordan llegó en mil novecientos cincuenta y nueve: un piloto de pruebas.", {"hal", "piloto"}, 2),
     ("p", 3, 0, "Tres: Hal Jordan de Page Punchers, menos de cien mil. ¡Y trae su cómic!", {"punchers", "cómic"}),
     ("p", 4, 0, "Cuatro: la alcancía de Green Lantern, menos de ciento setenta y cinco mil.", {"alcancía", "ciento"}),
+    ("host", "Un busto de Hal Jordan que además guarda tus ahorros.", {"busto", "ahorros"}, 4),
     VERDAD_TT,
     ("p", 5, 0, "Cinco: Isamot Kol, de la Tropa de los Linternas Verdes, menos de ciento setenta y cinco mil.", {"isamot", "tropa"}),
     ("host", "Sale en la película de dos mil once. Una pieza rara. ¿Cuál escoges?", {"rara"}, 5),
+    TT_EXTRA,
     CIERRE_TT]
 if __name__ == "__main__":
     correr(S, G, ((40, 230, 80), (230, 230, 240)), {"green": ("en", "Green"), "lantern": ("en", "Lantern"), "alan": ("en", "Alan"), "scott": ("en", "Scott"),

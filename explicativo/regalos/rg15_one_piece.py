@@ -28,6 +28,7 @@ G["tt"] = [
     ("p", 1, 0, "Uno: la camiseta de Luffy en Gear cinco, menos de cincuenta y cinco mil.", {"gear", "cincuenta"}),
     ("host", "Dato: One Piece empezó en mil novecientos noventa y siete, creado por Eiichiro Oda.", {"oda"}, 1),
     ("p", 2, 0, "Dos: la figura de Luffy con base, menos de sesenta y cinco mil.", {"luffy", "sesenta"}),
+    ("host", "El pirata de goma que sueña con ser el Rey de los Piratas.", {"rey"}, 2),
     ("p", 3, 0, "Tres: Roronoa Zoro, el de las tres espadas, menos de cien mil.", {"zoro", "cien"}),
     ("host", "Y sí: una de las espadas la sostiene con la boca.", {"boca"}, 3),
     ("p", 4, 0, "Cuatro: la taza tres de del sombrero de paja, menos de ciento veinte mil.", {"taza", "ciento"}),
@@ -35,6 +36,7 @@ G["tt"] = [
     VERDAD_TT,
     ("p", 5, 0, "Cinco: Shanks, el que le regaló el sombrero a Luffy, menos de ciento ochenta y cinco mil.", {"shanks", "sombrero"}),
     ("host", "¿Cuál de los cinco escoges?", {"escoges"}, 5),
+    TT_EXTRA,
     CIERRE_TT]
 if __name__ == "__main__":
     correr(S, G, ((235, 45, 45), (255, 205, 50)), {"one": ("en", "One"), "piece": ("en", "Piece"), "luffy": ("es", "lufi"), "gear": ("en", "Gear"), "shonen": ("es", "shónen"),

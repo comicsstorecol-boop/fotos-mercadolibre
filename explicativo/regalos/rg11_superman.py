@@ -30,11 +30,13 @@ G["tt"] = [
     ("p", 2, 0, "Dos: la camiseta del escudo, menos de cuarenta y cinco mil.", {"escudo", "cuarenta"}),
     ("host", "¿Sabías que al principio Superman no volaba? Solo saltaba edificios.", {"volaba"}, 2),
     ("p", 3, 0, "Tres: el hoodie negro de Superman, menos de noventa mil.", {"hoodie", "noventa"}),
+    ("host", "Negro con la S roja: elegante y poderoso.", {"poderoso"}, 3),
     ("host", "Y en las películas modernas, su S significa esperanza.", {"esperanza"}, 3),
     ("p", 4, 0, "Cuatro: el Superman de Christopher Reeve, de la película de mil novecientos setenta y ocho.", {"reeve", "setenta"}),
     VERDAD_TT,
     ("p", 5, 0, "Cinco: Superman de Page Punchers, menos de doscientos veinte mil. ¡Y trae su propio cómic!", {"punchers", "cómic"}),
     ("host", "¿Cuál de los cinco escoges?", {"escoges"}, 5),
+    TT_EXTRA,
     CIERRE_TT]
 if __name__ == "__main__":
     correr(S, G, ((235, 40, 40), (60, 130, 255)), {"superman": ("en", "Superman"), "action": ("en", "Action"), "comics": ("en", "Comics"), "jerry": ("en", "Jerry"),
