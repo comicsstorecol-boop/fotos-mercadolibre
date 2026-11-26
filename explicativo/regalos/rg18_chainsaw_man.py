@@ -31,9 +31,11 @@ G["tt"] = [
     ("host", "Dato: el manga de Tatsuki Fujimoto empezó en dos mil dieciocho.", {"fujimoto"}, 2),
     ("p", 3, 0, "Tres: el peluche de Chainsaw Man, menos de setenta y cinco mil. Tierno… con motosierras.", {"peluche", "motosierras"}),
     ("p", 4, 0, "Cuatro: la figura con Pochita, menos de cien mil.", {"figura", "pochita"}),
+    ("host", "Viene con su caja y su base para exhibir.", {"caja"}, 4),
     ("host", "La película del Arco de Reze superó los diez mil millones de yenes en Japón.", {"reze"}, 4),
     VERDAD_TT,
     ("p", 5, 0, "Cinco: la figura Chainsaw Man dos, menos de cien mil.", {"figura", "cien"}),
+    ("host", "Y en Estados Unidos fue número uno en taquilla dos fines de semana seguidos.", {"número"}, 5),
     ("host", "¿Cuál de los cinco escoges?", {"escoges"}, 5),
     TT_EXTRA,
     CIERRE_TT]
