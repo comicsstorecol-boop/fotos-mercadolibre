@@ -270,7 +270,7 @@ def guion_short(n):
     if n == 2: return _short(L(e_impacto("EL VILLANO\nDETRÁS DE TODO", VERDE, "doom", fig="doom_magia"), "El villano que estaba detrás de la destrucción del multiverso… era alguien que conoces.", "villano"),
                              _tramo(esc, "Ella venía de otro universo", "Rabum Alal. El Gran") + _tramo(esc, "Las Black Swans lo atraparon", "Doom había viajado") + _tramo(esc, "Y descubrió la verdad", "…y los usaron como"))
     if n == 3: return _short(L(e_impacto("NAMOR DESTRUYÓ\nUN PLANETA", (40, 230, 190), "azul", fig="namor_tridente"), "Namor hizo lo que ningún héroe se atrevía: destruir un planeta entero.", "planeta"),
-                             _tramo(esc, "Todos dudaron. Todos", "Y Black Panther, que ya odiaba") + _tramo(esc, "Cuando los Illuminati decidieron rendirse", "Y a diferencia de los Illuminati"))
+                             _tramo(esc, "Todos dudaron. Todos", "Héroes contra héroes") + _tramo(esc, "Cuando los Illuminati decidieron rendirse", "Y a diferencia de los Illuminati"))
     if n == 4: return _short(L(e_impacto("ESTO PUEDE PASAR\nEN DOOMSDAY", ORO, "doom", fig="doom_pie4"), "Esto que pasó en los cómics… podría llegar a Avengers Doomsday.", "doomsday"),
                              _tramo(esc, "Una incursión es el choque", "Después de ocho horas") + _tramo(esc, "Ahí, el Reed Richards", "Muchos fans creen"))
 
