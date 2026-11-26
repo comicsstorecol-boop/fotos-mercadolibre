@@ -66,3 +66,4 @@ Objetivo: Fernando da un TEMA → salen 3 videos listos para publicar:
 - PROPORCIÓN: figuras que comparten escena usan la MISMA altura (la menor que quepa) — e_dos/e_grupo. Nunca escalar cada figura por separado.
 - CLIMA VISUAL (explicativo/clima.py): lluvia, relámpagos, nieve, viento, parpadeo de noche, brasas/fuego, destello de explosión. Por escena con fn.clima (mapa FOTO_CLIMA por imagen + CLAVE_CLIMA por palabra) y `esc = clima.envolver(esc)`.
 - SERIE "CAMINO A DOOMSDAY" (10 caps, plan en el proyecto: claude/Serie_Camino_a_Doomsday.md). Cap 3 = explicativo/t04_illuminati.py (importa t03 y cambia IMG_DIR/SEMILLA). Fondos en biblioteca/fondos/illuminati. Figuras nuevas: blackbolt_mano/pie, bestia_mcu/clasico/ruge/estatua.
+- Cap 4 Incursiones = explicativo/t05_incursiones.py (fondos biblioteca/fondos/incursiones; figura nueva molecula_pie). Escenas nuevas: e_reloj (cuenta regresiva), e_dilema, e_revela (silueta que se revela), e_moleculas.
