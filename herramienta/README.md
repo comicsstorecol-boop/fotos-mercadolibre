@@ -41,3 +41,4 @@ Nuevo archivo de 160 (tandas de 20): acumulado-adulto-desde-Cs3258.json. Verific
 
 ## Archivo buzos hombre cuello redondo desde Bz0950
 Nuevo archivo de 200 (tandas de 20): acumulado-buzo-adulto-cuello-redondo-desde-Bz0950.json. Tandas generadas: Bz0950-Bz1147 (198/200). Tanda 10: AHS repetido quitado; faltó URL de Optimus Prime Vegeta (en pendiente) y vino URL extra de René Magritte (publicado Bz1147). Tanda 8: Zurg repetido quitado (19 buzos). Tanda 5: URLs 7-8 y 17-18 venían cruzadas, se emparejaron por foto. Verificar fotos en Chrome antes de entregar.
+- Archivo buzos hombre cuello redondo desde Bz0950 CERRADO con 198 (Bz0950-Bz1147) por decisión de Fernando; Excel completo generado. Optimus Prime Vegeta queda pendiente sin URL. Siguiente Bz1148.
