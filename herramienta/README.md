@@ -40,4 +40,4 @@ Nuevo archivo de 160 (tandas de 20): acumulado-adulto-desde-Cs3258.json. Verific
 - Archivo camisetas hombre desde Cs3258 cerró con 154 (Cs3258-Cs3411) por decisión de Fernando. Siguiente Cs3412.
 
 ## Archivo buzos hombre cuello redondo desde Bz0950
-Nuevo archivo de 200 (tandas de 20): acumulado-buzo-adulto-cuello-redondo-desde-Bz0950.json. Tandas generadas: Bz0950-Bz1069 (120/200). Tanda 5: URLs 7-8 y 17-18 venían cruzadas, se emparejaron por foto. Verificar fotos en Chrome antes de entregar.
+Nuevo archivo de 200 (tandas de 20): acumulado-buzo-adulto-cuello-redondo-desde-Bz0950.json. Tandas generadas: Bz0950-Bz1089 (140/200). Tanda 5: URLs 7-8 y 17-18 venían cruzadas, se emparejaron por foto. Verificar fotos en Chrome antes de entregar.
