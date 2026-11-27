@@ -38,3 +38,6 @@ Nuevo archivo de 160 camisetas en tandas de 20 (`acumulado-adulto-desde-Cs3099.j
 ## Archivo camisetas hombre desde Cs3258
 Nuevo archivo de 160 (tandas de 20): acumulado-adulto-desde-Cs3258.json. Verificar siempre fotos en Chrome antes de entregar.
 - Archivo camisetas hombre desde Cs3258 cerró con 154 (Cs3258-Cs3411) por decisión de Fernando. Siguiente Cs3412.
+
+## Archivo buzos hombre cuello redondo desde Bz0950
+Nuevo archivo de 200 (tandas de 20): acumulado-buzo-adulto-cuello-redondo-desde-Bz0950.json. Tanda 1 (Bz0950-Bz0969) identificada en pendiente-buzo-adulto-cuello-redondo.json, esperando URLs. Verificar fotos en Chrome antes de entregar.
