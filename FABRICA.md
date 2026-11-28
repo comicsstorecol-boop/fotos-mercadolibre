@@ -75,3 +75,7 @@ Objetivo: Fernando da un TEMA → salen 3 videos listos para publicar:
 - `recortador/` (adaptado de claude-shorts, MIT): saca shorts verticales de un video largo. Transcribe por palabra (Parakeet vía sherpa-onnx en la nube, faster-whisper en el PC), Claude elige tramos con `RUBRICA_claude-shorts.md`, cortes ajustados a frases y silencios, karaoke neón con colores de `marca.json`, gancho arriba y cierre "VIDEO COMPLETO EN NUESTRO CANAL" + sitio. Con `--guion` los subtítulos salen exactos. Preparar con `RECORTADOR=1 ./setup.sh`. Ver `recortador/README.md`.
 - `referencias/motion/` (iart-ai, MIT): reglas de gráficas animadas, carrera de barras, tipografía cinética, subtítulos y cuenta regresiva. `herramientas/hoja_contacto.sh` para revisar inicio|mitad|final.
 - Revisados y NO integrados: ffmpeg-skill (repite lo que ya hace el kit), ghost-editor (es para videos grabados hablando a cámara), HyperFrames/MotionClone/Three.js (otra tecnología, no aportan a los formatos aprobados), yt-dlp (solo para contenido propio).
+
+## VOZ PERMANENTE (28-nov-2026)
+- Fernando aprobó como voz fija de TODOS los videos (cortos, largos, shorts) la voz Kokoro "Alex" DIRECTA, sin convertir a su voz clonada y sin ecualizador/eco (`VOZ_MODO=alex`, por defecto en generador.tts_engine).
+- Acento latino por defecto (`VOZ_ACENTO=es-419`, seseo); `VOZ_ACENTO=es` = España (θ). `VOZ_MODO=clonada` vuelve a la voz kNN-VC anterior (necesita VOZ_KEY en setup.sh).
