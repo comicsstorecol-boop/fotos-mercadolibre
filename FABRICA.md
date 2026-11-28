@@ -81,3 +81,10 @@ Objetivo: Fernando da un TEMA → salen 3 videos listos para publicar:
 - Acento por defecto `VOZ_ACENTO=es` (exactamente la voz de la prueba short_01 que Fernando aprobó el 28-nov; pronuncia z/ce/ci como θ). `VOZ_ACENTO=es-419` = latino (seseo). `VOZ_MODO=clonada` vuelve a la voz kNN-VC anterior (necesita VOZ_KEY en setup.sh).
 - NARRADOR LIPSYNC (lo definitivo): cada frase del narrador se guarda como audio fijo en biblioteca/narrador/gamer/lipsync/<clave>.wav (+ .txt). Fernando lo sube a Higgsfield → Lipsync Studio con la imagen del narrador (gamer_narrador_h/_v.png) y devuelve el video; se guarda como <clave>_h.mp4 o <clave>_v.mp4 y la escena lo reproduce tal cual (boca real, sin cortes). Sin video lipsync, cae al editor v2. La ENTRADA es siempre la misma frase: clave 9220b8e1f0.
 - PRON: desde el 28-nov PRON_BASE pone en inglés los nombres de cómics; en guiones nuevos NO redefinir esas palabras en PRON (se sobreescriben con la versión en español).
+
+## Entrada y narrador (aprobado por Fernando, 28-nov-2026, desde Cap. 6 Camino a Doomsday)
+- El video de YouTube empieza con 2 s de plano general quieto y sin sonido: `biblioteca/narrador/gamer/plano_general_2s.mp4` (se pega al inicio al hacer el concat, igual que la pantalla final).
+- Luego la intro del narrador con primeros planos y cortes (1.ª escena del narrador, sin restricción).
+- Desde la 2.ª aparición del narrador: solo plano abierto (h1_0, h2_0), sin primeros planos ni acercamientos (`NARR_PLANO=abierto`, por defecto).
+- Voz "B": VOZ_MODO=clonada, VOZ_ACENTO=es-419, VOZ_BLEND=0.42,0.56,0.6,0.50 (mitad Fernando, mitad Alex). El caché de frases del narrador incluye modo/acento/mezcla en la clave.
+- "X-Men" se pronuncia en inglés: PRON {"x-men": ("en", "X-Men")}.

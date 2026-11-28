@@ -543,11 +543,13 @@ def _planificar_v2(self, lv, lead, nf):
     if not hasattr(self, "_hist"): self._hist = []
     nombres = getattr(self, "_noms", [str(i) for i in range(len(self.clips))])
     cam = [1 if n.startswith("cv") else 0 for n in nombres]
+    self._ncall = getattr(self, "_ncall", 0) + 1   # la 1.ª escena (intro) conserva primeros planos; desde la 2.ª, solo plano abierto
+    abiertos = set(os.environ.get("NARR_ABIERTOS", "h1_0,h2_0").split(",")) if (self._ncall > 1 and os.environ.get("NARR_PLANO", "abierto") == "abierto" and any(n.startswith("h") for n in nombres)) else set()
     STEP, MIN, LA = 6, 36, 42
 
     def mis(c, pos, tgt):
         m = self._M(c, pos); dif = m - tgt
-        w = np.where((tgt > .3) & (m < tgt - .12), 3.0, 1.0) * np.where((tgt < .08) & (m > .45), 1.6, 1.0)
+        w = np.where((tgt > .3) & (m < tgt - .12), 4.0, 1.0) * np.where((tgt < .08) & (m > .45), 1.6, 1.0)
         return float((np.abs(dif) * w).mean())
 
     def reuso(c, a, b):
@@ -572,15 +574,20 @@ def _planificar_v2(self, lv, lead, nf):
                 if pos[-1] >= len(self.clips[c]["m"]) - 1: continue
                 cost = mis(c, pos, tgt) + (.002 * (run - 120) if run > 120 else 0)
                 if best is None or cost < best[0]: best = (cost, c, pos, False)
-        puede_cortar = cur is None or best is None or (run >= MIN and nf - f0 >= 24)
+        quieta = False
+        if best is not None and not best[3]:
+            mm = self._M(best[1], best[2]); quieta = bool(((tgt > .35) & (mm < .16)).sum() >= 2)
+        puede_cortar = cur is None or best is None or (run >= MIN and nf - f0 >= 24) or (quieta and run >= 12 and nf - f0 >= 12)
+        if quieta and best is not None: best = (best[0] + .25, best[1], best[2], best[3])
         if puede_cortar:
             la = min(LA, nf - f0); tg2 = T_[f0:f0 + la]; i2 = np.arange(la)
             for c, cl in enumerate(self.clips):
                 if cur is not None and c == cur[0] and best is not None: continue
+                if abiertos and nombres[c] not in abiertos: continue  # solo plano abierto, mismo encuadre (Fernando, 28-nov)
                 L = len(cl["m"]); starts = np.arange(0, L - max(la, MIN + 6) - 2, 2)
                 if not len(starts): continue
                 Pm = starts[:, None] + 1.0 * i2[None, :]; Mv = self._M(c, Pm); dif = Mv - tg2[None, :]
-                w = np.where((tg2[None, :] > .3) & (Mv < tg2[None, :] - .12), 3.0, 1.0) * np.where((tg2[None, :] < .08) & (Mv > .45), 1.6, 1.0)
+                w = np.where((tg2[None, :] > .3) & (Mv < tg2[None, :] - .12), 4.0, 1.0) * np.where((tg2[None, :] < .08) & (Mv > .45), 1.6, 1.0)
                 cost = (np.abs(dif) * w).mean(1) + .04 * self.uso[c][starts]
                 cost = cost + np.array([reuso(c, a, a + la) for a in starts])
                 if cur is not None:

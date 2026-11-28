@@ -3,6 +3,7 @@ Uso: FORMATO=horizontal python3 t07_xmen.py yt salida.mp4  |  python3 t07_xmen.p
 Imágenes en IMG_DIR: 01 mansión, 02 hangar con jet, 03 sala de entrenamiento, 04 robots gigantes en ruinas, 05 ave de fuego cósmica, 06 multitud protestando."""
 import os, sys
 os.environ.setdefault("SEMILLA", "xmen")
+os.environ.setdefault("VOZ_MODO", "clonada"); os.environ.setdefault("VOZ_ACENTO", "es-419"); os.environ.setdefault("VOZ_BLEND", "0.42,0.56,0.6,0.50")  # voz "B": mitad Fernando, mitad Alex (aprobada 28-nov)
 os.environ.setdefault("IMG_DIR", "/home/claude/xmen/img")
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import clima
@@ -17,7 +18,7 @@ PRON = {w.lower(): ("en", w) for w in ["Xavier", "Jean", "Grey", "Rogue", "Kitty
         "Lee", "Stan", "Jack", "Kirby", "Hugh", "Jackman", "Patrick", "Stewart", "Ian", "McKellen", "James", "Marsden", "Rebecca", "Romijn",
         "Alan", "Cumming", "Kelsey", "Grammer", "Channing", "Tatum", "Fox", "Giant-Size", "Thunderbird", "Ororo", "Guinness", "Kelly", "Jennifer",
         "Lawrence", "Marvels", "Krakoa", "Scott", "Summers", "Carol", "Danvers", "Logan", "Oscar", "Dark", "Phoenix", "Jonathan", "Hickman", "BAMF", "John", "Byrne", "Russo", "Infinity", "War", "Endgame"]}
-PRON.update({"x-men": ("es", "équis men"), "x2": ("es", "équis dos"), "x-men,": ("es", "équis men")})
+PRON.update({"x-men": ("en", "X-Men"), "x2": ("en", "X2"), "x-men,": ("en", "X-Men")})
 AMX = (255, 200, 30)
 COLORES = (AMX, (90, 160, 255))
 
@@ -199,7 +200,7 @@ def guion_short(n):
     if n == 1: return _short(L(e_impacto("¿POR QUÉ\nMUTANTES?", AMX, "azul", fig="xavier_silla"), "¿Sabes por qué los X-Men nacieron con sus poderes?", "poderes"),
                              _tramo(esc, "Los X-Men aparecieron en septiembre", "Cíclope dispara") + _tramo(esc, "Xavier soñaba", "Protegían a un mundo"))
     if n == 2: return _short(L(e_impacto("8 MILLONES\nDE COPIAS", ORO, "azul", fig="ciclope_pie"), "El cómic más vendido de la historia es de los X-Men.", "vendido"),
-                             _tramo(esc, "En mil novecientos noventa y uno, X-Men", "Y en mil novecientos noventa y cuatro"))
+                             _tramo(esc, "Luego llegó el guionista", "Y con Claremont llegaron") + _tramo(esc, "En mil novecientos noventa y uno, X-Men", "Capítulo ocho. En el cine"))
     if n == 3: return _short(L(e_impacto("FÉNIX\nOSCURA", (255, 100, 30), "rojo", fig="fenix_alas"), "La heroína que destruyó una estrella entera.", "estrella"),
                              _tramo(esc, "Jean Grey, telépata", "Y en ese mismo número") + _tramo(esc, "Jean Grey se sacrificó para salvar", "Una muerte que cambió") + _tramo(esc, "La saga de Fénix Oscura se llevó", "En marzo de dos mil"))
     if n == 4: return _short(L(e_impacto("LOS X-MEN\nVUELVEN", VERDE, "doom", fig="wolverine_garras"), "Los X-Men originales del cine vuelven en Avengers Doomsday.", "vuelven"),
@@ -208,6 +209,7 @@ def guion_short(n):
 if __name__ == "__main__":
     v = sys.argv[1]; out = sys.argv[2]
     if v == "yt": esc, re_ = guion_yt()
+    elif v == "intro": esc, re_ = guion_yt()[0][:8], None
     else: esc, re_ = guion_short(int(v[1])), None
     if os.environ.get("CONTAR"):
         print(v, len(esc), "escenas", sum(len(e[1].split()) for e in esc), "palabras"); sys.exit()

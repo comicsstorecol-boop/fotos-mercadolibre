@@ -47,7 +47,7 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
     for fn, txt, clave in ESCENAS:
         a = None
         if fn.__name__ == "narrador":   # frase del narrador: audio fijo en disco (para lipsync en Higgsfield) y video lipsync si existe
-            os.makedirs(LIPS, exist_ok=True); key = hashlib.sha1(txt.strip().encode()).hexdigest()[:10]; wav = os.path.join(LIPS, key + ".wav")
+            os.makedirs(LIPS, exist_ok=True); key = hashlib.sha1((os.environ.get("VOZ_MODO", "alex") + ":" + os.environ.get("VOZ_ACENTO", "es") + ":" + os.environ.get("VOZ_BLEND", "") + ":" + txt.strip()).encode()).hexdigest()[:10]; wav = os.path.join(LIPS, key + ".wav")
             if os.path.exists(wav): a, _sr = sf.read(wav, dtype="float32")
             else:
                 a = speak(txt, pron) if pron else speak(txt); sf.write(wav, a, SR); open(os.path.join(LIPS, key + ".txt"), "w").write(txt)
