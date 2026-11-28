@@ -31,5 +31,16 @@ if [ -n "$VOZ_KEY" ] && [ -f "$KIT/voz_fernando.enc" ]; then
 else
   echo "AVISO: sin VOZ_KEY se usa la voz genérica"
 fi
+# Recortador de shorts (opcional: RECORTADOR=1 ./setup.sh). Transcripción por palabra con
+# Parakeet TDT v3 (habla español) vía sherpa-onnx; se baja de GitHub (~490 MB).
+if [ "$RECORTADOR" = "1" ]; then
+  $PIP sherpa-onnx opencv-python-headless 2>/dev/null || pip install -q sherpa-onnx opencv-python-headless
+  M="$KIT/recortador/modelo"; mkdir -p "$M"
+  if ! ls "$M"/sherpa-onnx-nemo-parakeet*/encoder*.onnx >/dev/null 2>&1; then
+    cd "$M" && curl -sL -o p.tar.bz2 $GH/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2 \
+      && tar xjf p.tar.bz2 && rm p.tar.bz2
+  fi
+  echo "Recortador listo"
+fi
 which ffmpeg >/dev/null || echo "FALTA ffmpeg"
 echo "Kit listo"
