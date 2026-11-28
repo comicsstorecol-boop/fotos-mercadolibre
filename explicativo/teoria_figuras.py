@@ -595,11 +595,38 @@ def _planificar_v2(self, lv, lead, nf):
     cerrar()
     return plan
 
+_LIP = {}
+def _lipsync_cuadro(f, t, d):
+    """Si existe un video lipsync de Higgsfield para esta frase (biblioteca/narrador/gamer/lipsync/<clave>_h.mp4 / _v.mp4),
+    se reproduce tal cual, sincronizado con el audio fijo de la frase: boca real, sin cortes."""
+    key = getattr(f, "lipkey", None)
+    if not key: return None
+    base = os.path.join(KIT, "biblioteca", "narrador", "gamer", "lipsync", key)
+    orden = ("_h.mp4", "_v.mp4", ".mp4") if HZ else ("_v.mp4", "_h.mp4", ".mp4")
+    src = next((base + e for e in orden if os.path.exists(base + e)), None)
+    if not src: return None
+    if src not in _LIP:
+        import subprocess, glob as _g
+        dd = f"/tmp/lips/{os.path.basename(src)[:-4]}_{W}x{H}"; os.makedirs(dd, exist_ok=True)
+        if not os.listdir(dd):
+            subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", src, "-vf", f"fps=30,scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H}", "-q:v", "2", f"{dd}/%05d.jpg"], check=True)
+        _LIP[src] = sorted(_g.glob(f"{dd}/*.jpg"))
+    fr = _LIP[src]; lead = getattr(f, "lead", .15)
+    k = int(min(len(fr) - 1, max(0, round((t - lead) * 30))))
+    return Image.open(fr[k]).convert("RGBA")
+
 def narrador_escena(titulo=None, col=VERDE, sub=None, z0=1.0, z1=1.05):
     """Escena del narrador: clip real cuya boca se abre y se cierra con la voz de Fernando (desde el primer cuadro)."""
     import numpy as np
     nv = _narrador_gamer(); st = {}
     def f(t, d):
+        lip = _lipsync_cuadro(f, t, d)
+        if lip is not None:
+            c = zoom(lip, t, d, z0, z1)
+            if titulo:
+                u = eb(pr(t, .2, .5)); texto(c, titulo, W / 2, P(1560, 860), P(84, 96), col, alpha=clamp(u * 1.5), glow_col=col)
+                if sub: texto(c, sub, W / 2, P(1660, 950), P(44, 46), (255, 255, 255), alpha=eo(pr(t, .6, .4)), stroke=5)
+            vineta(c, 120); return c
         nf = int(round(d * 30))
         if st.get("nf") != nf:
             voz = getattr(f, "voz", None); lead = getattr(f, "lead", .15)

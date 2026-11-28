@@ -42,8 +42,18 @@ def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250
         pass
     pron = {**PRON_BASE, **(pron or {})}
     SR = G.SR; speak = G.tts_engine(); plan = []
+    LIPS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "biblioteca", "narrador", "gamer", "lipsync")
+    import hashlib
     for fn, txt, clave in ESCENAS:
-        a = speak(txt, pron) if pron else speak(txt); dur = round((lead + len(a) / SR + .35) * 30) / 30
+        a = None
+        if fn.__name__ == "narrador":   # frase del narrador: audio fijo en disco (para lipsync en Higgsfield) y video lipsync si existe
+            os.makedirs(LIPS, exist_ok=True); key = hashlib.sha1(txt.strip().encode()).hexdigest()[:10]; wav = os.path.join(LIPS, key + ".wav")
+            if os.path.exists(wav): a, _sr = sf.read(wav, dtype="float32")
+            else:
+                a = speak(txt, pron) if pron else speak(txt); sf.write(wav, a, SR); open(os.path.join(LIPS, key + ".txt"), "w").write(txt)
+            fn.lipkey = key; fn.lipsync = next((os.path.join(LIPS, key + e) for e in ("_h.mp4", "_v.mp4", ".mp4") if os.path.exists(os.path.join(LIPS, key + e))), None)
+        if a is None: a = speak(txt, pron) if pron else speak(txt)
+        dur = round((lead + len(a) / SR + .35) * 30) / 30
         env = np.abs(a); hop = SR // 30; lv = np.array([env[i:i + hop].mean() if i < len(env) else 0 for i in range(0, len(env), hop)])
         lv = np.clip(lv / (np.percentile(lv, 90) + 1e-6), 0, 1)
         sm = np.zeros_like(lv); v = 0.   # boca natural: abre rápido, cierra suave; silencios cerrados
