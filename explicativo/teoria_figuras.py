@@ -544,7 +544,7 @@ def _planificar_v2(self, lv, lead, nf):
     nombres = getattr(self, "_noms", [str(i) for i in range(len(self.clips))])
     cam = [1 if n.startswith("cv") else 0 for n in nombres]
     self._ncall = getattr(self, "_ncall", 0) + 1   # la 1.ª escena (intro) conserva primeros planos; desde la 2.ª, solo plano abierto
-    abiertos = set(os.environ.get("NARR_ABIERTOS", "h1_0,h2_0").split(",")) if (self._ncall > 1 and os.environ.get("NARR_PLANO", "abierto") == "abierto" and any(n.startswith("h") for n in nombres)) else set()
+    abiertos = set(os.environ.get("NARR_ABIERTOS", "h1_0,h2_0,h1_0r,h2_0r").split(",")) if (self._ncall > 1 and os.environ.get("NARR_PLANO", "abierto") == "abierto" and any(n.startswith("h") for n in nombres)) else set()
     STEP, MIN, LA = 6, 36, 42
 
     def mis(c, pos, tgt):
@@ -552,17 +552,42 @@ def _planificar_v2(self, lv, lead, nf):
         w = np.where((tgt > .3) & (m < tgt - .12), 4.0, 1.0) * np.where((tgt < .08) & (m > .45), 1.6, 1.0)
         return float((np.abs(dif) * w).mean())
 
+    # un clip invertido (h1_0r) es la misma toma que h1_0: se compara en la línea de tiempo original
+    base = {i: nombres.index(n[:-1]) if n.endswith("r") and n[:-1] in nombres else i for i, n in enumerate(nombres)}
+    def orig(c, a, b):
+        if base[c] == c: return c, a, b
+        L = len(self.clips[c]["m"]) - 1; return base[c], L - b, L - a
+    h0 = len(self._hist)   # tramos usados en ESTA escena: prohibido repetirlos (ni al derecho ni al revés)
     def reuso(c, a, b):
-        pen = 0.
-        for j, (hc, ha, hb) in enumerate(reversed(self._hist)):
-            if hc != c or b < ha - 18 or a > hb + 18: continue
-            pen += 5.0 if j < 12 else .35
+        pen = 0.; c, a, b = orig(c, a, b)
+        vivos = list(self._hist)
+        if cur is not None and seg0 is not None: vivos.append(orig(cur[0], int(min(seg0, cur[1])), int(max(seg0, cur[1]))))
+        n_ = len(vivos)
+        for j, (hc, ha, hb) in enumerate(reversed(vivos)):
+            if hc != c or b < ha - 6 or a > hb + 6: continue
+            pen += 1000.0 if n_ - 1 - j >= h0 else (5.0 if j < 12 else .35)
         return pen
 
+    if abiertos:   # plano abierto: tomas largas, cada toma una sola vez por escena (no se repite ningún gesto)
+        import random as _r
+        rg = _r.Random(self._ncall * 7919 + nf)
+        bases = [i for i, n_ in enumerate(nombres) if n_ in abiertos and base[i] == i]
+        rg.shuffle(bases); plan = []; usados = []
+        k_ = 0
+        while len(plan) < nf:
+            b_ = bases[k_ % len(bases)]; k_ += 1
+            rev = rg.random() < .5 and any(base[i] == b_ and i != b_ and nombres[i] in abiertos for i in range(len(nombres)))
+            c_ = next(i for i in range(len(nombres)) if base[i] == b_ and (i != b_) == rev) if rev else b_
+            L_ = len(self.clips[c_]["m"]) - 2; resto = nf - len(plan); faltan = len(bases) - (k_ - 1) - 1
+            n_ = resto if faltan <= 0 else max(min(L_, resto - 60), min(resto, int(resto / (faltan + 1)) + 20))
+            n_ = max(1, min(n_, L_, resto)); o_ = rg.randint(0, max(0, L_ - n_))
+            for q in range(n_): plan.append((c_, float(o_ + q), None))
+            self._hist.append(orig(c_, o_, o_ + n_))
+        return plan[:nf]
     plan = []; cur = None; run = 0; seg0 = None
     def cerrar():
         if cur is not None and seg0 is not None:
-            self._hist.append((cur[0], int(seg0), int(cur[1])))
+            self._hist.append(orig(cur[0], int(seg0), int(cur[1])))
             u = self.uso[cur[0]]; u *= .985; u[max(0, int(seg0) - 12):int(cur[1]) + 12] += 1
     f0 = 0
     while f0 < nf:
@@ -582,7 +607,7 @@ def _planificar_v2(self, lv, lead, nf):
         if puede_cortar:
             la = min(LA, nf - f0); tg2 = T_[f0:f0 + la]; i2 = np.arange(la)
             for c, cl in enumerate(self.clips):
-                if cur is not None and c == cur[0] and best is not None: continue
+                if cur is not None and base[c] == base[cur[0]]: continue
                 if abiertos and nombres[c] not in abiertos: continue  # solo plano abierto, mismo encuadre (Fernando, 28-nov)
                 L = len(cl["m"]); starts = np.arange(0, L - max(la, MIN + 6) - 2, 2)
                 if not len(starts): continue
