@@ -527,7 +527,7 @@ def _planificar_suave(self, lv, lead, nf, K=12, salto=.75):
     return plan
 
 def _planificar_v2(self, lv, lead, nf):
-    """Editor de cortes v2 (desde el Cap. 6 de Camino a Doomsday):
+    """Editor de cortes v2 (desde el Cap. 6 de Camino a Doomsday). Clips a 30 fps reales (interpolados), siempre a velocidad 1x:
     - tomas más largas (mínimo 0,7 s): menos cortes rápidos;
     - la boca NUNCA se queda quieta cuando hay voz (penaliza x3 boca cerrada con voz);
     - prohibido repetir un tramo usado hace poco (ni el mismo gesto de manos seguido): historial global entre escenas;
@@ -567,26 +567,26 @@ def _planificar_v2(self, lv, lead, nf):
         n = min(STEP, nf - f0); tgt = T_[f0:f0 + n]; idx = np.arange(1, n + 1); best = None
         if cur is not None:
             c, st = cur
-            for r in (.72, .8, .88):
+            for r in (1.0,):
                 pos = st + r * idx
                 if pos[-1] >= len(self.clips[c]["m"]) - 1: continue
-                cost = mis(c, pos, tgt) + .3 * (r - .8) ** 2 + (.002 * (run - 120) if run > 120 else 0)
+                cost = mis(c, pos, tgt) + (.002 * (run - 120) if run > 120 else 0)
                 if best is None or cost < best[0]: best = (cost, c, pos, False)
         puede_cortar = cur is None or best is None or (run >= MIN and nf - f0 >= 24)
         if puede_cortar:
             la = min(LA, nf - f0); tg2 = T_[f0:f0 + la]; i2 = np.arange(la)
             for c, cl in enumerate(self.clips):
                 if cur is not None and c == cur[0] and best is not None: continue
-                L = len(cl["m"]); starts = np.arange(0, L - int(max(la, MIN + 6) * .88) - 2, 2)
+                L = len(cl["m"]); starts = np.arange(0, L - max(la, MIN + 6) - 2, 2)
                 if not len(starts): continue
-                Pm = starts[:, None] + .8 * i2[None, :]; Mv = self._M(c, Pm); dif = Mv - tg2[None, :]
+                Pm = starts[:, None] + 1.0 * i2[None, :]; Mv = self._M(c, Pm); dif = Mv - tg2[None, :]
                 w = np.where((tg2[None, :] > .3) & (Mv < tg2[None, :] - .12), 3.0, 1.0) * np.where((tg2[None, :] < .08) & (Mv > .45), 1.6, 1.0)
                 cost = (np.abs(dif) * w).mean(1) + .04 * self.uso[c][starts]
                 cost = cost + np.array([reuso(c, a, a + la) for a in starts])
                 if cur is not None:
                     cost = cost + .30 - (.06 if cam[c] != cam[cur[0]] else 0)
                 j = int(np.argmin(cost))
-                if best is None or cost[j] < best[0]: best = (float(cost[j]), c, starts[j] + .8 * (np.arange(1, n + 1) - 1), True)
+                if best is None or cost[j] < best[0]: best = (float(cost[j]), c, starts[j] + 1.0 * (np.arange(1, n + 1) - 1), True)
         _, c, pos, corte = best
         if corte:
             cerrar(); seg0 = pos[0]; run = 0
