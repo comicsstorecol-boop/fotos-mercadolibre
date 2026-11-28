@@ -2,7 +2,7 @@
 import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); EXP = os.path.dirname(HERE); sys.path.insert(0, EXP); sys.path.insert(0, os.path.dirname(EXP))
 PRON_BASE = {"comics-store": ("es", "cómics estor"), "marvel": ("en", "Marvel"), "legends": ("en", "Legends"), "stan": ("en", "Stan"), "lee": ("en", "Lee"),
-             "jack": ("en", "Jack"), "kirby": ("en", "Kirby"), "hoodie": ("es", "júdi"), "trucker": ("en", "trucker"), "mcfarlane": ("en", "McFarlane")}
+             "jack": ("en", "Jack"), "kirby": ("en", "Kirby"), "hoodie": ("es", "júdi"), "trucker": ("en", "trucker"), "mouse": ("en", "mouse"), "pad": ("en", "pad"), "mcfarlane": ("en", "McFarlane")}
 def correr(slug, G, colores, pron=None):
     from regalos import armar
     from motor import render

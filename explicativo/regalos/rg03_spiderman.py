@@ -8,7 +8,7 @@ IMG = os.path.join(os.path.dirname(EXP), "productos", "spiderman")
 ROJO, AZUL = (235, 35, 45), (40, 110, 255)
 PRON = {"spider-man": ("en", "Spider-Man"), "venom": ("en", "Venom"), "stan": ("en", "Stan"), "lee": ("en", "Lee"), "steve": ("en", "Steve"),
         "ditko": ("en", "Ditko"), "peter": ("en", "Peter"), "parker": ("en", "Parker"), "mcfarlane": ("en", "McFarlane"), "todd": ("en", "Todd"),
-        "trucker": ("en", "trucker"), "hoodie": ("es", "júdi"), "marvel": ("en", "Marvel"), "legends": ("en", "Legends"), "comics-store": ("es", "cómics estor")}
+        "trucker": ("en", "trucker"), "mouse": ("en", "mouse"), "pad": ("en", "pad"), "hoodie": ("es", "júdi"), "marvel": ("en", "Marvel"), "legends": ("en", "Legends"), "comics-store": ("es", "cómics estor")}
 
 G = {"productos": [
     dict(img=f"{IMG}/c1.png", nombre="MOUSE PAD SPIDER-MAN", precio="$19.999", nota="NACIÓ EN 1962"),
