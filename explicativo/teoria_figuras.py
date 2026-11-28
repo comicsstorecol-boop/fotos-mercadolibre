@@ -148,7 +148,7 @@ COLOR_FIG = {"doom": VERDE, "strange": (255, 165, 40), "thanos": (180, 90, 255),
              "thor": (120, 200, 255), "wolverine": (255, 220, 40), "magneto": (235, 60, 200), "xavier": (170, 120, 255), "reed": (60, 210, 255),
              "cuatro": (60, 210, 255), "cosa": (255, 140, 40), "hulk": (110, 255, 70), "wanda": (255, 50, 90), "antorcha": (255, 120, 30), "sue": (130, 210, 255), "namor": (40, 230, 190),
              "surfer": (200, 225, 255), "panther": (170, 90, 255), "galactus": (255, 60, 170), "mefisto": (255, 40, 40), "yelena": (150, 230, 200), "gambit": (255, 70, 170), "ciclope": (255, 70, 60),
-             "blackbolt": (190, 170, 255), "bestia": (90, 130, 255), "molecula": (220, 60, 230), "annihilus": (150, 255, 80), "topo": (90, 210, 110), "franklin": (60, 170, 255), "futuro": (60, 170, 255)}
+             "blackbolt": (190, 170, 255), "bestia": (90, 130, 255), "molecula": (220, 60, 230), "annihilus": (150, 255, 80), "topo": (90, 210, 110), "franklin": (60, 170, 255), "futuro": (60, 170, 255), "nightcrawler": (70, 110, 255), "mistica": (80, 210, 255), "tormenta": (235, 240, 255), "rogue": (120, 230, 60), "fenix": (255, 120, 30), "jean": (255, 90, 170)}
 def color_de(nombre, defecto=VERDE):
     return COLOR_FIG.get(nombre.split("_")[0], defecto)
 
@@ -472,9 +472,10 @@ def _narrador_gamer():
         from narrador_video import NarradorVideo
         nv = NarradorVideo("gamer")
         import types
-        nv.planificar = types.MethodType(_planificar_suave, nv)
+        nv.planificar = types.MethodType(_planificar_v2, nv)
         data = json.load(open(os.path.join(KIT, "biblioteca", "narrador", "gamer", "boca.json")))
         noms = sorted(os.path.basename(p_)[:-4] for p_ in __import__("glob").glob(os.path.join(KIT, "biblioteca", "narrador", "gamer", nv.ori, "*.mp4")))
+        nv._noms = noms
         crudos = []
         for nom, cl in zip(noms, nv.clips):
             v = np.array([np.nan if x is None else x for x in data[f"{nv.ori}/{nom}"]["boca"]], float)
@@ -523,6 +524,75 @@ def _planificar_suave(self, lv, lead, nf, K=12, salto=.75):
             plan.append((c, float(p_), fade))
         cur = (c, float(pos[-1]))
         u = self.uso[c]; a, b = int(pos[0]), int(pos[-1]) + 1; u *= .97; u[max(0, a - 12):b + 12] += 1
+    return plan
+
+def _planificar_v2(self, lv, lead, nf):
+    """Editor de cortes v2 (desde el Cap. 6 de Camino a Doomsday):
+    - tomas más largas (mínimo 0,7 s): menos cortes rápidos;
+    - la boca NUNCA se queda quieta cuando hay voz (penaliza x3 boca cerrada con voz);
+    - prohibido repetir un tramo usado hace poco (ni el mismo gesto de manos seguido): historial global entre escenas;
+    - al cortar, cambia de toma (no salta dentro del mismo clip) y alterna plano general / primer plano;
+    - corte limpio, sin fundidos (nada de imagen doble)."""
+    import numpy as np
+    T_ = np.zeros(nf); off = int(round(lead * 30)) - 1
+    for f in range(nf):
+        k = f - off
+        if 0 <= k < len(lv): T_[f] = lv[k]
+    T_ = np.clip(T_ / max(.35, np.percentile(T_[T_ > 0], 85) if (T_ > 0).any() else 1), 0, 1)
+    T_ = np.convolve(T_, [.2, .6, .2], "same")
+    if not hasattr(self, "_hist"): self._hist = []
+    nombres = getattr(self, "_noms", [str(i) for i in range(len(self.clips))])
+    cam = [1 if n.startswith("cv") else 0 for n in nombres]
+    STEP, MIN, LA = 6, 36, 42
+
+    def mis(c, pos, tgt):
+        m = self._M(c, pos); dif = m - tgt
+        w = np.where((tgt > .3) & (m < tgt - .12), 3.0, 1.0) * np.where((tgt < .08) & (m > .45), 1.6, 1.0)
+        return float((np.abs(dif) * w).mean())
+
+    def reuso(c, a, b):
+        pen = 0.
+        for j, (hc, ha, hb) in enumerate(reversed(self._hist)):
+            if hc != c or b < ha - 18 or a > hb + 18: continue
+            pen += 5.0 if j < 12 else .35
+        return pen
+
+    plan = []; cur = None; run = 0; seg0 = None
+    def cerrar():
+        if cur is not None and seg0 is not None:
+            self._hist.append((cur[0], int(seg0), int(cur[1])))
+            u = self.uso[cur[0]]; u *= .985; u[max(0, int(seg0) - 12):int(cur[1]) + 12] += 1
+    f0 = 0
+    while f0 < nf:
+        n = min(STEP, nf - f0); tgt = T_[f0:f0 + n]; idx = np.arange(1, n + 1); best = None
+        if cur is not None:
+            c, st = cur
+            for r in (.72, .8, .88):
+                pos = st + r * idx
+                if pos[-1] >= len(self.clips[c]["m"]) - 1: continue
+                cost = mis(c, pos, tgt) + .3 * (r - .8) ** 2 + (.002 * (run - 120) if run > 120 else 0)
+                if best is None or cost < best[0]: best = (cost, c, pos, False)
+        puede_cortar = cur is None or best is None or (run >= MIN and nf - f0 >= 24)
+        if puede_cortar:
+            la = min(LA, nf - f0); tg2 = T_[f0:f0 + la]; i2 = np.arange(la)
+            for c, cl in enumerate(self.clips):
+                if cur is not None and c == cur[0] and best is not None: continue
+                L = len(cl["m"]); starts = np.arange(0, L - int(max(la, MIN + 6) * .88) - 2, 2)
+                if not len(starts): continue
+                Pm = starts[:, None] + .8 * i2[None, :]; Mv = self._M(c, Pm); dif = Mv - tg2[None, :]
+                w = np.where((tg2[None, :] > .3) & (Mv < tg2[None, :] - .12), 3.0, 1.0) * np.where((tg2[None, :] < .08) & (Mv > .45), 1.6, 1.0)
+                cost = (np.abs(dif) * w).mean(1) + .04 * self.uso[c][starts]
+                cost = cost + np.array([reuso(c, a, a + la) for a in starts])
+                if cur is not None:
+                    cost = cost + .30 - (.06 if cam[c] != cam[cur[0]] else 0)
+                j = int(np.argmin(cost))
+                if best is None or cost[j] < best[0]: best = (float(cost[j]), c, starts[j] + .8 * (np.arange(1, n + 1) - 1), True)
+        _, c, pos, corte = best
+        if corte:
+            cerrar(); seg0 = pos[0]; run = 0
+        for p_ in pos: plan.append((c, float(p_), None))
+        cur = (c, float(pos[-1])); run += n; f0 += n
+    cerrar()
     return plan
 
 def narrador_escena(titulo=None, col=VERDE, sub=None, z0=1.0, z1=1.05):
