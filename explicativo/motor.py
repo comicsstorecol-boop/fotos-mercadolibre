@@ -18,8 +18,13 @@ def musica_terror(total, N, SR):
     return (drone + wind + eerie).astype(np.float32)
 
 # Palabras que siempre se dicen en inglés (o con su pronunciación usual) en todos los videos
-PRON_BASE = {"store": ("en", "Store"), "steve": ("en", "Steve"), "rogers": ("en", "Rogers"), "avengers": ("es", "avényers"),
-             "doomsday": ("es", "dúmsdei"), "thor": ("es", "tor"), "tva": ("es", "te ve a")}
+PRON_BASE = {  # nombres en inglés con fonemas en inglés (Fernando, 28-nov-2026: "inglés, suena mejor")
+    **{w.lower(): ("en", w) for w in ["Store", "Comics", "Steve", "Rogers", "Avengers", "Doomsday", "Doom", "Thor", "Marvel",
+        "Iron", "Man", "Spider-Man", "Secret", "Wars", "Reed", "Richards", "Latveria", "Endgame", "Hulk", "Loki", "Thanos",
+        "Wolverine", "Magneto", "Batman", "Superman", "Joker", "Gotham", "Venom", "Deadpool", "Strange", "Stark", "Tony",
+        "Peter", "Parker", "Bruce", "Banner", "Wayne", "Wanda", "Vision", "Black", "Panther", "Widow", "Fantastic", "Four",
+        "Galactus", "Silver", "Surfer", "Kang", "Multiverse", "Netflix", "Disney", "Halloween", "Freddy", "Krueger"]},
+    "tva": ("es", "te ve a")}
 NIVEL = 0.0  # apertura de boca del narrador en el cuadro actual (0..1)
 
 def render(ESCENAS, OUT, regancho_idx=None, musica="alegre", lead=.15, y_sub=250, pron=None, estilo=None, formato="vertical", colores=None, pelicula=False):
