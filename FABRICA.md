@@ -78,4 +78,4 @@ Objetivo: Fernando da un TEMA → salen 3 videos listos para publicar:
 
 ## VOZ PERMANENTE (28-nov-2026)
 - Fernando aprobó como voz fija de TODOS los videos (cortos, largos, shorts) la voz Kokoro "Alex" DIRECTA, sin convertir a su voz clonada y sin ecualizador/eco (`VOZ_MODO=alex`, por defecto en generador.tts_engine).
-- Acento latino por defecto (`VOZ_ACENTO=es-419`, seseo); `VOZ_ACENTO=es` = España (θ). `VOZ_MODO=clonada` vuelve a la voz kNN-VC anterior (necesita VOZ_KEY en setup.sh).
+- Acento por defecto `VOZ_ACENTO=es` (exactamente la voz de la prueba short_01 que Fernando aprobó el 28-nov; pronuncia z/ce/ci como θ). `VOZ_ACENTO=es-419` = latino (seseo). `VOZ_MODO=clonada` vuelve a la voz kNN-VC anterior (necesita VOZ_KEY en setup.sh).

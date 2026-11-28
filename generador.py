@@ -164,9 +164,9 @@ def tts_engine():
     cfg = SynthesisConfig(length_scale=0.8, noise_scale=0.6, noise_w_scale=0.7)
     import glob
     # VOZ PERMANENTE (aprobada 28-nov-2026): Kokoro "Alex" directa, sin convertir al timbre clonado.
-    # VOZ_MODO=clonada vuelve a la voz de Fernando (kNN-VC); VOZ_ACENTO=es-419 (latino, por defecto) o es (España).
+    # VOZ_MODO=clonada vuelve a la voz de Fernando (kNN-VC); VOZ_ACENTO=es (por defecto: la de la prueba short_01 aprobada) o es-419 (latino).
     MODO = os.environ.get("VOZ_MODO", "alex")
-    ACENTO = os.environ.get("VOZ_ACENTO", "es-419")
+    ACENTO = os.environ.get("VOZ_ACENTO", "es")
     ref = (os.environ.get("VOICE_REF") or ",".join(sorted(glob.glob(os.path.join(KIT, "voz_fernando", "*.wav"))))) if MODO == "clonada" else ""
     if ref:
         sys.path.insert(0, KIT); import vc as _vc
